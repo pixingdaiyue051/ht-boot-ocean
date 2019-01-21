@@ -1,0 +1,10 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+jdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1/local_demo?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+  user: root
+  password: root
+mybatisConfigLocation: mybatis-config-dev.xml

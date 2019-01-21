@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+mapperLocation: /mapper/**/*.xml
+entityLocation: com.tequeno.bootssm.entity
+mapper:
+  mappers: tk.mybatis.mapper.common.Mapper
+  not-empty: false
+  identity: mysql
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
