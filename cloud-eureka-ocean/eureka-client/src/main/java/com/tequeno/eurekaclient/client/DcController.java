@@ -12,6 +12,10 @@ public class DcController {
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    /**
+     * 打印已经注册了的服务
+     * @return
+     */
     @GetMapping("/dc")
     public String dc(){
         String msg = "services:" + discoveryClient.getServices();

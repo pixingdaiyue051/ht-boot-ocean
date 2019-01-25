@@ -11,6 +11,10 @@ public class DcController {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * 调用eureka-client的同名服务，打印已经注册的服务
+     * @return
+     */
     @GetMapping("/dc")
     public String dc(){
         return restTemplate.getForObject("http://eureka-client/dc", String.class);
