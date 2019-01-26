@@ -9,6 +9,17 @@ target/
 *.iml
 *.ipr
 out/
+###子项目ocean-api###
+ocean-api/target/
+ocean-api/.classpath
+ocean-api/.project
+ocean-api/.settings
+ocean-api
+ocean-api/.idea/
+ocean-api/*.iws
+ocean-api/*.iml
+ocean-api/*.ipr
+ocean-api/out/
 ###子项目boot-ssm###
 boot-ssm/target/
 boot-ssm/.classpath
