@@ -1,4 +1,4 @@
-###父项目站点###
+#i##父项目站点###
 target/
 .classpath
 .project
@@ -14,7 +14,7 @@ ocean-api/target/
 ocean-api/.classpath
 ocean-api/.project
 ocean-api/.settings
-ocean-api
+
 ocean-api/.idea/
 ocean-api/*.iws
 ocean-api/*.iml
