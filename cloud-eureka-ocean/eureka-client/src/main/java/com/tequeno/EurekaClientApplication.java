@@ -1,4 +1,4 @@
-package com.tequeno.eurekaclient;
+package com.tequeno;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

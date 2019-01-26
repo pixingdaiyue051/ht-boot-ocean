@@ -1,4 +1,4 @@
-package com.tequeno.eurekaribbon;
+package com.tequeno;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

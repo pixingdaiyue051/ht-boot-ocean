@@ -7,3 +7,22 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1001/eureka
+
+mapperLocation: /mapper/**/*.xml
+entityLocation: com.tequeno.client.entity
+mapper:
+  mappers: tk.mybatis.mapper.common.Mapper
+  not-empty: false
+  identity: mysql
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+jdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1/local_demo?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+  user: root
+  password: root
+mybatisConfigLocation: mybatis-config.xml

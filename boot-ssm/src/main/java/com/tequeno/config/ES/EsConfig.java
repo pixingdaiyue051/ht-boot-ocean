@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.config.ES;
+package com.tequeno.config.ES;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;

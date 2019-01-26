@@ -1,4 +1,4 @@
-package com.tequeno.eurekaclient;
+package com.tequeno;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

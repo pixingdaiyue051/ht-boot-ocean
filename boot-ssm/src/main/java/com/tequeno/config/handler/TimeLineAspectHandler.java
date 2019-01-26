@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.config.handler;
+package com.tequeno.config.handler;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;

@@ -1,8 +1,6 @@
-package com.tequeno.bootssm.config.handler;
+package com.tequeno.config.handler;
 
-import com.tequeno.common.utils.ResultBinderUtil;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;

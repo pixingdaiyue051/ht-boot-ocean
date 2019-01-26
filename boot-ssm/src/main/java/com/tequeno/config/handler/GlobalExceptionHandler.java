@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.config.handler;
+package com.tequeno.config.handler;
 
 import com.tequeno.common.enums.ResultCodeMsgEnum;
 import com.tequeno.common.utils.ResultBinder;

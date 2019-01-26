@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.config.dao;
+package com.tequeno.config.dao;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tequeno.client.mapper.UmDataDictionaryMapper" >
+  <resultMap id="BaseResultMap" type="com.tequeno.client.entity.UmDataDictionary" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="value_code" property="valueCode" jdbcType="VARCHAR" />
+    <result column="value_name" property="valueName" jdbcType="VARCHAR" />
+    <result column="compare_value" property="compareValue" jdbcType="INTEGER" />
+    <result column="create_by_id" property="createById" jdbcType="VARCHAR" />
+    <result column="modify_by_id" property="modifyById" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_code, type_name, value_code, value_name, compare_value, create_by_id, modify_by_id, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from um_data_dictionary
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from um_data_dictionary
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tequeno.client.entity.UmDataDictionary" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into um_data_dictionary (type_code, type_name, value_code, 
+      value_name, compare_value, create_by_id, 
+      modify_by_id, create_time, modify_time
+      )
+    values (#{typeCode,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, #{valueCode,jdbcType=VARCHAR}, 
+      #{valueName,jdbcType=VARCHAR}, #{compareValue,jdbcType=INTEGER}, #{createById,jdbcType=VARCHAR}, 
+      #{modifyById,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tequeno.client.entity.UmDataDictionary" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into um_data_dictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="valueCode != null" >
+        value_code,
+      </if>
+      <if test="valueName != null" >
+        value_name,
+      </if>
+      <if test="compareValue != null" >
+        compare_value,
+      </if>
+      <if test="createById != null" >
+        create_by_id,
+      </if>
+      <if test="modifyById != null" >
+        modify_by_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="valueCode != null" >
+        #{valueCode,jdbcType=VARCHAR},
+      </if>
+      <if test="valueName != null" >
+        #{valueName,jdbcType=VARCHAR},
+      </if>
+      <if test="compareValue != null" >
+        #{compareValue,jdbcType=INTEGER},
+      </if>
+      <if test="createById != null" >
+        #{createById,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyById != null" >
+        #{modifyById,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tequeno.client.entity.UmDataDictionary" >
+    update um_data_dictionary
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="valueCode != null" >
+        value_code = #{valueCode,jdbcType=VARCHAR},
+      </if>
+      <if test="valueName != null" >
+        value_name = #{valueName,jdbcType=VARCHAR},
+      </if>
+      <if test="compareValue != null" >
+        compare_value = #{compareValue,jdbcType=INTEGER},
+      </if>
+      <if test="createById != null" >
+        create_by_id = #{createById,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyById != null" >
+        modify_by_id = #{modifyById,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tequeno.client.entity.UmDataDictionary" >
+    update um_data_dictionary
+    set type_code = #{typeCode,jdbcType=VARCHAR},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      value_code = #{valueCode,jdbcType=VARCHAR},
+      value_name = #{valueName,jdbcType=VARCHAR},
+      compare_value = #{compareValue,jdbcType=INTEGER},
+      create_by_id = #{createById,jdbcType=VARCHAR},
+      modify_by_id = #{modifyById,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

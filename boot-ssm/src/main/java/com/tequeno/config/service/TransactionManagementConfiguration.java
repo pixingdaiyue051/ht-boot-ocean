@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.config.service;
+package com.tequeno.config.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

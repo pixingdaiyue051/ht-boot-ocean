@@ -1,4 +1,4 @@
-package com.tequeno.bootssm;
+package com.tequeno;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
