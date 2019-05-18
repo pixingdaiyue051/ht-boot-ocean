@@ -7,4 +7,7 @@ jdbc:
   url: jdbc:mysql://127.0.0.1/local_demo?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
   user: root
   password: root
+logging:
+  config: classpath:logback-dev.xml
+##自定义配置
 mybatisConfigLocation: mybatis-config-pro.xml

@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tequeno.bootssm.mapper.AreaMapper" >
-  <resultMap id="BaseResultMap" type="com.tequeno.bootssm.entity.area.Area" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
-    <result column="priority" property="priority" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, area_name, priority, create_time, modify_time
-  </sql>
-  <sql id="where_conditions">
-    <if test="areaName != null and areaName != ''" >
-      and area_name like CONCAT('%', #{areaName},'%')
-    </if>
-    <if test="priority != null" >
-      and priority = #{priority,jdbcType=INTEGER}
-    </if>
-    <if test="priorityGt != null" >
-      and priority &gt; #{priorityGt,jdbcType=INTEGER}
-    </if>
-    <if test="priorityLt != null" >
-      and priority &lt; #{priorityLt,jdbcType=INTEGER}
-    </if>
-    <if test="priorityGte != null" >
-      and priority &gt;= #{priorityGte,jdbcType=INTEGER}
-    </if>
-    <if test="priorityLte != null" >
-      and priority &lt;= #{priorityLte,jdbcType=INTEGER}
-    </if>
-    <if test="createTime != null" >
-      and create_time = #{createTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="modifyTime != null" >
-      and modify_time = #{modifyTime,jdbcType=TIMESTAMP}
-    </if>
-  </sql>
-  <sql id="order_conditions">
-    <choose>
-      <when test="orderby != null and orderby != ''">
-        order by ${orderby}
-      </when>
-      <otherwise>
-        order by create_time desc
-      </otherwise>
-    </choose>
-  </sql>
-  <select id="selectAllByCondition" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from tb_area
-    <where>
-      <include refid="where_conditions"/>
-    </where>
-    <include refid="order_conditions"/>
-  </select>
-  <delete id="deleteByCondition">
-    delete from tb_area
-    <where>
-      <include refid="where_conditions"/>
-    </where>
-  </delete>
+<mapper namespace="com.tequeno.bootssm.mapper.area.AreaMapper">
+    <resultMap id="BaseResultMap" type="com.tequeno.bootssm.pojo.area.Area">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="area_name" property="areaName" jdbcType="VARCHAR"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, area_name, priority, create_time, modify_time
+    </sql>
+    <sql id="where_conditions">
+        1 = 1
+        <if test="areaName != null and areaName != ''">
+            and area_name like CONCAT('%', #{areaName},'%')
+        </if>
+        <if test="priority != null">
+            and priority = #{priority,jdbcType=INTEGER}
+        </if>
+        <if test="priorityGt != null">
+            and priority &gt; #{priorityGt,jdbcType=INTEGER}
+        </if>
+        <if test="priorityLt != null">
+            and priority &lt; #{priorityLt,jdbcType=INTEGER}
+        </if>
+        <if test="priorityGte != null">
+            and priority &gt;= #{priorityGte,jdbcType=INTEGER}
+        </if>
+        <if test="priorityLte != null">
+            and priority &lt;= #{priorityLte,jdbcType=INTEGER}
+        </if>
+        <if test="createTime != null">
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="modifyTime != null">
+            and modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+        </if>
+    </sql>
+    <sql id="order_conditions">
+        <if test="orderBy != null and orderBy != ''">
+            order by ${orderBy}
+        </if>
+        <!--<choose>
+            <when test="orderBy != null and orderBy != ''">
+                order by ${orderBy}
+            </when>
+            <otherwise>
+                order by create_time desc
+            </otherwise>
+        </choose>-->
+    </sql>
+    <select id="selectAllByCondition" resultMap="BaseResultMap">
+        select * from tb_area
+        <where>
+            <include refid="where_conditions"/>
+        </where>
+        <include refid="order_conditions"/>
+    </select>
+    <delete id="deleteByCondition">
+        delete from tb_area
+        <where>
+            <include refid="where_conditions"/>
+        </where>
+    </delete>
 </mapper>

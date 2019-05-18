@@ -2,28 +2,27 @@ package com.tequeno.bootssm.service.base;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tequeno.common.constants.DemoConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
-@Transactional
-public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
+public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
     @Autowired
     protected D mapper;
 
     @Override
-    public T selectByPrimaryKey(Integer id) {
+    @Transactional
+    public T selectByPrimaryKey(Object id) {
         return mapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public Integer deleteByPrimaryKey(Integer id) {
-        return mapper.deleteByPrimaryKey(id);
+    public void deleteByPrimaryKey(Object id) {
+        mapper.deleteByPrimaryKey(id);
     }
 
     @Override
@@ -32,62 +31,51 @@ public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
     }
 
     @Override
-    public Integer insertSelective(T entity) {
-        return mapper.insertSelective(entity);
+    public void insertSelective(T entity) {
+        mapper.insertSelective(entity);
     }
 
     @Override
-    public Integer updateSelective(T entity) {
-        return mapper.updateByPrimaryKeySelective(entity);
+    @Transactional
+    public void updateSelective(T entity) {
+        mapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override
-    public List<T> getList(Map<String, Object> map) {
+    public List<T> getList(Q q) {
+        return this.actualQuery(q, null, null);
+    }
+
+    @Override
+    public PageInfo<T> findPager(Q q) {
         try {
-            String method = DemoConstants.SELECTALLBYCONDITION;
-            if (map != null && !map.isEmpty()) {
-                if (map.containsKey(DemoConstants.ANOTHERMETHOD)) {
-                    method = map.get(DemoConstants.ANOTHERMETHOD).toString();
-                }
-            }
-            Method m = mapper.getClass().getMethod(method, Map.class);
-            return (List<T>) m.invoke(mapper, map);
+            Class<?> superClass = q.getClass().getSuperclass();
+            Object obj = superClass.newInstance();
+            Method method = superClass.getDeclaredMethod("getCurrentPage");
+            Integer currentPage = (Integer) method.invoke(obj);
+            method = superClass.getDeclaredMethod("getPageSize");
+            Integer pageSize = (Integer) method.invoke(obj);
+            PageHelper.startPage(currentPage, pageSize);
+            return new PageInfo<>(this.actualQuery(q, superClass, obj));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
-    @Override
-    public PageInfo<T> findPager(Map<String, Object> map) {
-        int currentPage = (int) map.get(DemoConstants.CURRENTPAGE);
-        int limit = (int) map.get(DemoConstants.LIMIT);
-        PageHelper.startPage(currentPage, limit);
-        return new PageInfo<>(this.getList(map));
-    }
-
-    @Override
-    public List<Map<String, Object>> getListMap(Map<String, Object> map) {
+    private List<T> actualQuery(Q q, Class<?> superClass, Object obj) {
         try {
-            String method = DemoConstants.SELECTMAPBYCONDITION;
-            if (map != null && !map.isEmpty()) {
-                if (map.containsKey(DemoConstants.ANOTHERMETHOD)) {
-                    method = map.get(DemoConstants.ANOTHERMETHOD).toString();
-                }
+            if (null == superClass) {
+                superClass = q.getClass().getSuperclass();
+                obj = superClass.newInstance();
             }
-            Method m = mapper.getClass().getMethod(method, Map.class);
-            return (List<Map<String, Object>>) m.invoke(mapper, map);
+            Method loadMethod = superClass.getDeclaredMethod("getLoadMethod");
+            String methodName = (String) loadMethod.invoke(obj);
+            Method m = mapper.getClass().getMethod(methodName, q.getClass());
+            return (List<T>) m.invoke(mapper, q);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
-    }
-
-    @Override
-    public PageInfo<Map<String, Object>> findPagerMap(Map<String, Object> map) {
-        int currentPage = (int) map.get(DemoConstants.CURRENTPAGE);
-        int limit = (int) map.get(DemoConstants.LIMIT);
-        PageHelper.startPage(currentPage, limit);
-        return new PageInfo<>(this.getListMap(map));
+        return null;
     }
 }

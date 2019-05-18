@@ -5,76 +5,78 @@ import com.tequeno.common.utils.ResultBinder;
 import com.tequeno.common.utils.ResultBinderUtil;
 import com.tequeno.ribbon.entity.Area;
 import com.tequeno.ribbon.entity.UmUserInfo;
+import com.tequeno.ribbon.mapper.AreaMapper;
 import com.tequeno.ribbon.service.area.AreaService;
+import com.tequeno.ribbon.service.base.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@Transactional
 @RequestMapping("area")
-public class AreaController extends BaseController {
+public class AreaController extends BaseServiceImpl<AreaMapper, Area> implements AreaService {
 
     @Autowired
-    private AreaService areaService;
+    protected RestTemplate restTemplate;
 
     @PostMapping("list")
     public ResultBinder list(@RequestParam Map<String, Object> map) {
         map.put(DemoConstants.ORDERBY, "priority desc");
-        List<Area> list = areaService.getList(map);
+        List<Area> list = super.getList(map);
         if (list != null && !list.isEmpty()) {
             list.forEach(item -> System.out.println(item.getAreaName()));
+            System.out.println(list.stream().distinct().count());
         }
-        System.out.println(list.stream().distinct().count());
         return ResultBinderUtil.success(list);
     }
 
-    @GetMapping("one/{id}")
-    public ResultBinder one(@PathVariable Integer id) {
-        return ResultBinderUtil.success(areaService.selectByPrimaryKey(id));
+    @Override
+    @PostMapping("insert")
+    public int insertBatch(List<Area> areaList) {
+        if (areaList != null && !areaList.isEmpty()) {
+            for (Area area : areaList) {
+                super.insertSelective(area);
+            }
+            return areaList.size();
+        } else {
+            return 0;
+        }
     }
 
-    @PostMapping("add")
-    public ResultBinder add(@RequestBody List<Area> areaList) {
-        return ResultBinderUtil.success(areaService.insertBatch(areaList));
+    @Override
+    public int updateBatch(List<Area> areaList) {
+        return 0;
     }
 
-    @PostMapping("addOne")
-    public ResultBinder addOne(@RequestBody Area area) {
-        return ResultBinderUtil.success(areaService.insertSelective(area));
-    }
-
-    @PostMapping("updateOne")
-    public ResultBinder updateOne(@RequestBody Area area) {
-        return ResultBinderUtil.success(areaService.updateSelective(area));
-    }
-
-    @DeleteMapping("delete")
-    public ResultBinder delete(@RequestParam Map<String, Object> map) {
-        return ResultBinderUtil.success(areaService.deleteByCondition(map));
+    @Override
+    public int deleteByCondition(Map<String, Object> map) {
+        return 0;
     }
 
     @PostMapping("test/transcation")
     public ResultBinder test() {
-        try {
-            Area area = new Area();
-            area.setAreaName("ribbon-222");
-            areaService.insertSelective(area);
+        Area area = new Area();
+        area.setAreaName("ribbon-222");
+        super.insertSelective(area);
 //            System.out.println(1 / 0);
 //-------------------------------------------------------------
 
-            UmUserInfo userInfo = new UmUserInfo();
-            userInfo.setId("1221");
-            userInfo.setUserName("ab111");
-            userInfo.setTrueName("ab111");
-            userInfo.setPwd("123456");
-            ResultBinder rb = restTemplate.postForObject("http://eureka-client/user/addOne", userInfo, ResultBinder.class);
-            System.out.println(rb.getMsg() + "===" + rb.getData());
-            return ResultBinderUtil.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultBinderUtil.fail();
-        }
+        UmUserInfo userInfo = new UmUserInfo();
+        userInfo.setId("1221");
+        userInfo.setUserName("ab111");
+        userInfo.setTrueName("ab111");
+        userInfo.setPwd("123456");
+        ResultBinder rb = restTemplate.postForObject("http://eureka-client/user/addOne", userInfo, ResultBinder.class);
+        System.out.println(rb.getMsg() + "===" + rb.getData());
+        System.out.println(1 / 0);
+        return ResultBinderUtil.success();
     }
 }

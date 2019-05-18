@@ -1,8 +1,6 @@
 spring:
   profiles:
     active: dev
-mapperLocation: /mapper/**/*.xml
-entityLocation: com.tequeno.bootssm.entity
 mapper:
   mappers: tk.mybatis.mapper.common.Mapper
   not-empty: false
@@ -12,3 +10,6 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+##自定义配置
+mapperLocation: /mapper/**/*.xml
+entityLocation: com.tequeno.bootssm.pojo

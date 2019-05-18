@@ -1,15 +1,15 @@
 package com.tequeno.bootssm.service.area;
 
-import com.tequeno.bootssm.entity.area.Area;
+import com.tequeno.bootssm.pojo.area.Area;
+import com.tequeno.bootssm.pojo.area.AreaQuery;
 import com.tequeno.bootssm.service.base.BaseService;
 
 import java.util.List;
-import java.util.Map;
 
-public interface AreaService extends BaseService<Area> {
-    int insertBatch(List<Area> areaList);
+public interface AreaService extends BaseService<Area, AreaQuery> {
+    void insertBatch(List<Area> areaList);
 
-    int updateBatch(List<Area> areaList);
+    void updateBatch(List<Area> areaList);
 
-    int deleteByCondition(Map<String, Object> map);
+    void deleteByCondition(AreaQuery query);
 }

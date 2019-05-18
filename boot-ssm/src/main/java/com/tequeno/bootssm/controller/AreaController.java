@@ -1,16 +1,15 @@
 package com.tequeno.bootssm.controller;
 
-import com.tequeno.common.constants.DemoConstants;
+import com.tequeno.bootssm.pojo.area.Area;
+import com.tequeno.bootssm.pojo.area.AreaQuery;
+import com.tequeno.bootssm.service.area.AreaService;
 import com.tequeno.common.utils.ResultBinder;
 import com.tequeno.common.utils.ResultBinderUtil;
-import com.tequeno.bootssm.entity.area.Area;
-import com.tequeno.bootssm.service.area.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("area")
@@ -20,11 +19,12 @@ public class AreaController {
     private AreaService areaService;
 
     @PostMapping("list")
-    public ResultBinder list(@RequestParam Map<String, Object> map) {
-        map.put(DemoConstants.ORDERBY, "priority desc");
-        List<Area> list = areaService.getList(map);
+    public ResultBinder list(@RequestBody AreaQuery areaQ) {
+//        areaQ.setLoadMethod("");
+//        areaQ.setOrderBy();
+        List<Area> list = areaService.getList(areaQ);
         if (list != null && !list.isEmpty()) {
-            list.forEach(item -> System.out.println(item.getAreaName()));
+            list.forEach(System.out::println);
         }
         System.out.println(list.stream().distinct().count());
         return ResultBinderUtil.success(list);
@@ -37,22 +37,27 @@ public class AreaController {
 
     @PostMapping("add")
     public ResultBinder add(@RequestBody List<Area> areaList) {
-        return ResultBinderUtil.success(areaService.insertBatch(areaList));
+        areaService.insertBatch(areaList);
+        return ResultBinderUtil.success(true);
     }
 
     @PostMapping("addOne")
     public ResultBinder addOne(@RequestBody Area area) {
-        return ResultBinderUtil.success(areaService.insertSelective(area));
+        areaService.insertSelective(area);
+        return ResultBinderUtil.success(true);
     }
 
     @PostMapping("updateOne")
     public ResultBinder updateOne(@RequestBody Area area) {
-        return ResultBinderUtil.success(areaService.updateSelective(area));
+        areaService.updateSelective(area);
+        return ResultBinderUtil.success(true);
     }
 
     @DeleteMapping("delete")
-    public ResultBinder delete(@RequestParam Map<String, Object> map) {
-        return ResultBinderUtil.success(areaService.deleteByCondition(map));
+    public ResultBinder delete() {
+        AreaQuery areaQ = new AreaQuery();
+        areaService.deleteByCondition(areaQ);
+        return ResultBinderUtil.success();
     }
 
     @PostMapping("test/transcation")

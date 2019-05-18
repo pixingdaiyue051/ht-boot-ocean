@@ -1,27 +1,22 @@
-package com.tequeno.bootssm.entity.area;
+package com.tequeno.bootssm.pojo.area;
 
-import com.tequeno.bootssm.entity.BaseEntity;
+import com.tequeno.bootssm.pojo.BaseEntity;
 
-import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 @Table(name = "tb_area")
 public class Area extends BaseEntity {
 
-    private String AreaName;
+    private String areaName;
 
     private Integer priority;
 
-    public Area() {
-    }
-
     public String getAreaName() {
-        return AreaName;
+        return areaName;
     }
 
     public void setAreaName(String areaName) {
-        AreaName = areaName;
+        this.areaName = areaName;
     }
 
     public Integer getPriority() {
@@ -36,7 +31,7 @@ public class Area extends BaseEntity {
     public String toString() {
         return "Area{" +
                 "id=" + id +
-                ", AreaName='" + AreaName + '\'' +
+                ", areaName='" + areaName + '\'' +
                 ", priority=" + priority +
                 ", createTime=" + createTime +
                 ", modifyTime=" + modifyTime +

@@ -1,18 +1,18 @@
-package com.tequeno.bootssm.entity.sys;
+package com.tequeno.bootssm.pojo.sys;
 
-import com.tequeno.bootssm.entity.BaseEntity;
+import com.tequeno.bootssm.pojo.BaseEntity;
 
 import javax.persistence.Table;
 
 @Table(name = "um_user_info")
 public class UmUserInfo extends BaseEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -403886687529880018L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -403886687529880018L;
 
-	private String userName;
+    private String userName;
 
     private String trueName;
 

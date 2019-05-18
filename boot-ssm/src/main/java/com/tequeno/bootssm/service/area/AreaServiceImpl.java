@@ -1,44 +1,35 @@
 package com.tequeno.bootssm.service.area;
 
-import com.tequeno.bootssm.entity.area.Area;
-import com.tequeno.bootssm.mapper.AreaMapper;
+import com.tequeno.bootssm.mapper.area.AreaMapper;
+import com.tequeno.bootssm.pojo.area.Area;
+import com.tequeno.bootssm.pojo.area.AreaQuery;
 import com.tequeno.bootssm.service.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
-@Transactional
-public class AreaServiceImpl extends BaseServiceImpl<AreaMapper, Area> implements AreaService {
+public class AreaServiceImpl extends BaseServiceImpl<AreaMapper, Area, AreaQuery> implements AreaService {
 
     @Override
-    public int insertBatch(List<Area> areaList) {
+    @Transactional
+    public void insertBatch(List<Area> areaList) {
         if (areaList != null && !areaList.isEmpty()) {
-            for (Area area : areaList) {
-                super.insertSelective(area);
-            }
-            return areaList.size();
-        } else {
-            return 0;
+            areaList.forEach(a -> super.insertSelective(a));
         }
     }
 
     @Override
-    public int updateBatch(List<Area> areaList) {
+    @Transactional
+    public void updateBatch(List<Area> areaList) {
         if (areaList != null && !areaList.isEmpty()) {
-            for (Area area : areaList) {
-                super.updateSelective(area);
-            }
-            return areaList.size();
-        } else {
-            return 0;
+            areaList.forEach(a -> super.updateSelective(a));
         }
     }
 
     @Override
-    public int deleteByCondition(Map<String, Object> map) {
-        return mapper.deleteByCondition(map);
+    public void deleteByCondition(AreaQuery query) {
+        mapper.deleteByCondition(query);
     }
 }
