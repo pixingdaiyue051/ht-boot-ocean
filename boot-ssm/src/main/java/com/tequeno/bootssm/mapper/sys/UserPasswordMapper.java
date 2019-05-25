@@ -6,5 +6,5 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface UserPasswordMapper extends Mapper<UserPassword> {
 
-    UserPassword selectByUserId(@Param("userId") Integer userId);
+    UserPassword selectByUserId(@Param("userId") Long userId);
 }

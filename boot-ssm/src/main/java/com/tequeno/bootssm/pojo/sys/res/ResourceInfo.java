@@ -12,7 +12,7 @@ public class ResourceInfo extends BaseEntity {
      */
     private static final long serialVersionUID = 5394622621482086854L;
 
-    private String pid;
+    private Long pid;
 
     private String resZhName;
 
@@ -24,11 +24,11 @@ public class ResourceInfo extends BaseEntity {
 
     private Integer seq;
 
-    public String getPid() {
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(String pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 

@@ -17,38 +17,37 @@
 //
 //    private final static Logger logger = LoggerFactory.getLogger(HttpAspectHandler.class);
 //
-//    @Pointcut("execution(* com.tequeno.bootssm.controller.*.*(..))")
+//    @Pointcut("execution(* com.tequeno.bootssm.controller..*.*(..))")
 //    public void controllerAspect() {
 //    }
 //
 //    @Before("controllerAspect()")
-//    public void doBefore(JoinPoint joinPoint) {
+//    public void doAdviceBeforeHttp(JoinPoint joinPoint) {
+//        logger.info("doAdviceBeforeHttp");
 //        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 //        HttpServletRequest request = attributes.getRequest();
 //        Signature s = joinPoint.getSignature();
-//        logger.info("{}方法,开始执行...", s.getDeclaringType().getSimpleName() + "." + s.getName());
+//        logger.info("{}.{}方法,开始执行...", s.getDeclaringType().getSimpleName(), s.getName());
 //        logger.info("url={}", request.getRequestURI());
 //        logger.info("method={}", request.getMethod());
 //        logger.info("args={}", joinPoint.getArgs());
 //    }
 //
 //    @After("controllerAspect()")
-//    public void doAfter(JoinPoint joinPoint) {
+//    public void doAdviceAfterHttp(JoinPoint joinPoint) {
+//        logger.info("doAdviceAfterHttp");
 //        Signature s = joinPoint.getSignature();
-//        logger.info("{}方法,执行结束", s.getDeclaringType().getSimpleName() + "." + s.getName());
+//        logger.info("{}.{}方法,开始执行...", s.getDeclaringType().getSimpleName(), s.getName());
 //    }
 //
-////    @Around("controllerAspect()")
-////    public void doAround(ProceedingJoinPoint joinPoint) throws Throwable {
-////        logger.info("HttpAspectHandler.doAround");
-////
-////        Object obj = joinPoint.proceed();
-////        System.out.println(obj);
-////
+////    @AfterReturning(returning = "obj", pointcut = "controllerAspect()")
+////    public void doAfterReturningHttp(Object obj) {
+////        logger.info("doAfterReturningHttp");
+////        logger.info("response={}", obj);
 ////    }
 //
-//    @AfterReturning(returning = "obj", pointcut = "controllerAspect()")
-//    public void doAfterReturning(Object obj) {
-//        logger.info("response={}", obj.toString());
-//    }
+////    @AfterThrowing(throwing = "error", pointcut = "controllerAspect()")
+////    public void doAfterThrowingHttp(Object obj) {
+////        logger.info("response={}", obj);
+////    }
 //}

@@ -42,4 +42,7 @@
     </where>
     <include refid="order_conditions"/>
   </select>
+  <select id="syncUpdateName" statementType="CALLABLE">
+    call proc_update_user_name(#{oldUserName},#{newUserName})
+  </select>
 </mapper>

@@ -2,26 +2,19 @@ package com.tequeno.common.constants;
 
 public class CommonQuery {
 
-    protected Integer currentPage;
+    private Integer currentPage;
 
-    protected Integer pageSize;
+    private Integer pageSize;
 
-    protected Integer pageStartedIndexIncluded;
+    private String loadMethod;
 
-    protected Integer pageEndedIndexIncluded;
-
-    protected String loadMethod;
-
-    protected String orderBy;
+    private String orderBy;
 
     public CommonQuery() {
         loadMethod = "selectAllByCondition";
         orderBy = "create_time desc";
-        if (null != currentPage && null != pageSize) {
-            int i = (currentPage - 1) * pageSize;
-            pageStartedIndexIncluded = i <= 0 ? 1 : i;
-            pageEndedIndexIncluded = currentPage * pageSize;
-        }
+        currentPage = 1;
+        pageSize = 10;
     }
 
     public CommonQuery(String loadMethod) {
@@ -49,22 +42,6 @@ public class CommonQuery {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public int getPageStartedIndexIncluded() {
-        return pageStartedIndexIncluded;
-    }
-
-    public void setPageStartedIndexIncluded(Integer pageStartedIndexIncluded) {
-        this.pageStartedIndexIncluded = pageStartedIndexIncluded;
-    }
-
-    public int getPageEndedIndexIncluded() {
-        return pageEndedIndexIncluded;
-    }
-
-    public void setPageEndedIndexIncluded(Integer pageEndedIndexIncluded) {
-        this.pageEndedIndexIncluded = pageEndedIndexIncluded;
     }
 
     public String getLoadMethod() {

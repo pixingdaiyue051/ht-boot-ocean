@@ -7,15 +7,15 @@ import javax.persistence.Table;
 @Table(name = "um_user_password")
 public class UserPassword extends BaseEntity {
 
-    private Integer userId;
+    private Long userId;
 
     private String encryptPassword;
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

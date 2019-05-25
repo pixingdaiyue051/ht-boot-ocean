@@ -1,4 +1,7 @@
 server:
-  port: 8380
+  port: 8083
   servlet:
     context-path: /
+spring:
+  redis:
+    database: 1

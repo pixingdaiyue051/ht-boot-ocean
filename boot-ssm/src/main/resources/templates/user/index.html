@@ -3,31 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
-    <script type="text/javascript" src="/static/jquery/jquery.min-3.4.1.js"/>
+    <script type="text/javascript" src="/jquery/jquery.min-3.4.1.js"></script>
+    <script type="text/javascript" src="/user/user_index.js"></script>
 </head>
 <body>
-<input id="tel" placeholder="输入手机号"/>
+<input id="tel" type="text" placeholder="输入手机号"/>
 <input id="btnSub" value="提交" type="button"/>
 <p id="info" style="color: red"></p>
 </body>
-<script>
-    $(function () {
-        $("#btnSub").click(function () {
-            let tel = $("#tel").val();
-            if (!tel) {
-                $("#info").text("手机号不为空");
-                return false;
-            }
-            $.ajax({
-                type: "POST",
-                url: "127.0.0.1:8020/user/opt",
-                data: {tel: tel},
-                success: function (res) {
-                    console.log(res);
-                    $("#info").text(res.data);
-                }
-            })
-        });
-    })
-</script>
 </html>

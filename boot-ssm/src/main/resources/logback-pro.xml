@@ -86,7 +86,7 @@
         <appender-ref ref ="RollingErrorFile"/>  
     </appender>
 
-    <logger name="com.teuqueno"/>
+    <logger name="com.tequeno"/>
     <logger name="java"/>
     <logger name="org.springframework"/>
     <logger name="org.mybatis"/>

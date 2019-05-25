@@ -2,6 +2,7 @@ package com.tequeno.bootssm.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tequeno.config.cache.JedisCacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
@@ -10,8 +11,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
+
     @Autowired
     protected D mapper;
+
+    @Autowired
+    protected JedisCacheUtil cacheUtil;
 
     @Override
     @Transactional
@@ -20,6 +25,7 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     }
 
     @Override
+    @Transactional
     public void deleteByPrimaryKey(Object id) {
         mapper.deleteByPrimaryKey(id);
     }
@@ -30,6 +36,7 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     }
 
     @Override
+    @Transactional
     public void insertSelective(T entity) {
         mapper.insertSelective(entity);
     }
@@ -42,35 +49,33 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
 
     @Override
     public List<T> getList(Q q) {
-        return this.actualQuery(q, null, null);
+        return this.actualQuery(q, null);
     }
 
     @Override
     public PageInfo<T> findPager(Q q) {
         try {
             Class<?> superClass = q.getClass().getSuperclass();
-            Object obj = superClass.newInstance();
             Method method = superClass.getDeclaredMethod("getCurrentPage");
-            Integer currentPage = (Integer) method.invoke(obj);
+            Integer currentPage = (Integer) method.invoke(q);
             method = superClass.getDeclaredMethod("getPageSize");
-            Integer pageSize = (Integer) method.invoke(obj);
+            Integer pageSize = (Integer) method.invoke(q);
             PageHelper.startPage(currentPage, pageSize);
-            return new PageInfo<>(this.actualQuery(q, superClass, obj));
+            return new PageInfo<>(this.actualQuery(q, superClass));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private List<T> actualQuery(Q q, Class<?> superClass, Object obj) {
+    private List<T> actualQuery(Q q, Class<?> superClass) {
         try {
             if (null == superClass) {
                 superClass = q.getClass().getSuperclass();
-                obj = superClass.newInstance();
             }
             Method loadMethod = superClass.getDeclaredMethod("getLoadMethod");
-            String methodName = (String) loadMethod.invoke(obj);
-            Method m = mapper.getClass().getMethod(methodName, q.getClass());
+            String methodName = (String) loadMethod.invoke(q);
+            Method m = mapper.getClass().getDeclaredMethod(methodName, q.getClass());
             return (List<T>) m.invoke(mapper, q);
         } catch (Exception e) {
             e.printStackTrace();

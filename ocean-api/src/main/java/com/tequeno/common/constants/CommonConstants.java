@@ -37,4 +37,8 @@ public class CommonConstants {
      * modalMap中加载成功时的提示词
      */
     public static final String DATA = "data";
+
+    public static int ENABLE = 1;
+
+    public static int DISENABLE = 0;
 }
