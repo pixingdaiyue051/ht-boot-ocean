@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.service.base;
+package com.tequeno.bootssm.service;
 
 import com.github.pagehelper.PageInfo;
 
