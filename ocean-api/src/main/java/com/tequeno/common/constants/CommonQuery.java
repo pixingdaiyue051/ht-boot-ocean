@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.pojo;
+package com.tequeno.common.constants;
 
 public class CommonQuery {
 
