@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ResultBinder exceptionHandle(HttpServletRequest request, Exception e) {
-        logger.warn("访问url={}出错 {}", request.getRequestURI(), e);
+        logger.warn("访问url:{}时捕获到程序异常", request.getRequestURI(), e);
         if (e instanceof TequenoException) {
             return ResultBinderUtil.fail(((TequenoException) e).getResultCodeMsgEnum());
         }

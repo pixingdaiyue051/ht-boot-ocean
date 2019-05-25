@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="60000" debug="true">
     <!-- 定义日志文件 输出位置以下是API内的默认位置 -->
     <!-- <property name="log_dir" value="/home/hadmin/data/logs/src" /> -->
-    <property name="log_dir" value="/logs/ht-boot-ocean/boot-ssm" />
+    <property name="log_dir" value="/logs/ht-boot-ocean/boot-assembly" />
     <!-- 日志最大的历史 30天 -->
     <property name="maxHistory" value="30" />
     <!-- 异步输出日志最大缓冲默认256 -->
@@ -24,7 +24,7 @@
     </appender>
     <appender name="RollingInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">  
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/info-file.log</fileNamePattern>
+	        <fileNamePattern>${log_dir}/info-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -45,7 +45,7 @@
     </appender>
 	<appender name="RollingWarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">  
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/warn-file.log</fileNamePattern>
+	        <fileNamePattern>${log_dir}/warn-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -66,7 +66,7 @@
     </appender>
 	<appender name="RollingErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/error-file.log</fileNamePattern>
+	        <fileNamePattern>${log_dir}/error-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -87,7 +87,7 @@
     </appender>
 	<appender name="RollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/debug-file.log</fileNamePattern>
+	        <fileNamePattern>${log_dir}/debug-file-%d{yyyy-MM-dd}.log</fileNamePattern>
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -112,18 +112,6 @@
     <logger name="java"/>
     <logger name="org.springframework"/>
     <logger name="org.mybatis"/>
-    <logger name="org.apache.ibatis" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
-    <logger name="java.sql" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
-    <logger name="com.tequeno.bootssm.mapper" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

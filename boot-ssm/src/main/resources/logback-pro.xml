@@ -89,6 +89,7 @@
     <logger name="com.teuqueno"/>
     <logger name="java"/>
     <logger name="org.springframework"/>
+    <logger name="org.mybatis"/>
 
     <root level="INFO">
         <appender-ref ref="AsyncInfo" />

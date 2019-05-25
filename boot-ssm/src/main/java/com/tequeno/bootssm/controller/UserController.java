@@ -17,13 +17,7 @@ public class UserController extends BaseServiceImpl<UserInfoMapper, UserInfo, Us
 
     @PostMapping("list")
     public ResultBinder list(@RequestBody UserInfoQuery userQ) {
-//        areaQ.setLoadMethod("");
-//        areaQ.setOrderBy();
         List<UserInfo> userInfoList = super.getList(userQ);
-        if (userInfoList != null && !userInfoList.isEmpty()) {
-            userInfoList.forEach(System.out::println);
-        }
-        System.out.println(userInfoList.stream().distinct().count());
         return ResultBinderUtil.success(userInfoList);
     }
 

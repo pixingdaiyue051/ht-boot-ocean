@@ -17,13 +17,7 @@ public class AreaController extends BaseServiceImpl<AreaMapper, Area, AreaQuery>
 
     @PostMapping("list")
     public ResultBinder list(@RequestBody AreaQuery areaQ) {
-//        areaQ.setLoadMethod("");
-//        areaQ.setOrderBy();
         List<Area> list = super.getList(areaQ);
-        if (list != null && !list.isEmpty()) {
-            list.forEach(System.out::println);
-        }
-        System.out.println(list.stream().distinct().count());
         return ResultBinderUtil.success(list);
     }
 

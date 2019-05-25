@@ -20,6 +20,17 @@ ocean-api/*.iml
 ocean-api/*.ipr
 ocean-api/out/
 
+###子项目boot-assembly###
+boot-assembly/target/
+boot-assembly/.classpath
+boot-assembly/.project
+boot-assembly/.settings
+boot-assembly/.idea/
+boot-assembly/*.iws
+boot-assembly/*.iml
+boot-assembly/*.ipr
+boot-assembly/out/
+
 ###子项目boot-ssm###
 boot-ssm/target/
 boot-ssm/.classpath

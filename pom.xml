@@ -8,6 +8,7 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>boot-assembly</module>
         <module>boot-ssm</module>
         <module>cloud-eureka-ocean</module>
         <module>ocean-api</module>
