@@ -1,6 +1,6 @@
 package com.tequeno.common.constants;
 
-public class DemoConstants {
+public class CommonConstants {
     /**
      * 当前页码
      */
