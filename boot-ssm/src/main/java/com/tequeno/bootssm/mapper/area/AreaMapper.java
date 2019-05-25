@@ -2,7 +2,6 @@ package com.tequeno.bootssm.mapper.area;
 
 import com.tequeno.bootssm.pojo.area.Area;
 import com.tequeno.bootssm.pojo.area.AreaQuery;
-import com.tequeno.bootssm.pojo.data.UmDataDictionary;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;

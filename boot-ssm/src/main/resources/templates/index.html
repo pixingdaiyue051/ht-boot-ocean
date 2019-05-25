@@ -2,11 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>index</title>
+    <!--<script type="text/javascript" src="/static/index/index.js"/>
+    <link type="text/css" rel="stylesheet" href="/static/index/index.css"/>-->
 </head>
 <body>
-    <span th:text="${name}"/>
-    <span th:text="${value}"/>
-    <span th:text="${area.getAreaName()}"/>
+    <span th:text="${name}">未知</span>
+    <span th:text="${value}">未知</span>
+    <a th:href="@{/hello(userName=${user.userName})}"><span th:text="${user.trueName}">未知</span></a>
 </body>
 </html>

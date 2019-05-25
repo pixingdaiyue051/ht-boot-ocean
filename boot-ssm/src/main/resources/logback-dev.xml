@@ -24,7 +24,7 @@
     </appender>
     <appender name="RollingInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">  
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/info-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
+	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/info-file.log</fileNamePattern>
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -45,7 +45,7 @@
     </appender>
 	<appender name="RollingWarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">  
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/warn-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
+	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/warn-file.log</fileNamePattern>
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -66,7 +66,7 @@
     </appender>
 	<appender name="RollingErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/error-file-%d{yyyy-MM-dd}.log</fileNamePattern>   
+	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/error-file.log</fileNamePattern>
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   
@@ -87,7 +87,7 @@
     </appender>
 	<appender name="RollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
-	        <fileNamePattern>${log_dir}/debug-file-%d{yyyy-MM-dd}.log</fileNamePattern>
+	        <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/debug-file.log</fileNamePattern>
 	        <maxHistory>${maxHistory}</maxHistory>    
 	    </rollingPolicy>   
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">   

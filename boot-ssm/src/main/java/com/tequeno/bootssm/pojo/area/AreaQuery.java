@@ -1,12 +1,12 @@
 package com.tequeno.bootssm.pojo.area;
 
-import com.tequeno.bootssm.pojo.CommonQuery;
-
-import java.util.Date;
+import com.tequeno.common.constants.CommonQuery;
 
 public class AreaQuery extends CommonQuery {
 
     private String areaName;
+
+    private String areaNameLike;
 
     private Integer priority;
 
@@ -17,10 +17,6 @@ public class AreaQuery extends CommonQuery {
     private Integer priorityGte;
 
     private Integer priorityLte;
-
-    private Date createTime;
-
-    private Date modifyTime;
 
     public String getAreaName() {
         return areaName;
@@ -70,19 +66,11 @@ public class AreaQuery extends CommonQuery {
         this.priorityLte = priorityLte;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getAreaNameLike() {
+        return areaNameLike;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setAreaNameLike(String areaNameLike) {
+        this.areaNameLike = areaNameLike;
     }
 }

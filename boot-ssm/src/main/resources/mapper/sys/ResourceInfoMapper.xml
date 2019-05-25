@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tequeno.bootssm.mapper.sys.ResourceInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.tequeno.bootssm.pojo.sys.res.ResourceInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="res_zh_name" property="resZhName" jdbcType="VARCHAR" />
+    <result column="res_cn_name" property="resCnName" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="res_url" property="resUrl" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pid, res_zh_name, res_cn_name, grade, res_url, seq, create_time, modify_time
+  </sql>
+  <sql id="where_conditions">
+    1 = 1
+  </sql>
+  <sql id="order_conditions">
+    <if test="orderBy != null and orderBy != ''">
+      order by ${orderBy}
+    </if>
+  </sql>
+  <select id="selectAllByCondition" resultMap="BaseResultMap">
+    select * from um_resource_info
+    <where>
+      <include refid="where_conditions"/>
+    </where>
+    <include refid="order_conditions"/>
+  </select>
+</mapper>
