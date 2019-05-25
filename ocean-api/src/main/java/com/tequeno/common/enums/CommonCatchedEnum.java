@@ -1,32 +1,31 @@
 package com.tequeno.common.enums;
 
-public enum ResultCodeMsgEnum {
+public enum CommonCatchedEnum implements CommonCodeMsgInterface {
     SUCCESS("1", "成功"),
     FAIL("0", "失败"),
-    UNKNOW("-1","未知错误"),
-    BUSSY("E-001","服务繁忙"),
-    INTERNAL("E-002","系统异常"),
+    SYSTEM_ERROR("-1", "系统异常"),
+
+    PARAMETER_NOT_VALID("0001", "参数不全"),
     ;
     private String code;
     private String msg;
 
-    ResultCodeMsgEnum(String code, String msg) {
+    CommonCatchedEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
+    @Override
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
+    @Override
     public String getMsg() {
         return msg;
     }
 
+    @Override
     public void setMsg(String msg) {
         this.msg = msg;
     }

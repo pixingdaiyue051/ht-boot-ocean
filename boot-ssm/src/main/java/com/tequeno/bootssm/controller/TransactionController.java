@@ -4,8 +4,8 @@ import com.tequeno.bootssm.mapper.area.AreaMapper;
 import com.tequeno.bootssm.mapper.sys.UserInfoMapper;
 import com.tequeno.bootssm.pojo.area.Area;
 import com.tequeno.bootssm.pojo.sys.user.UserInfo;
-import com.tequeno.common.utils.ResultBinder;
-import com.tequeno.common.utils.ResultBinderUtil;
+import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.utils.CommonResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class TransactionController {
         } catch (Exception e) {
             throw e;
         }
-        return ResultBinderUtil.success();
+        return CommonResultUtil.success();
     }
 
     @PostMapping("test2")
@@ -41,7 +41,7 @@ public class TransactionController {
         insertUser();
         insertArea();
         System.out.println(1 / 0);
-        return ResultBinderUtil.success();
+        return CommonResultUtil.success();
     }
 
     @Transactional

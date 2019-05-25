@@ -4,8 +4,8 @@ import com.tequeno.client.entity.Area;
 import com.tequeno.client.mapper.AreaMapper;
 import com.tequeno.client.service.BaseServiceImpl;
 import com.tequeno.common.constants.CommonConstants;
-import com.tequeno.common.utils.ResultBinder;
-import com.tequeno.common.utils.ResultBinderUtil;
+import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.utils.CommonResultUtil;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +28,6 @@ public class AreaController extends BaseServiceImpl<AreaMapper, Area> {
             list.forEach(item -> System.out.println(item.getAreaName()));
             System.out.println(list.stream().distinct().count());
         }
-        return ResultBinderUtil.success(list);
+        return CommonResultUtil.success(list);
     }
 }

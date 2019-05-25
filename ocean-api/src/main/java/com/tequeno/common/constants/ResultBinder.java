@@ -1,6 +1,6 @@
-package com.tequeno.common.utils;
+package com.tequeno.common.constants;
 
-public class ResultBinder<T> {
+public class ResultBinder {
 
     private Boolean success;
 
@@ -8,7 +8,7 @@ public class ResultBinder<T> {
 
     private String msg;
 
-    private T Data;
+    private Object Data;
 
     public Boolean getSuccess() {
         return success;
@@ -34,11 +34,11 @@ public class ResultBinder<T> {
         this.msg = msg;
     }
 
-    public T getData() {
+    public Object getData() {
         return Data;
     }
 
-    public void setData(T data) {
+    public void setData(Object data) {
         Data = data;
     }
 }

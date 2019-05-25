@@ -1,9 +1,9 @@
 package com.tequeno.config.handler;
 
-import com.tequeno.common.enums.ResultCodeMsgEnum;
-import com.tequeno.common.utils.ResultBinder;
-import com.tequeno.common.utils.ResultBinderUtil;
-import com.tequeno.common.utils.TequenoException;
+import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.enums.CommonCatchedEnum;
+import com.tequeno.common.utils.CommonException;
+import com.tequeno.common.utils.CommonResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,9 +20,9 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResultBinder exceptionHandle(HttpServletRequest request, Exception e) {
         logger.warn("访问url:{}时捕获到程序异常", request.getRequestURI(), e);
-        if (e instanceof TequenoException) {
-            return ResultBinderUtil.fail(((TequenoException) e).getResultCodeMsgEnum());
+        if (e instanceof CommonException) {
+            return CommonResultUtil.fail(((CommonException) e).getCommonCodeMsgInterface());
         }
-        return ResultBinderUtil.fail(ResultCodeMsgEnum.UNKNOW);
+        return CommonResultUtil.fail(CommonCatchedEnum.SYSTEM_ERROR);
     }
 }
