@@ -2,7 +2,7 @@ package com.tequeno.ribbon.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tequeno.common.constants.CommonConstants;
+import com.tequeno.common.constants.HtCommonConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
@@ -44,10 +44,10 @@ public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
     @Override
     public List<T> getList(Map<String, Object> map) {
         try {
-            String method = CommonConstants.SELECTALLBYCONDITION;
+            String method = HtCommonConstant.SELECTALLBYCONDITION;
             if (map != null && !map.isEmpty()) {
-                if (map.containsKey(CommonConstants.ANOTHERMETHOD)) {
-                    method = map.get(CommonConstants.ANOTHERMETHOD).toString();
+                if (map.containsKey(HtCommonConstant.ANOTHERMETHOD)) {
+                    method = map.get(HtCommonConstant.ANOTHERMETHOD).toString();
                 }
             }
             Method m = mapper.getClass().getMethod(method, Map.class);
@@ -60,8 +60,8 @@ public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
 
     @Override
     public PageInfo<T> findPager(Map<String, Object> map) {
-        int currentPage = (int) map.get(CommonConstants.CURRENTPAGE);
-        int limit = (int) map.get(CommonConstants.LIMIT);
+        int currentPage = (int) map.get(HtCommonConstant.CURRENTPAGE);
+        int limit = (int) map.get(HtCommonConstant.LIMIT);
         PageHelper.startPage(currentPage, limit);
         return new PageInfo<>(this.getList(map));
     }
@@ -69,10 +69,10 @@ public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
     @Override
     public List<Map<String, Object>> getListMap(Map<String, Object> map) {
         try {
-            String method = CommonConstants.SELECTMAPBYCONDITION;
+            String method = HtCommonConstant.SELECTMAPBYCONDITION;
             if (map != null && !map.isEmpty()) {
-                if (map.containsKey(CommonConstants.ANOTHERMETHOD)) {
-                    method = map.get(CommonConstants.ANOTHERMETHOD).toString();
+                if (map.containsKey(HtCommonConstant.ANOTHERMETHOD)) {
+                    method = map.get(HtCommonConstant.ANOTHERMETHOD).toString();
                 }
             }
             Method m = mapper.getClass().getMethod(method, Map.class);
@@ -85,8 +85,8 @@ public class BaseServiceImpl<D extends Mapper<T>, T> implements BaseService<T> {
 
     @Override
     public PageInfo<Map<String, Object>> findPagerMap(Map<String, Object> map) {
-        int currentPage = (int) map.get(CommonConstants.CURRENTPAGE);
-        int limit = (int) map.get(CommonConstants.LIMIT);
+        int currentPage = (int) map.get(HtCommonConstant.CURRENTPAGE);
+        int limit = (int) map.get(HtCommonConstant.LIMIT);
         PageHelper.startPage(currentPage, limit);
         return new PageInfo<>(this.getListMap(map));
     }

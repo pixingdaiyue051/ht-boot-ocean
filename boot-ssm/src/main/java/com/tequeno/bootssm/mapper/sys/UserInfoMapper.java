@@ -11,5 +11,7 @@ public interface UserInfoMapper extends Mapper<UserInfo> {
 
     List<UserInfo> selectAllByCondition(UserInfoQuery query);
 
-    void syncUpdateName(@Param("oldUserName") String oldUserName, @Param("newUserName") String newUserName);
+    UserInfo selectByUsername(@Param("userName") String userName);
+
+    void syncUpdateName(@Param("oldTrueName") String oldTrueName, @Param("newTrueName") String newTrueName);
 }

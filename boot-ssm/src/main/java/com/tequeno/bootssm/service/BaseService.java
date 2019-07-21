@@ -1,6 +1,7 @@
 package com.tequeno.bootssm.service;
 
 import com.github.pagehelper.PageInfo;
+import com.tequeno.common.enums.JedisKeyPrefixEnum;
 
 import java.util.List;
 
@@ -22,27 +23,6 @@ public interface BaseService<T, Q> {
     List<T> selectAll();
 
     /**
-     * 插入一条记录,属性为null的不会被插入,成功后该实体类中会有新生成的id
-     *
-     * @param entity
-     */
-    void insertSelective(T entity);
-
-    /**
-     * 根据主键更新记录,属性为null的不会被更新,推荐使用时将不需要更新的字段主动设置为null
-     *
-     * @param entity
-     */
-    void updateSelective(T entity);
-
-    /**
-     * 根据主键删除记录
-     *
-     * @param id
-     */
-    void deleteByPrimaryKey(Object id);
-
-    /**
      * 根据条件查询记录,map的key要和mapper里面的判断字段名字一致
      *
      * @param q 查询参数query
@@ -58,4 +38,55 @@ public interface BaseService<T, Q> {
      */
     PageInfo<T> findPager(Q q);
 
+    /**
+     * 插入一条记录,属性为null的不会被插入,成功后该实体类中会有新生成的id
+     *
+     * @param entity
+     */
+    int insertSelective(T entity);
+
+    /**
+     * 根据主键更新记录,属性为null的不会被更新,推荐使用时将不需要更新的字段主动设置为null
+     *
+     * @param entity
+     */
+    int updateSelective(T entity);
+
+    /**
+     * 根据主键删除记录
+     *
+     * @param id
+     */
+    int deleteByPrimaryKey(Object id);
+
+    /**
+     * 带缓存的根据id查询
+     *
+     * @param id
+     * @param prefixEnum 缓存前缀
+     * @return
+     */
+    default T selectByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
+        return selectByPrimaryKey(id);
+    }
+
+    /**
+     * 带缓存的根据id更新
+     *
+     * @param entity
+     * @param prefixEnum 缓存前缀
+     */
+    default int updateSelective(Object id, T entity, JedisKeyPrefixEnum prefixEnum) {
+        return updateSelective(entity);
+    }
+
+    /**
+     * 根据主键删除记录，同时删除缓存
+     *
+     * @param id
+     * @param prefixEnum 缓存前缀
+     */
+    default int deleteByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
+        return deleteByPrimaryKey(id);
+    }
 }

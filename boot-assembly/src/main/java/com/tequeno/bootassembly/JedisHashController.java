@@ -2,7 +2,7 @@ package com.tequeno.bootassembly;
 
 import com.tequeno.common.constants.ResultBinder;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
-import com.tequeno.common.utils.CommonResultUtil;
+import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.redis.JedisCacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,18 @@ public class JedisHashController {
                             @RequestParam("hashKey") String hashKey,
                             @RequestParam("hashValue") Object hashValue) {
         key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
-        return CommonResultUtil.success(cacheUtil.hset(key, hashKey, hashValue));
+        return HtResultInfoWrapper.success(cacheUtil.hset(key, hashKey, hashValue));
     }
 
     @PostMapping("setObject")
-    public ResultBinder set(@RequestParam("key") String key, @RequestBody Map<Object, Object> map) {
+    public ResultBinder set(@RequestParam("key") String key, @RequestBody Map<String, Object> map) {
         key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
-        return CommonResultUtil.success(cacheUtil.hmset(key, map));
+        return HtResultInfoWrapper.success(cacheUtil.hmset(key, map));
     }
 
     @PostMapping("get")
-    public ResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") Object hashKey) {
+    public ResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
         key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
-        return CommonResultUtil.success(cacheUtil.hget(key, hashKey));
+        return HtResultInfoWrapper.success(cacheUtil.hget(key, hashKey));
     }
 }

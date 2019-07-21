@@ -5,7 +5,7 @@ import com.tequeno.bootssm.mapper.sys.UserInfoMapper;
 import com.tequeno.bootssm.pojo.area.Area;
 import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.common.constants.ResultBinder;
-import com.tequeno.common.utils.CommonResultUtil;
+import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class TransactionController {
     private AreaMapper areaMapper;
 
     @PostMapping("test1")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultBinder test1() {
         insertUserPlus();
         try {
@@ -32,19 +32,19 @@ public class TransactionController {
         } catch (Exception e) {
             throw e;
         }
-        return CommonResultUtil.success();
+        return HtResultInfoWrapper.success();
     }
 
     @PostMapping("test2")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultBinder test2() {
         insertUser();
         insertArea();
         System.out.println(1 / 0);
-        return CommonResultUtil.success();
+        return HtResultInfoWrapper.success();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void insertUser() {
         UserInfo user = new UserInfo();
         user.setUserName("rok");
@@ -52,7 +52,7 @@ public class TransactionController {
         userInfoMapper.insertSelective(user);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void insertUserPlus() {
         UserInfo user = new UserInfo();
         user.setUserName("rok");
@@ -60,7 +60,7 @@ public class TransactionController {
         userInfoMapper.insertSelective(user);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.SUPPORTS)
     public void insertUserPlus2() {
         UserInfo user = new UserInfo();
         user.setUserName("rok");
@@ -68,7 +68,7 @@ public class TransactionController {
         userInfoMapper.insertSelective(user);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void insertArea() {
         Area area = new Area();
         area.setAreaName("我问问");
@@ -76,7 +76,7 @@ public class TransactionController {
         areaMapper.insertSelective(area);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void insertAreaPlus() {
         Area area = new Area();
         area.setAreaName("我问问");
@@ -85,7 +85,7 @@ public class TransactionController {
         System.out.println(1 / 0);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.SUPPORTS)
     public void insertAreaPlus2() {
         Area area = new Area();
         area.setAreaName("我问问");

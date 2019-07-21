@@ -7,10 +7,7 @@ import javax.persistence.Table;
 @Table(name = "um_data_dictionary")
 public class DataDictionary extends BaseEntity {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 8042832293482625516L;
+    private static final long serialVersionUID = -4610934219433753563L;
 
     private String typeCode;
 
@@ -61,5 +58,4 @@ public class DataDictionary extends BaseEntity {
     public void setCompareValue(Integer compareValue) {
         this.compareValue = compareValue;
     }
-
 }

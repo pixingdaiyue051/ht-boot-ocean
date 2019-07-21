@@ -1,8 +1,8 @@
 package com.tequeno.bootssm.pojo.sys.user;
 
-import com.tequeno.common.constants.CommonQuery;
+import com.tequeno.common.constants.HtCommonQuery;
 
-public class UserPasswordQuery extends CommonQuery {
+public class UserPasswordQuery extends HtCommonQuery {
 
     private Integer userId;
 

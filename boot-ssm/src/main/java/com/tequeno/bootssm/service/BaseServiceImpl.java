@@ -2,6 +2,7 @@ package com.tequeno.bootssm.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.config.cache.JedisCacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +10,9 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
-public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
+public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
 
     @Autowired
     protected D mapper;
@@ -19,32 +21,14 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     protected JedisCacheUtil cacheUtil;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public T selectByPrimaryKey(Object id) {
         return mapper.selectByPrimaryKey(id);
     }
 
     @Override
-    @Transactional
-    public void deleteByPrimaryKey(Object id) {
-        mapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
     public List<T> selectAll() {
         return mapper.selectAll();
-    }
-
-    @Override
-    @Transactional
-    public void insertSelective(T entity) {
-        mapper.insertSelective(entity);
-    }
-
-    @Override
-    @Transactional
-    public void updateSelective(T entity) {
-        mapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override
@@ -66,6 +50,52 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int insertSelective(T entity) {
+        return mapper.insertSelective(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateSelective(T entity) {
+        return mapper.updateByPrimaryKeySelective(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteByPrimaryKey(Object id) {
+        return mapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public T selectByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
+        final String key = prefixEnum.assemblyKey(id);
+        Object o = Optional.ofNullable(cacheUtil.get(key)).orElseGet(() -> {
+            T t = selectByPrimaryKey(id);
+            cacheUtil.set(key, t);
+            return t;
+        });
+        return (T) o;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateSelective(Object id, T entity, JedisKeyPrefixEnum prefixEnum) {
+        final String key = prefixEnum.assemblyKey(id);
+        cacheUtil.del(key);
+        return updateSelective(entity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
+        final String key = prefixEnum.assemblyKey(id);
+        cacheUtil.del(key);
+        return deleteByPrimaryKey(id);
     }
 
     private List<T> actualQuery(Q q, Class<?> superClass) {

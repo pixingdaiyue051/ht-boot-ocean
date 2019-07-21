@@ -8,7 +8,7 @@ public class ResultBinder {
 
     private String msg;
 
-    private Object Data;
+    private Object data;
 
     public Boolean getSuccess() {
         return success;
@@ -35,10 +35,10 @@ public class ResultBinder {
     }
 
     public Object getData() {
-        return Data;
+        return data;
     }
 
     public void setData(Object data) {
-        Data = data;
+        this.data = data;
     }
 }

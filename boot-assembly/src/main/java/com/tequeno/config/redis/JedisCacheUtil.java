@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class JedisCacheUtil {
 
     private final static Logger logger = LoggerFactory.getLogger(JedisCacheUtil.class);
@@ -183,13 +181,13 @@ public class JedisCacheUtil {
     }
 
     /**
-     * HashGet
+     * 根据hashKey获取单一hash缓存
      *
-     * @param key
-     * @param hashKey
+     * @param key     键
+     * @param hashKey hash键对应是map的key
      * @return 值
      */
-    public Object hget(String key, Object hashKey) {
+    public Object hget(String key, String hashKey) {
         try {
             check(key, hashKey);
             return redisTemplate.opsForHash().get(key, hashKey);
@@ -200,12 +198,12 @@ public class JedisCacheUtil {
     }
 
     /**
-     * 获取hashKey对应的所有键值
+     * 获取key对应的所有hash缓存
      *
      * @param key 键
-     * @return 对应的多个键值
+     * @return 当前key下存放的所有数据
      */
-    public Map<Object, Object> hmget(String key) {
+    public Map<String, Object> hmget(String key) {
         try {
             check(key);
             return redisTemplate.opsForHash().entries(key);
@@ -216,13 +214,13 @@ public class JedisCacheUtil {
     }
 
     /**
-     * HashSet
+     * 将map整体存入hash表
      *
      * @param key 键
      * @param map 对应多个键值
      * @return true 成功 false 失败
      */
-    public boolean hmset(String key, Map<Object, Object> map) {
+    public boolean hmset(String key, Map<String, Object> map) {
         try {
             check(key);
             redisTemplate.opsForHash().putAll(key, map);
@@ -234,7 +232,7 @@ public class JedisCacheUtil {
     }
 
     /**
-     * HashSet 并设置时间
+     * 将map整体存入hash表,并设置失效时间
      *
      * @param key  键
      * @param map  对应多个键值
@@ -272,7 +270,7 @@ public class JedisCacheUtil {
     }
 
     /**
-     * 向一张hash表中放入数据,如果不存在将创建
+     * 向一张hash表中放入数据,如果不存在将创建,并设置失效时间
      *
      * @param key       键
      * @param hashKey   项
@@ -298,7 +296,7 @@ public class JedisCacheUtil {
      * @param key     键 不能为null
      * @param hashKey 项 可以使多个 不能为null
      */
-    public boolean hdel(String key, Object... hashKey) {
+    public boolean hdel(String key, String... hashKey) {
         try {
             check(key, hashKey);
             redisTemplate.opsForHash().delete(key, hashKey);
@@ -326,6 +324,16 @@ public class JedisCacheUtil {
         }
     }
 
+//    public boolean rt(String key, String hashKey) {
+//        try {
+//            check(key, hashKey);
+//            return redisTemplate.opsForList();
+//        } catch (Exception e) {
+//            logger.warn("JedisCacheUtil.hasHashKey调用失败", e);
+//            return false;
+//        }
+//    }
+
     private void check(String key) {
         if (null == key) {
             throw new RuntimeException();
@@ -348,5 +356,9 @@ public class JedisCacheUtil {
         if (null == key || null == value || ZERO > time) {
             throw new RuntimeException();
         }
+    }
+
+    public void sendMsg(String chanel, Object message) {
+        redisTemplate.convertAndSend(chanel, message);
     }
 }

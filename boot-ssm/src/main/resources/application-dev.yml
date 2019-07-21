@@ -1,10 +1,7 @@
 server:
-  port: 8082
+  port: 8511
   servlet:
     context-path: /
-  thymeleaf:
-    cache: false
-    mode: HTML
 logging:
   config: classpath:logback-dev.xml
 ##自定义配置

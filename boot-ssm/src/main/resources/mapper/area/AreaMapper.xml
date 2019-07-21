@@ -9,15 +9,15 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, area_name, priority, create_time, modify_time
+        ID, AREA_NAME, PRIORITY, CREATE_TIME, MODIFY_TIME
     </sql>
     <sql id="where_conditions">
         1 = 1
         <if test="areaName != null and areaName != ''">
-            and area_name = #{areaName}
+            AND AREA_NAME = #{areaName}
         </if>
         <if test="areaNameLike != null and areaNameLike != ''">
-            and area_name like CONCAT('%', #{areaNameLike},'%')
+            AND AREA_NAME LIKE CONCAT('%', #{areaNameLike},'%')
         </if>
         <if test="priority != null">
             and priority = #{priority,jdbcType=INTEGER}

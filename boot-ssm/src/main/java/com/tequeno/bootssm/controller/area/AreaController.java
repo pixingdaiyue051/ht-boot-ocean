@@ -4,7 +4,7 @@ import com.tequeno.bootssm.pojo.area.Area;
 import com.tequeno.bootssm.pojo.area.AreaQuery;
 import com.tequeno.bootssm.service.area.AreaService;
 import com.tequeno.common.constants.ResultBinder;
-import com.tequeno.common.utils.CommonResultUtil;
+import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +21,25 @@ public class AreaController {
     @PostMapping("list")
     public ResultBinder list(@RequestBody AreaQuery areaQ) {
         List<Area> list = areaService.getList(areaQ);
-        return CommonResultUtil.success(list);
+        return HtResultInfoWrapper.success(list);
     }
 
     @GetMapping("one/{id}")
     public ResultBinder one(@PathVariable Integer id) {
-        return CommonResultUtil.success(areaService.selectByPrimaryKey(id));
+        return HtResultInfoWrapper.success(areaService.selectByPrimaryKey(id));
     }
 
     @PostMapping("addOne")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultBinder addOne(@RequestBody Area area) {
         areaService.insertSelective(area);
-        return CommonResultUtil.success(true);
+        return HtResultInfoWrapper.success();
     }
 
     @PostMapping("updateOne")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResultBinder updateOne(@RequestBody Area area) {
         areaService.updateSelective(area);
-        return CommonResultUtil.success(true);
+        return HtResultInfoWrapper.success();
     }
 }

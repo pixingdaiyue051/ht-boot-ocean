@@ -20,7 +20,7 @@
 //
 //    private String redisClusterNodes;
 //
-//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+//    private final static Logger logger = LoggerFactory.getLogger(RedisClusterConfig.class);
 //
 //    @Bean
 //    public RedisClusterConfiguration redisClusterConfiguration() {

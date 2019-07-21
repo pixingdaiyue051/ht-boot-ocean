@@ -1,8 +1,8 @@
 package com.tequeno.bootssm.pojo.area;
 
-import com.tequeno.common.constants.CommonQuery;
+import com.tequeno.common.constants.HtCommonQuery;
 
-public class AreaQuery extends CommonQuery {
+public class AreaQuery extends HtCommonQuery {
 
     private String areaName;
 

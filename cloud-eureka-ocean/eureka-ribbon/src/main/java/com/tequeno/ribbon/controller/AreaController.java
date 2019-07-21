@@ -1,8 +1,8 @@
 package com.tequeno.ribbon.controller;
 
-import com.tequeno.common.constants.CommonConstants;
+import com.tequeno.common.constants.HtCommonConstant;
 import com.tequeno.common.constants.ResultBinder;
-import com.tequeno.common.utils.CommonResultUtil;
+import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.ribbon.entity.Area;
 import com.tequeno.ribbon.mapper.AreaMapper;
 import com.tequeno.ribbon.service.BaseServiceImpl;
@@ -27,12 +27,12 @@ public class AreaController extends BaseServiceImpl<AreaMapper, Area> {
 
     @PostMapping("list")
     public ResultBinder list(@RequestParam Map<String, Object> map) {
-        map.put(CommonConstants.ORDERBY, "priority desc");
+        map.put(HtCommonConstant.ORDERBY, "priority desc");
         List<Area> list = super.getList(map);
         if (list != null && !list.isEmpty()) {
             list.forEach(item -> System.out.println(item.getAreaName()));
             System.out.println(list.stream().distinct().count());
         }
-        return CommonResultUtil.success(list);
+        return HtResultInfoWrapper.success(list);
     }
 }

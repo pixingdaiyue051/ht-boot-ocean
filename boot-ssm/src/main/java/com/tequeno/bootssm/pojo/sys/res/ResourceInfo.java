@@ -7,12 +7,11 @@ import javax.persistence.Table;
 @Table(name = "um_resource_info")
 public class ResourceInfo extends BaseEntity {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 5394622621482086854L;
+    private static final long serialVersionUID = 220700261847671111L;
 
     private Long pid;
+
+    private String resCode;
 
     private String resZhName;
 
@@ -23,6 +22,8 @@ public class ResourceInfo extends BaseEntity {
     private String resUrl;
 
     private Integer seq;
+
+    private String remark;
 
     public Long getPid() {
         return pid;
@@ -70,5 +71,21 @@ public class ResourceInfo extends BaseEntity {
 
     public void setSeq(Integer seq) {
         this.seq = seq;
+    }
+
+    public String getResCode() {
+        return resCode;
+    }
+
+    public void setResCode(String resCode) {
+        this.resCode = resCode;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
