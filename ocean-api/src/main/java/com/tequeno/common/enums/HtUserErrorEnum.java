@@ -21,6 +21,7 @@ public enum HtUserErrorEnum implements HtErrorInterface {
     USERNAME_OR_PASSWORD_ERROR("1204", "用户名或密码错误"),
     USER_LOCKED("1204", "账号被锁定"),
     USER_DISABLED("1205", "账号被禁用"),
+    LOGOUT("1206", "已退出"),
 
     NOT_PERMITTED("2000", "无访问权限"),
     ;

@@ -10,6 +10,7 @@ import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
+import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.config.shiro.HtPermissionAnno;
 import com.tequeno.config.validators.UserValidator;
 import com.tequeno.enums.HtUserResEnum;
@@ -71,6 +72,7 @@ public class UserInfoController {
 
     @PostMapping("addOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ADD)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.validate(userModel, result);
         if (result.hasErrors()) {
@@ -84,6 +86,7 @@ public class UserInfoController {
 
     @PostMapping("updateOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_UPDATE)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder updateOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.updateValidate(userModel, result);
         if (result.hasErrors()) {
@@ -96,9 +99,11 @@ public class UserInfoController {
     }
 
     @PostMapping("login")
+    @HtRepeatedSubmitAnno(expireTime = 600L)
     public ResultBinder login(@RequestParam("userName") String userName, @RequestParam("password") String password) {
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+//            token.setRememberMe(true);
             Subject user = SecurityUtils.getSubject();
             user.login(token);
         } catch (UnknownAccountException e) {
@@ -118,5 +123,12 @@ public class UserInfoController {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.LOGIN_FAILED);
         }
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);
+    }
+
+    @PostMapping("logout")
+    public ResultBinder logout() {
+        Subject user = SecurityUtils.getSubject();
+        user.logout();
+        return HtResultInfoWrapper.success(HtUserErrorEnum.LOGOUT);
     }
 }

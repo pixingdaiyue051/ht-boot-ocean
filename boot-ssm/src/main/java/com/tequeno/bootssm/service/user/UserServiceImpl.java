@@ -8,7 +8,7 @@ import com.tequeno.bootssm.pojo.sys.user.UserInfoQuery;
 import com.tequeno.bootssm.pojo.sys.user.UserModel;
 import com.tequeno.bootssm.pojo.sys.user.UserPassword;
 import com.tequeno.bootssm.service.BaseServiceImpl;
-import com.tequeno.common.constants.HtCommonConstant;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtCommonException;
@@ -39,7 +39,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         // 1.写入用户信息
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(userModel, userInfo);
-        userInfo.setEnabled(HtCommonConstant.ENABLE);
+        userInfo.setEnabled(HtZeroOneConstant.ENABLED);
         super.insertSelective(userInfo);
         // 2.写入加密的密码信息
         UserPassword userPassword = new UserPassword();

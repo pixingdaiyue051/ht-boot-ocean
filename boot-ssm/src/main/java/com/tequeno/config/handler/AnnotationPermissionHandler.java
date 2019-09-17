@@ -22,6 +22,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,26 +46,7 @@ public class AnnotationPermissionHandler {
         HtUserResEnum[] permissionEnums = permissionAnno.value();
         Subject user = SecurityUtils.getSubject();
         String userName = user.getPrincipal().toString();
-        if (logical.equals(HtPermissionAnno.Logical.OR)) {
-            // 只要有一种权限就放行
-            long count = Arrays.stream(permissionEnums)
-                    .map(p -> resourceService.selectUserRes(userName, p.getCode()))
-                    .filter(r -> null != r)
-                    .count();
-            if (count > 0) {
-                return joinPoint.proceed();
-            } else {
-                String msg = Arrays.stream(permissionEnums)
-                        .map(p -> resourceService.selectResByResCode(p.getCode()).getResZhName())
-                        .collect(Collectors.joining(","));
-                if (permissionEnums.length > 1) {
-                    msg = HtAssemConstants.NEED_ONE_LEAST_PERMISSION.replaceFirst("\\?", msg);
-                } else {
-                    msg = HtAssemConstants.NEED_SPECIFIC_PERMISSION.replaceFirst("\\?", msg);
-                }
-                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.setMsgBindReturn(msg));
-            }
-        } else {
+        if (logical.equals(HtPermissionAnno.Logical.AND)) {
             // 只要有一种权限不对就拦截
             String msg = Arrays.stream(permissionEnums)
                     .map(p -> resourceService.selectResByResCode(p.getCode()))
@@ -75,10 +57,29 @@ public class AnnotationPermissionHandler {
                     .map(ResourceInfo::getResZhName)
                     .collect(Collectors.joining(","));
             if (StringUtils.isNotEmpty(msg)) {
-                msg = HtAssemConstants.NEED_ALL_PERMISSION.replaceFirst("\\?", msg);
+                msg = String.format(HtAssemConstants.NEED_ALL_PERMISSION, msg);
                 return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.setMsgBindReturn(msg));
             } else {
                 return joinPoint.proceed();
+            }
+        } else {
+            // 只要有一种权限就放行
+            Optional<VUserRoleRes> any = Arrays.stream(permissionEnums)
+                    .map(p -> resourceService.selectUserRes(userName, p.getCode()))
+                    .filter(r -> null != r)
+                    .findAny();
+            if (any.isPresent()) {
+                return joinPoint.proceed();
+            } else {
+                String msg = Arrays.stream(permissionEnums)
+                        .map(p -> resourceService.selectResByResCode(p.getCode()).getResZhName())
+                        .collect(Collectors.joining(","));
+                if (permissionEnums.length > 1) {
+                    msg = String.format(HtAssemConstants.NEED_ONE_LEAST_PERMISSION, msg);
+                } else {
+                    msg = String.format(HtAssemConstants.NEED_SPECIFIC_PERMISSION, msg);
+                }
+                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.setMsgBindReturn(msg));
             }
         }
     }

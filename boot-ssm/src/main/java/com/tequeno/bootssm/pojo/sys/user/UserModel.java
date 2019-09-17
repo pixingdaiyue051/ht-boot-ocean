@@ -6,7 +6,7 @@ public class UserModel extends UserInfo {
 
     private String password;
 
-    private String opt;
+    private String otp;
 
     public String getPassword() {
         return password;
@@ -16,11 +16,11 @@ public class UserModel extends UserInfo {
         this.password = password;
     }
 
-    public String getOpt() {
-        return opt;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setOpt(String opt) {
-        this.opt = opt;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

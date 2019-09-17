@@ -38,28 +38,4 @@ public class HtCommonConstant {
      */
     public static final String DATA = "data";
 
-    /**
-     * 启用
-     */
-    public static final int ENABLE = 1;
-
-    /**
-     * 禁用
-     */
-    public static final int DISENABLE = 0;
-
-    /**
-     * 数字字符串，应用于获取随机数验证码
-     */
-    public static final String NUMBER_STR = "0123456789";
-
-    /**
-     * 验证码长度
-     */
-    public static final int OPT_LENGTH = 6;
-
-    /**
-     * 验证码失效时间 10 分钟
-     */
-    public static final long OPT_EXPIRED = 600L;
 }

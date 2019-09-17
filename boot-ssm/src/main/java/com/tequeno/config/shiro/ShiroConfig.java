@@ -1,9 +1,16 @@
 package com.tequeno.config.shiro;
 
+import com.tequeno.common.constants.HtPropertyConstant;
 import com.tequeno.utils.HtLocalMethod;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +19,52 @@ import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
+
+    /**
+     * 使用redis实现session共享
+     *
+     * @return
+     */
+    @Bean
+    public RedisSessionDao sessionDao() {
+        return new RedisSessionDao();
+    }
+
+    @Bean
+    public Cookie sessionIdCookie() {
+        return new SimpleCookie(HtPropertyConstant.DEFAULT_SESSION_NAME);
+    }
+
+    /**
+     * session管理器
+     *
+     * @return
+     */
+    @Bean
+    public SessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionDAO(sessionDao());
+        sessionManager.setGlobalSessionTimeout(HtPropertyConstant.SESSION_TIMEOUT);
+        sessionManager.setDeleteInvalidSessions(true);
+        sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.setSessionIdCookie(sessionIdCookie());
+        return sessionManager;
+    }
+
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie(HtPropertyConstant.DEFAULT_REMEMBERME_NAME);
+        simpleCookie.setMaxAge(HtPropertyConstant.DEFAULT_REMEMBERME_COOKIE_TIMEOUT);
+        return simpleCookie;
+    }
+
+    @Bean
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setCipherKey(Base64.decode(HtPropertyConstant.DEFAULT_CIPHER_KEY));
+        return cookieRememberMeManager;
+    }
 
     /**
      * 凭证匹配器
@@ -39,13 +92,15 @@ public class ShiroConfig {
     }
 
     /**
-     * 安全管理器
+     * web安全管理器
      *
      * @return
      */
     @Bean
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+//        securityManager.setSessionManager(sessionManager());
+//        securityManager.setRememberMeManager(rememberMeManager());
         securityManager.setRealm(userRealm());
         return securityManager;
     }
@@ -66,8 +121,8 @@ public class ShiroConfig {
         //注意此处使用的是LinkedHashMap，是有顺序的，shiro会按从上到下的顺序匹配验证，匹配了就不再继续验证
         //所以上面的url要苛刻，宽松的url要放在下面，尤其是"/**"要放到最下面，如果放前面的话其后的验证规则就没作用了。
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/outter/opt/phone/*", "anon");
-        filterChainDefinitionMap.put("/outter/opt/email/*", "anon");
+        filterChainDefinitionMap.put("/outter/otp/phone/*", "anon");
+        filterChainDefinitionMap.put("/outter/otp/email/*", "anon");
         filterChainDefinitionMap.put("/outter/captcha", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/favicon.ico", "anon");

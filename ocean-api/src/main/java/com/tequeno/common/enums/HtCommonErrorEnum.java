@@ -10,9 +10,11 @@ public enum HtCommonErrorEnum implements HtErrorInterface {
     PARAMETER_NOT_MATCHED("0101", "参数类型不匹配"),
     PARAMETER_NOT_VALID("0102", "参数不全"),
     OBEJCT_NOT_FETCHED("0103", "未查询到指定数据"),
-    OPT_NULL_OR_EXIPRED("0104", "未匹配到验证码或者验证码已过期"),
-    WRONG_OPT("0105", "验证码错误"),
-    OPT_NOT_EMPTY("0107", "验证码不为空"),
+    OTP_NULL_OR_EXIPRED("0104", "未匹配到验证码或者验证码已过期"),
+    WRONG_OTP("0105", "验证码错误"),
+    OTP_NOT_EMPTY("0107", "验证码不为空"),
+
+    NOT_REPEATED_SUBMIT("0200", "请勿重复提交"),
     ;
     private String code;
     private String msg;

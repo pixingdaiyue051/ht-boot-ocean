@@ -1,16 +1,17 @@
 package com.tequeno.bootssm.controller;
 
-import com.tequeno.common.constants.HtCommonConstant;
 import com.tequeno.common.constants.HtCommonRegPattern;
+import com.tequeno.common.constants.HtPropertyConstant;
 import com.tequeno.common.constants.ResultBinder;
-import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.enums.HtUserErrorEnum;
+import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.temail.EmailRespone;
 import com.tequeno.common.temail.EmailUtil;
 import com.tequeno.common.temail.EmailWrapper;
 import com.tequeno.common.utils.HtCommonMethodUtil;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,23 +35,25 @@ public class OutController {
         return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_LOGINED);
     }
 
-    @PostMapping("opt/phone/{tel}")
-    public ResultBinder getOptPhone(@PathVariable("tel") String tel) {
+    @PostMapping("otp/phone/{tel}")
+    @HtRepeatedSubmitAnno(expireTime = 120L)
+    public ResultBinder getOtpPhone(@PathVariable("tel") String tel) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.PHONE_NOT_MATCHED);
         }
-        Object o = actualGetOpt(tel);
+        Object o = actualGetOtp(tel);
         return HtResultInfoWrapper.success(o);
     }
 
-    @PostMapping("opt/email/{email}")
-    public ResultBinder getOptEmail(@PathVariable("email") String email) {
+    @PostMapping("otp/email/{email}")
+    @HtRepeatedSubmitAnno(expireTime = 120L)
+    public ResultBinder getOtpEmail(@PathVariable("email") String email) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.MAIL_NOT_MATCHED);
         }
-        String o = actualGetOpt(email);
+        String o = actualGetOtp(email);
         EmailWrapper emailWrapper = new EmailWrapper();
         emailWrapper.setSubject("test");
         emailWrapper.setToEmail(email);
@@ -59,10 +62,10 @@ public class OutController {
         return HtResultInfoWrapper.success(emailRespone.getMsg());
     }
 
-    private String actualGetOpt(String hkey) {
-        String key = JedisKeyPrefixEnum.HUSER_OPT.getPrefix();
-        String optCode = HtCommonMethodUtil.getNonceStr(HtCommonConstant.OPT_LENGTH);
-        cacheUtil.hset(key, hkey, optCode, HtCommonConstant.OPT_EXPIRED);
-        return optCode;
+    private String actualGetOtp(String hkey) {
+        String key = JedisKeyPrefixEnum.HUSER_OTP.getPrefix();
+        String otpCode = HtCommonMethodUtil.getNonceStr(HtPropertyConstant.OTP_LENGTH);
+        cacheUtil.hset(key, hkey, otpCode, HtPropertyConstant.OTP_EXPIRED);
+        return otpCode;
     }
 }

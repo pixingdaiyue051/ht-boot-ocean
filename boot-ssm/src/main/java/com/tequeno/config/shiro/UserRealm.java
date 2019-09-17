@@ -1,7 +1,7 @@
 package com.tequeno.config.shiro;
 
 import com.tequeno.bootssm.service.user.UserService;
-import com.tequeno.common.constants.HtCommonConstant;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.config.cache.JedisCacheUtil;
 import org.apache.shiro.authc.*;
@@ -33,7 +33,7 @@ public class UserRealm extends AuthorizingRealm {
         String userName = authenticationToken.getPrincipal().toString();
         SimpleAuthenticationInfo authenticationInfo = Optional.ofNullable(userService.selectByUsername(userName))
                 .map(u -> {
-                    if (HtCommonConstant.DISENABLE == u.getEnabled()) {
+                    if (HtZeroOneConstant.DISABLED == u.getEnabled()) {
                         throw new DisabledAccountException();
                     }
                     // 设置用户id为key的缓存

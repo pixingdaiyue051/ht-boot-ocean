@@ -17,13 +17,20 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
 
     @Override
     public ResourceInfo selectResByResCode(String resCode) {
-        UserRoleResQuery resQ = new UserRoleResQuery();
-        resQ.setResCode(resCode);
-        List<ResourceInfo> resourceInfos = mapper.selectAllByCondition(resQ);
-        if (CollectionUtils.isNotEmpty(resourceInfos)) {
-            return resourceInfos.get(0);
-        }
-        return null;
+        String key = JedisKeyPrefixEnum.HRES.getPrefix();
+        Object o = cacheUtil.hget(key, resCode);
+        Object orElseGet = Optional.ofNullable(o).orElseGet(() -> {
+            UserRoleResQuery resQ = new UserRoleResQuery();
+            resQ.setResCode(resCode);
+            List<ResourceInfo> resourceInfos = mapper.selectAllByCondition(resQ);
+            if (CollectionUtils.isNotEmpty(resourceInfos)) {
+                ResourceInfo resourceInfo = resourceInfos.get(0);
+                cacheUtil.hset(key, resCode, resourceInfo);
+                return resourceInfo;
+            }
+            return null;
+        });
+        return (ResourceInfo) orElseGet;
     }
 
     @Override

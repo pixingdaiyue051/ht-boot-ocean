@@ -95,8 +95,8 @@ public class UserValidator implements Validator {
         if (StringUtils.isBlank(userModel.getUserName())) {
             errors.reject(HtUserErrorEnum.USERNAME_NOT_EMPTY.getMsg());
         }
-        if (StringUtils.isBlank(userModel.getOpt())) {
-            errors.reject(HtCommonErrorEnum.OPT_NOT_EMPTY.getMsg());
+        if (StringUtils.isBlank(userModel.getOtp())) {
+            errors.reject(HtCommonErrorEnum.OTP_NOT_EMPTY.getMsg());
         }
         boolean phoneNotBlank = StringUtils.isNotBlank(userModel.getPhoneNum());
         boolean emailNotBlank = StringUtils.isNotBlank(userModel.getEmail());
@@ -104,11 +104,11 @@ public class UserValidator implements Validator {
             errors.reject(HtUserErrorEnum.BIND_ERROR_1.getMsg());
             return;
         }
-        if(!phoneNotBlank && !emailNotBlank){
+        if (!phoneNotBlank && !emailNotBlank) {
             errors.reject(HtUserErrorEnum.BIND_ERROR_2.getMsg());
             return;
         }
-        if(phoneNotBlank) {
+        if (phoneNotBlank) {
             if (!Pattern.matches(HtCommonRegPattern.REG_PHONE, userModel.getPhoneNum())) {
                 errors.reject(HtUserErrorEnum.PHONE_NOT_MATCHED.getMsg());
             }

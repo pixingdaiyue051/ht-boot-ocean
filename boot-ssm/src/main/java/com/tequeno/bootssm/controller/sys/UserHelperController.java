@@ -2,8 +2,8 @@ package com.tequeno.bootssm.controller.sys;
 
 import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.bootssm.service.user.UserService;
-import com.tequeno.common.constants.HtCommonConstant;
 import com.tequeno.common.constants.HtCommonRegPattern;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.constants.ResultBinder;
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.HtUserErrorEnum;
@@ -11,6 +11,7 @@ import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtCommonException;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.config.shiro.HtPermissionAnno;
 import com.tequeno.enums.HtUserResEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,9 @@ public class UserHelperController {
      */
     @PostMapping("disable")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ENABLE)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder disable(@RequestParam("ids") String ids, @RequestParam(value = "enable", required = false) boolean enable) {
-        userService.enableDisableUser(ids, enable ? HtCommonConstant.ENABLE : HtCommonConstant.DISENABLE);
+        userService.enableDisableUser(ids, enable ? HtZeroOneConstant.ENABLED : HtZeroOneConstant.DISABLED);
         return HtResultInfoWrapper.success();
     }
 
@@ -52,6 +54,7 @@ public class UserHelperController {
      */
     @PostMapping("delete")
     @HtPermissionAnno(HtUserResEnum.RES_USER_DELETE)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder delete(@RequestParam("ids") String ids) {
         userService.deleteUser(ids);
         return HtResultInfoWrapper.success();
@@ -62,19 +65,20 @@ public class UserHelperController {
      *
      * @param userName 用户名
      * @param tel      手机号
-     * @param opt      获取到的验证码
+     * @param otp      获取到的验证码
      * @return
      */
     @PostMapping("bind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder bindPhone(@RequestParam("userName") String userName,
                                   @RequestParam("tel") String tel,
-                                  @RequestParam("opt") String opt) {
+                                  @RequestParam("otp") String otp) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.PHONE_NOT_MATCHED);
         }
-        return innerBind(userName, opt, tel, u -> u.setPhoneNum(tel));
+        return innerBind(userName, otp, tel, u -> u.setPhoneNum(tel));
     }
 
     /**
@@ -82,19 +86,20 @@ public class UserHelperController {
      *
      * @param userName
      * @param tel
-     * @param opt
+     * @param otp
      * @return
      */
     @PostMapping("unbind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder unbindPhone(@RequestParam("userName") String userName,
                                     @RequestParam("tel") String tel,
-                                    @RequestParam("opt") String opt) {
+                                    @RequestParam("otp") String otp) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.PHONE_NOT_MATCHED);
         }
-        return innerBind(userName, opt, tel, u -> u.setPhoneNum(""));
+        return innerBind(userName, otp, tel, u -> u.setPhoneNum(""));
     }
 
     /**
@@ -102,19 +107,20 @@ public class UserHelperController {
      *
      * @param userName 用户名
      * @param email    邮箱地址
-     * @param opt      获取到的验证码
+     * @param otp      获取到的验证码
      * @return
      */
     @PostMapping("bind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder bindEmail(@RequestParam("userName") String userName,
                                   @RequestParam("email") String email,
-                                  @RequestParam("opt") String opt) {
+                                  @RequestParam("otp") String otp) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.MAIL_NOT_MATCHED);
         }
-        return innerBind(userName, opt, email, u -> u.setEmail(email));
+        return innerBind(userName, otp, email, u -> u.setEmail(email));
     }
 
     /**
@@ -122,32 +128,33 @@ public class UserHelperController {
      *
      * @param userName
      * @param email
-     * @param opt
+     * @param otp
      * @return
      */
     @PostMapping("unbind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
+    @HtRepeatedSubmitAnno(expireTime = 120L)
     public ResultBinder unbindEmail(@RequestParam("userName") String userName,
                                     @RequestParam("email") String email,
-                                    @RequestParam("opt") String opt) {
+                                    @RequestParam("otp") String otp) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.MAIL_NOT_MATCHED);
         }
-        return innerBind(userName, opt, email, u -> u.setEmail(""));
+        return innerBind(userName, otp, email, u -> u.setEmail(""));
     }
 
-    private ResultBinder innerBind(String userName, String opt, String hkey, Consumer<UserInfo> c) {
-        String key = JedisKeyPrefixEnum.HUSER_OPT.getPrefix();
+    private ResultBinder innerBind(String userName, String otp, String hkey, Consumer<UserInfo> c) {
+        String key = JedisKeyPrefixEnum.HUSER_OTP.getPrefix();
         return Optional.ofNullable(cacheUtil.hget(key, hkey))
                 .map(o -> {
-                    if (!opt.equals(o)) {
-                        throw new HtCommonException(HtCommonErrorEnum.WRONG_OPT);
+                    if (!otp.equals(o)) {
+                        throw new HtCommonException(HtCommonErrorEnum.WRONG_OTP);
                     }
                     userService.bindPhoneOrEmail(userName, c);
                     cacheUtil.hdel(key, hkey);
                     return HtResultInfoWrapper.success();
                 })
-                .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OPT_NULL_OR_EXIPRED));
+                .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OTP_NULL_OR_EXIPRED));
     }
 }

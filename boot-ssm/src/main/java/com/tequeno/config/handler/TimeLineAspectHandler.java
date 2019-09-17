@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-@Order(1)
+@Order(2)
 public class TimeLineAspectHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeLineAspectHandler.class);

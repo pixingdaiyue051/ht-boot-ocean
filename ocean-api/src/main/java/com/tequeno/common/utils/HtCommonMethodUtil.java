@@ -1,13 +1,13 @@
 package com.tequeno.common.utils;
 
-import com.tequeno.common.constants.HtCommonConstant;
+import com.tequeno.common.constants.HtPropertyConstant;
 
 import java.util.Random;
 
 public class HtCommonMethodUtil {
 
     public static String getNonceStr(int len) {
-        final String symbols = HtCommonConstant.NUMBER_STR;
+        final String symbols = HtPropertyConstant.NUMBER_STR;
         final char[] nonceChars = new char[len];
         final Random random = new Random();
         for (int index = 0; index < nonceChars.length; ++index) {

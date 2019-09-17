@@ -1,19 +1,24 @@
 package com.tequeno.config.cache;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.tequeno.bootssm.mapper.sys.DataDictionaryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -85,7 +90,7 @@ public class RedisConfig {
 //                stream().
 //                collect(Collectors.groupingBy(DataDictionary::getTypeCode)).
 //                forEach((k, v) -> {
-//                    final String hashKey = JedisKeyPrefixEnum.HDATA.assemblyKey(k);
+//                    final String hashKey = JedisKeyPrefixEnum.HDICT.assemblyKey(k);
 //                    v.forEach(d -> {
 //                        template.opsForHash().put(hashKey, d.getValueCode(), d);
 //                    });
@@ -97,6 +102,29 @@ public class RedisConfig {
         return new JedisCacheUtil();
     }
 
+    @Bean
+    public ChannelTopic channelTopic() {
+        return new ChannelTopic("string-topic");
+    }
+
+    @Bean
+    public PatternTopic patternTopic() {
+        return new PatternTopic("*");
+    }
+
+    @Bean
+    public MessageListener messageListener() {
+        return new JedisMessageListener();
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        container.addMessageListener(messageListener(), patternTopic());
+        return container;
+    }
+
     private class MyNullKeySerializer extends JsonSerializer<Object> {
         @Override
         public void serialize(Object nullKey, JsonGenerator jsonGenerator, SerializerProvider unused)
@@ -104,27 +132,4 @@ public class RedisConfig {
             jsonGenerator.writeFieldName("");
         }
     }
-
-//    @Bean
-//    public ChannelTopic channelTopic() {
-//        return new ChannelTopic("string-topic");
-//    }
-//
-//    @Bean
-//    public PatternTopic patternTopic() {
-//        return new PatternTopic("*");
-//    }
-//
-//    @Bean
-//    public MessageListener messageListener() {
-//        return new JedisMessageListener();
-//    }
-//
-//    @Bean
-//    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(factory);
-//        container.addMessageListener(messageListener(), patternTopic());
-//        return container;
-//    }
 }
