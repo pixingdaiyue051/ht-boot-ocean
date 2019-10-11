@@ -5,15 +5,15 @@ import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.bootssm.pojo.sys.user.UserInfoQuery;
 import com.tequeno.bootssm.pojo.sys.user.UserModel;
 import com.tequeno.bootssm.service.user.UserService;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.constants.ResultBinder;
-import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
+import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
-import com.tequeno.config.shiro.HtPermissionAnno;
-import com.tequeno.config.validators.UserValidator;
 import com.tequeno.enums.HtUserResEnum;
+import com.tequeno.validators.UserValidator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
@@ -22,15 +22,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin
 public class UserInfoController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserInfoController.class);
@@ -47,7 +44,7 @@ public class UserInfoController {
         userQ.setPageSize(3);
         PageInfo<UserInfo> pager = userService.findPager(userQ);
         System.out.println(pager);
-        if (pager.getTotal() > 0) {
+        if (pager.getTotal() > HtZeroOneConstant.ZERO_I) {
             return HtResultInfoWrapper.success(pager);
         }
         return HtResultInfoWrapper.fail();
@@ -72,38 +69,28 @@ public class UserInfoController {
 
     @PostMapping("addOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ADD)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.validate(userModel, result);
-        if (result.hasErrors()) {
-            List<ObjectError> allErrors = result.getAllErrors();
-            String errors = allErrors.stream().map(e -> e.getCode()).collect(Collectors.joining(","));
-            return HtResultInfoWrapper.fail(HtCommonErrorEnum.COMBINE_ERROR.setMsgBindReturn(errors));
-        }
         userService.addUser(userModel);
         return HtResultInfoWrapper.success();
     }
 
     @PostMapping("updateOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_UPDATE)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder updateOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.updateValidate(userModel, result);
-        if (result.hasErrors()) {
-            List<ObjectError> allErrors = result.getAllErrors();
-            String errors = allErrors.stream().map(e -> e.getCode()).collect(Collectors.joining(","));
-            return HtResultInfoWrapper.fail(HtCommonErrorEnum.COMBINE_ERROR.setMsgBindReturn(errors));
-        }
         userService.updateUser(userModel);
         return HtResultInfoWrapper.success();
     }
 
     @PostMapping("login")
-    @HtRepeatedSubmitAnno(expireTime = 600L)
+    @HtRepeatedSubmitAnno
     public ResultBinder login(@RequestParam("userName") String userName, @RequestParam("password") String password) {
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-//            token.setRememberMe(true);
+            token.setRememberMe(true);
             Subject user = SecurityUtils.getSubject();
             user.login(token);
         } catch (UnknownAccountException e) {
@@ -126,6 +113,7 @@ public class UserInfoController {
     }
 
     @PostMapping("logout")
+    @HtRepeatedSubmitAnno
     public ResultBinder logout() {
         Subject user = SecurityUtils.getSubject();
         user.logout();

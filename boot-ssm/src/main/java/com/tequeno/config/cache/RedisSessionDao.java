@@ -1,4 +1,4 @@
-package com.tequeno.config.shiro;
+package com.tequeno.config.cache;
 
 import com.tequeno.common.constants.HtPropertyConstant;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;

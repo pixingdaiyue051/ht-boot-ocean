@@ -142,7 +142,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
 //                    4.删除用户密码缓存
                     cacheUtil.hdel(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), u.getId().toString());
 //                    5.删除用户角色关联信息,不会直接删除角色信息
-                    roleMapper.deleteUserRole(u.getId(), null);
+                    roleMapper.deleteUserRole(u.getId(), null, null);
 //                    6.删除用户权限缓存
                     cacheUtil.del(JedisKeyPrefixEnum.HUSER_RES.assemblyKey(u.getUserName()));
                 });

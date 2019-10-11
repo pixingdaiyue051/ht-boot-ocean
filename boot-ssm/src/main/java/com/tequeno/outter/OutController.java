@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.controller;
+package com.tequeno.outter;
 
 import com.tequeno.common.constants.HtCommonRegPattern;
 import com.tequeno.common.constants.HtPropertyConstant;
@@ -36,7 +36,7 @@ public class OutController {
     }
 
     @PostMapping("otp/phone/{tel}")
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder getOtpPhone(@PathVariable("tel") String tel) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
@@ -47,7 +47,7 @@ public class OutController {
     }
 
     @PostMapping("otp/email/{email}")
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder getOtpEmail(@PathVariable("email") String email) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {

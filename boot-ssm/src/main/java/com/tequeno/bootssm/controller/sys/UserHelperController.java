@@ -11,18 +11,20 @@ import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtCommonException;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
-import com.tequeno.config.shiro.HtPermissionAnno;
 import com.tequeno.enums.HtUserResEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin
 public class UserHelperController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class UserHelperController {
      */
     @PostMapping("disable")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ENABLE)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder disable(@RequestParam("ids") String ids, @RequestParam(value = "enable", required = false) boolean enable) {
         userService.enableDisableUser(ids, enable ? HtZeroOneConstant.ENABLED : HtZeroOneConstant.DISABLED);
         return HtResultInfoWrapper.success();
@@ -54,7 +56,7 @@ public class UserHelperController {
      */
     @PostMapping("delete")
     @HtPermissionAnno(HtUserResEnum.RES_USER_DELETE)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder delete(@RequestParam("ids") String ids) {
         userService.deleteUser(ids);
         return HtResultInfoWrapper.success();
@@ -70,7 +72,7 @@ public class UserHelperController {
      */
     @PostMapping("bind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder bindPhone(@RequestParam("userName") String userName,
                                   @RequestParam("tel") String tel,
                                   @RequestParam("otp") String otp) {
@@ -91,7 +93,7 @@ public class UserHelperController {
      */
     @PostMapping("unbind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder unbindPhone(@RequestParam("userName") String userName,
                                     @RequestParam("tel") String tel,
                                     @RequestParam("otp") String otp) {
@@ -112,7 +114,7 @@ public class UserHelperController {
      */
     @PostMapping("bind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder bindEmail(@RequestParam("userName") String userName,
                                   @RequestParam("email") String email,
                                   @RequestParam("otp") String otp) {
@@ -133,7 +135,7 @@ public class UserHelperController {
      */
     @PostMapping("unbind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
-    @HtRepeatedSubmitAnno(expireTime = 120L)
+    @HtRepeatedSubmitAnno
     public ResultBinder unbindEmail(@RequestParam("userName") String userName,
                                     @RequestParam("email") String email,
                                     @RequestParam("otp") String otp) {

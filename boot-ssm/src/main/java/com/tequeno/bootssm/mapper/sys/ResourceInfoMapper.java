@@ -12,7 +12,7 @@ public interface ResourceInfoMapper extends Mapper<ResourceInfo> {
 
     List<ResourceInfo> selectAllByCondition(UserRoleResQuery query);
 
-    int deleteRoleRes(@Param("resId") Long resId, @Param("roleId") Long roleId);
+    int deleteRoleRes(@Param("resId") Long resId, @Param("roleId") Long roleId, @Param("resCode") String resCode);
 
     List<VUserRoleRes> selectUserRes(UserRoleResQuery query);
 }

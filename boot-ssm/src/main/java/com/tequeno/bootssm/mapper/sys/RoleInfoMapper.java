@@ -14,7 +14,7 @@ public interface RoleInfoMapper extends Mapper<RoleInfo> {
 
     List<RoleInfo> selectAllByCondition(UserRoleResQuery query);
 
-    int deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+    int deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId, @Param("roleCode") String roleCode);
 
     List<VUserRoleRes> selectUserRole(UserRoleResQuery query);
 }

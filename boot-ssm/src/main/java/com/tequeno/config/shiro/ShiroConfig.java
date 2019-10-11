@@ -1,6 +1,7 @@
 package com.tequeno.config.shiro;
 
 import com.tequeno.common.constants.HtPropertyConstant;
+import com.tequeno.config.cache.RedisSessionDao;
 import com.tequeno.utils.HtLocalMethod;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
@@ -8,7 +9,6 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +31,10 @@ public class ShiroConfig {
     }
 
     @Bean
-    public Cookie sessionIdCookie() {
-        return new SimpleCookie(HtPropertyConstant.DEFAULT_SESSION_NAME);
+    public SimpleCookie sessionIdCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie(HtPropertyConstant.DEFAULT_SESSION_NAME);
+        simpleCookie.setMaxAge((int) HtPropertyConstant.SESSION_TIMEOUT);
+        return simpleCookie;
     }
 
     /**
@@ -45,7 +47,6 @@ public class ShiroConfig {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionDAO(sessionDao());
         sessionManager.setGlobalSessionTimeout(HtPropertyConstant.SESSION_TIMEOUT);
-        sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionIdCookieEnabled(true);
         sessionManager.setSessionIdCookie(sessionIdCookie());
         return sessionManager;
@@ -100,7 +101,7 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 //        securityManager.setSessionManager(sessionManager());
-//        securityManager.setRememberMeManager(rememberMeManager());
+        securityManager.setRememberMeManager(rememberMeManager());
         securityManager.setRealm(userRealm());
         return securityManager;
     }
@@ -117,17 +118,15 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl("/outter/fail");
         shiroFilterFactoryBean.setSuccessUrl("/outter/success");
         shiroFilterFactoryBean.setUnauthorizedUrl("/outter/401");
-
         //注意此处使用的是LinkedHashMap，是有顺序的，shiro会按从上到下的顺序匹配验证，匹配了就不再继续验证
         //所以上面的url要苛刻，宽松的url要放在下面，尤其是"/**"要放到最下面，如果放前面的话其后的验证规则就没作用了。
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/outter/otp/phone/*", "anon");
-        filterChainDefinitionMap.put("/outter/otp/email/*", "anon");
-        filterChainDefinitionMap.put("/outter/captcha", "anon");
+        filterChainDefinitionMap.put("/outter/**", "anon");
+        filterChainDefinitionMap.put("/test/**", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/**", "authc");
-
+        //设置顺序连
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }

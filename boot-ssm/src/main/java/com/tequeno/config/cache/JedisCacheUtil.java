@@ -1,6 +1,5 @@
 package com.tequeno.config.cache;
 
-import com.tequeno.common.constants.HtPropertyConstant;
 import com.tequeno.common.constants.HtZeroOneConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +28,6 @@ public class JedisCacheUtil {
      * 获得锁是否成功 1 成功 0 失败
      */
     private final Long SUCCESS = HtZeroOneConstant.ONE_L;
-
-    /**
-     * 获得分布式锁重试时间 默认1s 默认的超时时间3s(HtRepeatedSubmitAnno.waitTimeout) 所以默认可以尝试3次
-     */
-    private final long TIME_TO_RETRY = HtZeroOneConstant.ONE_LONG;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -113,9 +107,9 @@ public class JedisCacheUtil {
      */
     public boolean del(String... key) {
         try {
-            if (key != null && key.length > 0) {
-                if (key.length == 0) {
-                    redisTemplate.delete(key[0]);
+            if (key != null && key.length > HtZeroOneConstant.ZERO_I) {
+                if (key.length == HtZeroOneConstant.ZERO_I) {
+                    redisTemplate.delete(key[HtZeroOneConstant.ZERO_I]);
                 } else {
                     redisTemplate.delete(CollectionUtils.arrayToList(key));
                 }
@@ -171,7 +165,7 @@ public class JedisCacheUtil {
     public boolean set(String key, Object value) {
         try {
             check(key, value);
-            redisTemplate.opsForValue().set(key, value, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
             logger.info("JedisCacheUtil.set调用失败");
@@ -242,7 +236,6 @@ public class JedisCacheUtil {
         try {
             check(key);
             redisTemplate.opsForHash().putAll(key, map);
-            expire(key, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
             return true;
         } catch (Exception e) {
             logger.info("JedisCacheUtil.hmset调用失败");
@@ -281,7 +274,6 @@ public class JedisCacheUtil {
     public boolean hset(String key, String hashKey, Object hashValue) {
         try {
             redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            expire(key, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
             return true;
         } catch (Exception e) {
             logger.info("JedisCacheUtil.hset调用失败");
@@ -440,30 +432,20 @@ public class JedisCacheUtil {
     /**
      * 获取分布式锁
      *
-     * @param lockKey     锁
-     * @param requestId   请求标识
-     * @param expireTime  单位秒
-     * @param waitTimeout 单位毫秒
+     * @param lockKey    锁
+     * @param requestId  请求标识
+     * @param expireTime 单位秒
      * @return 是否获取成功
      */
-    public boolean tryLock(String lockKey, String requestId, long expireTime, long waitTimeout) {
-        // 当前时间
-        long nanoTime = System.nanoTime();
+    public boolean tryLock(String lockKey, String requestId, long expireTime) {
         try {
-            String script = "if redis.call('setNx',KEYS[1],ARGV[1]) then if redis.call('get',KEYS[1])==ARGV[1] then return redis.call('expire',KEYS[1],ARGV[2]) else return 0 end end";
-            int count = 1;
-            do {
-                RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
-                Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
-                if (SUCCESS.equals(result)) {
-                    logger.info("尝试获取分布式锁-key[{}]requestId[{}]count[{}]成功", lockKey, requestId, count);
-                    return true;
-                }
-                // 休眠后重试
-                logger.info("重新尝试获取分布式锁-key[{}]requestId[{}]count[{}]", lockKey, requestId, count);
-                Thread.sleep(TIME_TO_RETRY);
-                count++;
-            } while ((System.nanoTime() - nanoTime) < TimeUnit.MILLISECONDS.toNanos(waitTimeout));
+            String script = "if redis.call('setNx',KEYS[1],ARGV[1]) then if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('expire',KEYS[1],ARGV[2]) else return 0 end end";
+            RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
+            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
+            if (SUCCESS.equals(result)) {
+                logger.info("尝试获取分布式锁-key[{}]requestId[{}]成功", lockKey, requestId);
+                return true;
+            }
         } catch (Exception e) {
             logger.error("尝试获取分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
         }
@@ -478,9 +460,14 @@ public class JedisCacheUtil {
      * @return 是否释放成功
      */
     public boolean releaseLock(String lockKey, String requestId) {
-        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
-        Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId);
-        return SUCCESS.equals(result);
+        try {
+            String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+            RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
+            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId);
+            return SUCCESS.equals(result);
+        } catch (Exception e) {
+            logger.error("尝试释放分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
+            return false;
+        }
     }
 }

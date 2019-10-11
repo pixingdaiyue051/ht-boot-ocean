@@ -2,10 +2,7 @@ package com.tequeno.config.cache;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.tequeno.bootssm.mapper.sys.DataDictionaryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +18,6 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.io.IOException;
 
 @Configuration
 public class RedisConfig {
@@ -42,13 +37,6 @@ public class RedisConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-//        //设置输入时忽略JSON字符串中存在而Java对象实际没有的属性
-//        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-//        // 丢弃空健
-//        objectMapper.getSerializerProvider().setNullKeySerializer(new MyNullKeySerializer());
-//        // 丢弃空值
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return objectMapper;
     }
 
@@ -123,13 +111,5 @@ public class RedisConfig {
         container.setConnectionFactory(factory);
         container.addMessageListener(messageListener(), patternTopic());
         return container;
-    }
-
-    private class MyNullKeySerializer extends JsonSerializer<Object> {
-        @Override
-        public void serialize(Object nullKey, JsonGenerator jsonGenerator, SerializerProvider unused)
-                throws IOException {
-            jsonGenerator.writeFieldName("");
-        }
     }
 }

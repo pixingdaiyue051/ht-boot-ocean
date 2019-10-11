@@ -1,4 +1,4 @@
-package com.tequeno.config.shiro;
+package com.tequeno.config.handler;
 
 import com.tequeno.enums.HtUserResEnum;
 

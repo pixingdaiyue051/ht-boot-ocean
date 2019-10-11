@@ -3,6 +3,13 @@ spring:
     active: dev
   application:
     name: boot-ssm
+  activemq:
+    user: admin
+    password: admin
+    broker-url: tcp://127.0.0.1:61616
+    pool:
+      enabled: true
+      max-connections: 10
 mapper:
   mappers: tk.mybatis.mapper.common.Mapper
   not-empty: false

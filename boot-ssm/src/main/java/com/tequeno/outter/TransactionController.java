@@ -1,4 +1,4 @@
-package com.tequeno.bootssm.controller;
+package com.tequeno.outter;
 
 import com.tequeno.bootssm.mapper.area.AreaMapper;
 import com.tequeno.bootssm.mapper.sys.UserInfoMapper;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("tran")
+@RequestMapping("test/tran")
 public class TransactionController {
 
     @Autowired

@@ -10,8 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -58,12 +63,42 @@ public class RedisConfig {
         // hash的value序列化方式采用jackson
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.afterPropertiesSet();
+        try {
+            // 如果没有异常则表示redis
+            RedisConnection connection = factory.getConnection();
+            logger.info("redis正常启动,对应connection:{}", connection);
+        } catch (Exception e) {
+            logger.info("redis未开启");
+        }
         return template;
     }
 
     @Bean
     public JedisCacheUtil jedisCacheUtil() {
         return new JedisCacheUtil();
+    }
+
+    @Bean
+    public ChannelTopic channelTopic() {
+        return new ChannelTopic("string-topic");
+    }
+
+    @Bean
+    public PatternTopic patternTopic() {
+        return new PatternTopic("*");
+    }
+
+    @Bean
+    public MessageListener messageListener() {
+        return new JedisMessageListener();
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        container.addMessageListener(messageListener(), patternTopic());
+        return container;
     }
 
     private class MyNullKeySerializer extends JsonSerializer<Object> {
@@ -73,27 +108,4 @@ public class RedisConfig {
             jsonGenerator.writeFieldName("");
         }
     }
-
-//    @Bean
-//    public ChannelTopic channelTopic() {
-//        return new ChannelTopic("string-topic");
-//    }
-//
-//    @Bean
-//    public PatternTopic patternTopic() {
-//        return new PatternTopic("*");
-//    }
-//
-//    @Bean
-//    public MessageListener messageListener() {
-//        return new JedisMessageListener();
-//    }
-//
-//    @Bean
-//    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(factory);
-//        container.addMessageListener(messageListener(), patternTopic());
-//        return container;
-//    }
 }

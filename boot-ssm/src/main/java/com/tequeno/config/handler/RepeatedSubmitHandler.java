@@ -32,10 +32,11 @@ public class RepeatedSubmitHandler {
         Signature s = joinPoint.getSignature();
         String key = JedisKeyPrefixEnum.LOCK.assemblyKey(s.getDeclaringType().getSimpleName() + s.getName());
         String value = UUID.randomUUID().toString();
-        boolean isGetLock = cacheUtil.tryLock(key, value, repeatedSubmitAnno.expireTime(), repeatedSubmitAnno.waitTimeout());
+        boolean isGetLock = cacheUtil.tryLock(key, value, repeatedSubmitAnno.expireTime());
         if (isGetLock) {
-            cacheUtil.releaseLock(key, value);
-            return joinPoint.proceed();
+            Object proceed = joinPoint.proceed();
+//            cacheUtil.releaseLock(key, value);
+            return proceed;
         }
         return HtResultInfoWrapper.fail(HtCommonErrorEnum.NOT_REPEATED_SUBMIT);
     }

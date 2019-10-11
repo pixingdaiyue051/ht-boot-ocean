@@ -5,6 +5,7 @@ import com.tequeno.bootssm.pojo.sys.res.ResourceInfo;
 import com.tequeno.bootssm.pojo.sys.res.UserRoleResQuery;
 import com.tequeno.bootssm.pojo.sys.res.VUserRoleRes;
 import com.tequeno.bootssm.service.BaseServiceImpl;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
             resQ.setResCode(resCode);
             List<ResourceInfo> resourceInfos = mapper.selectAllByCondition(resQ);
             if (CollectionUtils.isNotEmpty(resourceInfos)) {
-                ResourceInfo resourceInfo = resourceInfos.get(0);
+                ResourceInfo resourceInfo = resourceInfos.get(HtZeroOneConstant.ZERO_I);
                 cacheUtil.hset(key, resCode, resourceInfo);
                 return resourceInfo;
             }
@@ -43,7 +44,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
             query.setResCode(resCode);
             List<VUserRoleRes> userResList = mapper.selectUserRes(query);
             if (CollectionUtils.isNotEmpty(userResList)) {
-                VUserRoleRes result = userResList.get(0);
+                VUserRoleRes result = userResList.get(HtZeroOneConstant.ZERO_I);
                 cacheUtil.hset(key, resCode, result);
                 return result;
             }

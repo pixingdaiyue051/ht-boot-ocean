@@ -8,6 +8,4 @@ import java.lang.annotation.*;
 public @interface HtRepeatedSubmitAnno {
 
     long expireTime() default 1L;
-
-    long waitTimeout() default 3000L;
 }

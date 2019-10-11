@@ -5,7 +5,6 @@ import com.tequeno.bootssm.pojo.sys.res.VUserRoleRes;
 import com.tequeno.bootssm.service.res.ResourceService;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.shiro.HtPermissionAnno;
 import com.tequeno.enums.HtUserResEnum;
 import com.tequeno.utils.HtAssemConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +34,7 @@ public class AnnotationPermissionHandler {
     @Autowired
     private ResourceService resourceService;
 
-    @Pointcut("@annotation(com.tequeno.config.shiro.HtPermissionAnno)")
+    @Pointcut("@annotation(com.tequeno.config.handler.HtPermissionAnno)")
     public void permissionAspect() {
     }
 

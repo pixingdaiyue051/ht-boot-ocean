@@ -5,5 +5,12 @@ server:
 spring:
   redis:
     database: 1
+  activemq:
+    user: admin
+    password: admin
+    broker-url: tcp://127.0.0.1:61616
+    pool:
+      enabled: true
+      max-connections: 10
 logging:
   config: classpath:logback-spring.xml

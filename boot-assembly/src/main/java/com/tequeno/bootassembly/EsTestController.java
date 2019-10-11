@@ -26,7 +26,7 @@
 //import java.util.Map;
 //
 //@RestController
-//@RequestMapping("book")
+//@RequestMapping("test/book")
 //public class BookController {
 //    private static final String INDEX = "book";
 //    private static final String TYPE = "novel";
@@ -34,7 +34,7 @@
 //    @Autowired
 //    private TransportClient client;
 //
-//    @GetMapping("/novel/{id}")
+//    @RequestMapping("/novel/{id}")
 //    public ResponseEntity get(@PathVariable String id) {
 //        ResponseEntity responseEntity = null;
 //        try {
@@ -51,7 +51,7 @@
 //        return responseEntity;
 //    }
 //
-//    @PostMapping("/novel/add")
+//    @RequestMapping("/novel/add")
 //    public ResponseEntity add(@RequestParam(name = "title") String title,
 //                              @RequestParam(name = "name") String name,
 //                              @RequestParam(name = "auth") String auth,
@@ -88,7 +88,7 @@
 //        return responseEntity;
 //    }
 //
-//    @PostMapping("/novel/update")
+//    @RequestMapping("/novel/update")
 //    public ResponseEntity update(@RequestParam(name = "id") String id,
 //                                 @RequestParam(name = "title", required = false) String title,
 //                                 @RequestParam(name = "name", required = false) String name,
@@ -125,7 +125,7 @@
 //        return responseEntity;
 //    }
 //
-//    @PostMapping("/novel/query")
+//    @RequestMapping("/novel/query")
 //    public ResponseEntity query(@RequestParam(name = "title", required = false) String title,
 //                                @RequestParam(name = "name", required = false) String name,
 //                                @RequestParam(name = "auth", required = false) String auth,
