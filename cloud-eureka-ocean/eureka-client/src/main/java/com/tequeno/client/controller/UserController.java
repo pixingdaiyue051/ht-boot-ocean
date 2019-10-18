@@ -17,7 +17,7 @@ import java.util.Map;
 @RequestMapping("user")
 public class UserController extends BaseServiceImpl<UmUserInfoMapper, UmUserInfo> {
 
-    @PostMapping("list")
+    @RequestMapping("list")
     public ResultBinder list(@RequestParam Map<String, Object> map) {
         map.put(HtCommonConstant.ORDERBY, "priority desc");
         List<UmUserInfo> list = super.getList(map);
@@ -28,7 +28,7 @@ public class UserController extends BaseServiceImpl<UmUserInfoMapper, UmUserInfo
         return HtResultInfoWrapper.success(list);
     }
 
-    @PostMapping("addOne")
+    @RequestMapping("addOne")
     public ResultBinder addOne(@RequestBody UmUserInfo userInfo) {
         return HtResultInfoWrapper.success(mapper.insertSelective(userInfo));
     }

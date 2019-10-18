@@ -51,6 +51,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>transport</artifactId>
+                    <groupId>org.elasticsearch.client</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- es-client-->
         <dependency>
@@ -68,6 +74,12 @@
             <groupId>com.tequeno</groupId>
             <artifactId>ocean-api</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-lang3</artifactId>
+                    <groupId>org.apache.commons</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- common.lang3-->
         <dependency>

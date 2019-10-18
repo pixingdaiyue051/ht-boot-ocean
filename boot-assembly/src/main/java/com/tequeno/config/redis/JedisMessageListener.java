@@ -1,5 +1,6 @@
 package com.tequeno.config.redis;
 
+import com.tequeno.common.enums.JedisMsgKeyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ public class JedisMessageListener implements MessageListener {
         RedisSerializer<?> topicSerializer = redisTemplate.getKeySerializer();
         RedisSerializer<?> msgSerializer = redisTemplate.getValueSerializer();
         Object channel = topicSerializer.deserialize(message.getChannel());
-        Object body = msgSerializer.deserialize(message.getBody());
-        logger.info("接收到主题:[{}]", channel);
-        logger.info("接收到消息内容:[{}]", body);
+        if(JedisMsgKeyEnum.TEST.getChanel().equals(channel)){
+            Object body = msgSerializer.deserialize(message.getBody());
+            logger.info("接收到测试主题:[{}]", channel);
+            logger.info("接收到测试消息内容:[{}]", body);
+        }
     }
 }

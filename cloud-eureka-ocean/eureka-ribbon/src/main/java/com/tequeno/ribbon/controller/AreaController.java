@@ -8,7 +8,7 @@ import com.tequeno.ribbon.mapper.AreaMapper;
 import com.tequeno.ribbon.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +25,7 @@ public class AreaController extends BaseServiceImpl<AreaMapper, Area> {
     @Autowired
     protected RestTemplate restTemplate;
 
-    @PostMapping("list")
+    @RequestMapping("list")
     public ResultBinder list(@RequestParam Map<String, Object> map) {
         map.put(HtCommonConstant.ORDERBY, "priority desc");
         List<Area> list = super.getList(map);

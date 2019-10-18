@@ -18,25 +18,25 @@ public class AreaController {
     @Autowired
     private AreaService areaService;
 
-    @PostMapping("list")
+    @RequestMapping("list")
     public ResultBinder list(@RequestBody AreaQuery areaQ) {
         List<Area> list = areaService.getList(areaQ);
         return HtResultInfoWrapper.success(list);
     }
 
-    @GetMapping("one/{id}")
+    @RequestMapping("one/{id}")
     public ResultBinder one(@PathVariable Integer id) {
         return HtResultInfoWrapper.success(areaService.selectByPrimaryKey(id));
     }
 
-    @PostMapping("addOne")
+    @RequestMapping("addOne")
     @Transactional(rollbackFor = Exception.class)
     public ResultBinder addOne(@RequestBody Area area) {
         areaService.insertSelective(area);
         return HtResultInfoWrapper.success();
     }
 
-    @PostMapping("updateOne")
+    @RequestMapping("updateOne")
     @Transactional(rollbackFor = Exception.class)
     public ResultBinder updateOne(@RequestBody Area area) {
         areaService.updateSelective(area);

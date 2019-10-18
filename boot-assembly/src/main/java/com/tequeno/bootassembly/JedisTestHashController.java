@@ -23,19 +23,25 @@ public class JedisTestHashController {
     public ResultBinder set(@RequestParam("key") String key,
                             @RequestParam("hashKey") String hashKey,
                             @RequestParam("hashValue") Object hashValue) {
-        key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hset(key, hashKey, hashValue));
     }
 
     @RequestMapping("setObject")
     public ResultBinder set(@RequestParam("key") String key, @RequestBody Map<String, Object> map) {
-        key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hmset(key, map));
     }
 
     @RequestMapping("get")
     public ResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
-        key = JedisKeyPrefixEnum.JEDIS.assemblyKey(key);
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hget(key, hashKey));
+    }
+
+    @RequestMapping("getObject")
+    public ResultBinder getObject(@RequestParam("key") String key) {
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.hmget(key));
     }
 }

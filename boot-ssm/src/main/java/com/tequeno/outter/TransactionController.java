@@ -9,7 +9,7 @@ import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +23,7 @@ public class TransactionController {
     @Autowired
     private AreaMapper areaMapper;
 
-    @PostMapping("test1")
+    @RequestMapping("test1")
     @Transactional(rollbackFor = Exception.class)
     public ResultBinder test1() {
         insertUserPlus();
@@ -35,7 +35,7 @@ public class TransactionController {
         return HtResultInfoWrapper.success();
     }
 
-    @PostMapping("test2")
+    @RequestMapping("test2")
     @Transactional(rollbackFor = Exception.class)
     public ResultBinder test2() {
         insertUser();

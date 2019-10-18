@@ -38,7 +38,7 @@ public class UserInfoController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("page")
+    @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
     public ResultBinder page(@RequestBody UserInfoQuery userQ) {
         userQ.setPageSize(3);
@@ -50,7 +50,7 @@ public class UserInfoController {
         return HtResultInfoWrapper.fail();
     }
 
-    @PostMapping("list")
+    @RequestMapping("list")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
     public ResultBinder list(@RequestBody UserInfoQuery userQ) {
         List<UserInfo> userInfoList = userService.getList(userQ);
@@ -60,14 +60,14 @@ public class UserInfoController {
         return HtResultInfoWrapper.success(userInfoList);
     }
 
-    @GetMapping("one/{id}")
+    @RequestMapping("one/{id}")
     @HtPermissionAnno(value = HtUserResEnum.RES_USER_QUERY)
     public ResultBinder one(@PathVariable String id) {
         UserInfo userInfo = userService.selectByPrimaryKey(id, JedisKeyPrefixEnum.USER);
         return HtResultInfoWrapper.success(userInfo);
     }
 
-    @PostMapping("addOne")
+    @RequestMapping("addOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ADD)
     @HtRepeatedSubmitAnno
     public ResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
@@ -76,7 +76,7 @@ public class UserInfoController {
         return HtResultInfoWrapper.success();
     }
 
-    @PostMapping("updateOne")
+    @RequestMapping("updateOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_UPDATE)
     @HtRepeatedSubmitAnno
     public ResultBinder updateOne(@RequestBody UserModel userModel, BindingResult result) {
@@ -85,7 +85,7 @@ public class UserInfoController {
         return HtResultInfoWrapper.success();
     }
 
-    @PostMapping("login")
+    @RequestMapping("login")
     @HtRepeatedSubmitAnno
     public ResultBinder login(@RequestParam("userName") String userName, @RequestParam("password") String password) {
         try {
@@ -112,7 +112,7 @@ public class UserInfoController {
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);
     }
 
-    @PostMapping("logout")
+    @RequestMapping("logout")
     @HtRepeatedSubmitAnno
     public ResultBinder logout() {
         Subject user = SecurityUtils.getSubject();

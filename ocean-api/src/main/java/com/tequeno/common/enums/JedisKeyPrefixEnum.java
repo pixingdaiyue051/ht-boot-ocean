@@ -5,8 +5,8 @@ public enum JedisKeyPrefixEnum {
 
     SESSION("SESSION:", "session管理"),
 
-    JEDIS("JEDIS:", "jedis测试"),
-    TEST("TEST:", "编程范例测试用"),
+    HTEST("HTEST:", "编程范例测试用hash key"),
+    TEST("TEST:", "编程范例测试用普通key"),
 
     HDICT("HDICT:", "数据字典hash"),
     HUSER_PASSWORD("HPASSWORD", "用户密码模块"),

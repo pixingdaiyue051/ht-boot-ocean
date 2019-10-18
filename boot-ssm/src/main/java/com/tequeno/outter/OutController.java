@@ -14,7 +14,7 @@ import com.tequeno.config.cache.JedisCacheUtil;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +35,7 @@ public class OutController {
         return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_LOGINED);
     }
 
-    @PostMapping("otp/phone/{tel}")
+    @RequestMapping("otp/phone/{tel}")
     @HtRepeatedSubmitAnno
     public ResultBinder getOtpPhone(@PathVariable("tel") String tel) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
@@ -46,7 +46,7 @@ public class OutController {
         return HtResultInfoWrapper.success(o);
     }
 
-    @PostMapping("otp/email/{email}")
+    @RequestMapping("otp/email/{email}")
     @HtRepeatedSubmitAnno
     public ResultBinder getOtpEmail(@PathVariable("email") String email) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);

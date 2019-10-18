@@ -15,7 +15,7 @@ import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.enums.HtUserResEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +40,7 @@ public class UserHelperController {
      * @param enable 默认false禁用,true启用
      * @return
      */
-    @PostMapping("disable")
+    @RequestMapping("disable")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ENABLE)
     @HtRepeatedSubmitAnno
     public ResultBinder disable(@RequestParam("ids") String ids, @RequestParam(value = "enable", required = false) boolean enable) {
@@ -54,7 +54,7 @@ public class UserHelperController {
      * @param ids 用户id逗号分隔
      * @return
      */
-    @PostMapping("delete")
+    @RequestMapping("delete")
     @HtPermissionAnno(HtUserResEnum.RES_USER_DELETE)
     @HtRepeatedSubmitAnno
     public ResultBinder delete(@RequestParam("ids") String ids) {
@@ -70,7 +70,7 @@ public class UserHelperController {
      * @param otp      获取到的验证码
      * @return
      */
-    @PostMapping("bind/phone")
+    @RequestMapping("bind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
     public ResultBinder bindPhone(@RequestParam("userName") String userName,
@@ -91,7 +91,7 @@ public class UserHelperController {
      * @param otp
      * @return
      */
-    @PostMapping("unbind/phone")
+    @RequestMapping("unbind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
     public ResultBinder unbindPhone(@RequestParam("userName") String userName,
@@ -112,7 +112,7 @@ public class UserHelperController {
      * @param otp      获取到的验证码
      * @return
      */
-    @PostMapping("bind/email")
+    @RequestMapping("bind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
     public ResultBinder bindEmail(@RequestParam("userName") String userName,
@@ -133,7 +133,7 @@ public class UserHelperController {
      * @param otp
      * @return
      */
-    @PostMapping("unbind/email")
+    @RequestMapping("unbind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
     public ResultBinder unbindEmail(@RequestParam("userName") String userName,
