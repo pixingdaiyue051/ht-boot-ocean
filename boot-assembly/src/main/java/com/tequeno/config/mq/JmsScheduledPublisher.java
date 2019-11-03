@@ -10,18 +10,10 @@ import javax.jms.Queue;
 import javax.jms.Topic;
 
 @Component
-public class JmsPublisher {
+public class JmsScheduledPublisher {
 
     @Autowired
     private JmsMessagingTemplate jms;
-
-    @Autowired
-    @Qualifier(HtJmsConstant.QUEUE_NAME_1)
-    private Queue queue1;
-
-    @Autowired
-    @Qualifier(HtJmsConstant.TOPIC_NAME_1)
-    private Topic topic1;
 
     @Autowired
     @Qualifier(HtJmsConstant.QUEUE_NAME_2)
@@ -32,10 +24,10 @@ public class JmsPublisher {
     private Topic topic2;
 
     public void sendQueue(Object o) {
-        jms.convertAndSend(queue1, o);
+        jms.convertAndSend(queue2, o);
     }
 
     public void sendTopic(Object o) {
-        jms.convertAndSend(topic1, o);
+        jms.convertAndSend(topic2, o);
     }
 }

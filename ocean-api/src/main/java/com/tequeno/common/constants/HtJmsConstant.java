@@ -15,10 +15,12 @@ public class HtJmsConstant {
     /**
      * 队列名字
      */
-    public final static String QUEUE_NAME = "ht.publish.queue";
+    public final static String QUEUE_NAME_1 = "ht.publish.queue.test1";
+    public final static String QUEUE_NAME_2 = "ht.publish.queue.test2";
 
     /**
      * 主题名字
      */
-    public final static String TOPIC_NAME = "ht.publish.topic";
+    public final static String TOPIC_NAME_1 = "ht.publish.topic.test1";
+    public final static String TOPIC_NAME_2 = "ht.publish.topic.test2";
 }
