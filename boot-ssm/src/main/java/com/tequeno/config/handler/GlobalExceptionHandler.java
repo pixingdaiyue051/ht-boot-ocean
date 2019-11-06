@@ -1,6 +1,6 @@
 package com.tequeno.config.handler;
 
-import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.utils.HtCommonException;
 import com.tequeno.common.utils.HtResultInfoWrapper;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResultBinder exceptionHandle(HttpServletRequest request, Exception e) {
+    public HtResultBinder exceptionHandle(HttpServletRequest request, Exception e) {
         logger.warn("访问url:{}时捕获到程序异常", request.getRequestURI(), e);
         if (e instanceof HtCommonException) {
             return HtResultInfoWrapper.fail(((HtCommonException) e).getErrorImpl());

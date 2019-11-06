@@ -1,6 +1,6 @@
 package com.tequeno.config.mq;
 
-import com.tequeno.common.constants.HtJmsConstant;
+import com.tequeno.common.mq.HtJmsConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
@@ -12,6 +12,8 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 
 import javax.jms.Queue;
 import javax.jms.Topic;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class ActiveMqConfig {
@@ -25,29 +27,35 @@ public class ActiveMqConfig {
     @Value("${spring.activemq.broker-url}")
     private String brokerUrl;
 
-    @Bean(HtJmsConstant.QUEUE_NAME_1)
-    public Queue queue1() {
-        return new ActiveMQQueue(HtJmsConstant.QUEUE_NAME_1);
+    @Bean(HtJmsConstant.QUEUE_SCHEDULED_NAME)
+    public Queue queueScheduled() {
+        return new ActiveMQQueue(HtJmsConstant.QUEUE_SCHEDULED_NAME);
     }
 
-    @Bean(HtJmsConstant.TOPIC_NAME_1)
-    public Topic topic1() {
-        return new ActiveMQTopic(HtJmsConstant.TOPIC_NAME_1);
+    @Bean(HtJmsConstant.TOPIC_SCHEDULED_NAME)
+    public Topic topicScheduled() {
+        return new ActiveMQTopic(HtJmsConstant.TOPIC_SCHEDULED_NAME);
     }
 
-    @Bean(HtJmsConstant.QUEUE_NAME_2)
-    public Queue queue2() {
-        return new ActiveMQQueue(HtJmsConstant.QUEUE_NAME_2);
+    @Bean(HtJmsConstant.QUEUE_SIMPLE_NAME)
+    public Queue queueSimple() {
+        return new ActiveMQQueue(HtJmsConstant.QUEUE_SIMPLE_NAME);
     }
 
-    @Bean(HtJmsConstant.TOPIC_NAME_2)
-    public Topic topic2() {
-        return new ActiveMQTopic(HtJmsConstant.TOPIC_NAME_2);
+    @Bean(HtJmsConstant.TOPIC_SIMPLE_NAME)
+    public Topic topicSimple() {
+        return new ActiveMQTopic(HtJmsConstant.TOPIC_SIMPLE_NAME);
     }
 
     @Bean
     public ActiveMQConnectionFactory connectionFactory() {
-        return new ActiveMQConnectionFactory(user, password, brokerUrl);
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(user, password, brokerUrl);
+        List<String> packageList = new ArrayList<>();
+        packageList.add("java.util");
+        packageList.add("java.lang");
+        packageList.add("com.tequeno.common.mq");
+        factory.setTrustedPackages(packageList);
+        return factory;
     }
 
     @Bean

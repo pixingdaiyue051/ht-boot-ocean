@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "7795d66f-b32e-4248-84c5-37f31b1c7b97",
+		"name": "testjms",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "toipc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jms/sche/topic?msg=eeeeeee&delay=10000",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jms",
+						"sche",
+						"topic"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "eeeeeee"
+						},
+						{
+							"key": "delay",
+							"value": "10000"
+						},
+						{
+							"key": "repeat",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "period",
+							"value": "10000",
+							"disabled": true
+						},
+						{
+							"key": "cron",
+							"value": "*/5 * * * *",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toipcsimple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jms/topic?msg=eeeeeee",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jms",
+						"topic"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "eeeeeee"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "queue",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jms/sche/queue?msg=eeeeeee&delay=10000&repeat=10&period=10000",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jms",
+						"sche",
+						"queue"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "eeeeeee"
+						},
+						{
+							"key": "delay",
+							"value": "10000"
+						},
+						{
+							"key": "repeat",
+							"value": "10"
+						},
+						{
+							"key": "period",
+							"value": "10000"
+						},
+						{
+							"key": "cron",
+							"value": "*/5 * * * *",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "queuesimple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jms/queue?msg=sssssssss",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jms",
+						"queue"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "sssssssss"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

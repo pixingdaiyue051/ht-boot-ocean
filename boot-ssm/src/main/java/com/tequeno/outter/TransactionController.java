@@ -4,12 +4,11 @@ import com.tequeno.bootssm.mapper.area.AreaMapper;
 import com.tequeno.bootssm.mapper.sys.UserInfoMapper;
 import com.tequeno.bootssm.pojo.area.Area;
 import com.tequeno.bootssm.pojo.sys.user.UserInfo;
-import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +24,7 @@ public class TransactionController {
 
     @RequestMapping("test1")
     @Transactional(rollbackFor = Exception.class)
-    public ResultBinder test1() {
+    public HtResultBinder test1() {
         insertUserPlus();
         try {
             insertAreaPlus();
@@ -37,7 +36,7 @@ public class TransactionController {
 
     @RequestMapping("test2")
     @Transactional(rollbackFor = Exception.class)
-    public ResultBinder test2() {
+    public HtResultBinder test2() {
         insertUser();
         insertArea();
         System.out.println(1 / 0);

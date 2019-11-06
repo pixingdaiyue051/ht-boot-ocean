@@ -15,6 +15,8 @@ public enum HtCommonErrorEnum implements HtErrorInterface {
     OTP_NOT_EMPTY("0107", "验证码不为空"),
 
     NOT_REPEATED_SUBMIT("0200", "请勿重复提交"),
+
+    JMS_ERROR("0300", null),
     ;
     private String code;
     private String msg;

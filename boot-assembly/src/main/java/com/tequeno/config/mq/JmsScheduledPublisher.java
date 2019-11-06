@@ -1,11 +1,14 @@
 package com.tequeno.config.mq;
 
-import com.tequeno.common.constants.HtJmsConstant;
+import com.tequeno.common.mq.HtJmsConstant;
+import com.tequeno.common.mq.HtJmsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Component;
 
+import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
 
@@ -13,21 +16,25 @@ import javax.jms.Topic;
 public class JmsScheduledPublisher {
 
     @Autowired
-    private JmsMessagingTemplate jms;
+    private JmsTemplate jms;
 
     @Autowired
-    @Qualifier(HtJmsConstant.QUEUE_NAME_2)
-    private Queue queue2;
+    @Qualifier(HtJmsConstant.QUEUE_SCHEDULED_NAME)
+    private Queue queue;
 
     @Autowired
-    @Qualifier(HtJmsConstant.TOPIC_NAME_2)
-    private Topic topic2;
+    @Qualifier(HtJmsConstant.TOPIC_SCHEDULED_NAME)
+    private Topic topic;
 
-    public void sendQueue(Object o) {
-        jms.convertAndSend(queue2, o);
+    public void sendQueue(HtJmsModel model, MessagePostProcessor postProcessor) {
+        send(queue, model, postProcessor);
     }
 
-    public void sendTopic(Object o) {
-        jms.convertAndSend(topic2, o);
+    public void sendTopic(HtJmsModel model, MessagePostProcessor postProcessor) {
+        send(topic, model, postProcessor);
+    }
+
+    public void send(Destination destination, HtJmsModel model, MessagePostProcessor postProcessor) {
+        jms.convertAndSend(destination, model, postProcessor);
     }
 }

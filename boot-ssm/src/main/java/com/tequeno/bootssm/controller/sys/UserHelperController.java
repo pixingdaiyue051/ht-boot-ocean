@@ -3,8 +3,8 @@ package com.tequeno.bootssm.controller.sys;
 import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.bootssm.service.user.UserService;
 import com.tequeno.common.constants.HtCommonRegPattern;
+import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.constants.HtZeroOneConstant;
-import com.tequeno.common.constants.ResultBinder;
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
@@ -15,7 +15,6 @@ import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.enums.HtUserResEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +42,7 @@ public class UserHelperController {
     @RequestMapping("disable")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ENABLE)
     @HtRepeatedSubmitAnno
-    public ResultBinder disable(@RequestParam("ids") String ids, @RequestParam(value = "enable", required = false) boolean enable) {
+    public HtResultBinder disable(@RequestParam("ids") String ids, @RequestParam(value = "enable", required = false) boolean enable) {
         userService.enableDisableUser(ids, enable ? HtZeroOneConstant.ENABLED : HtZeroOneConstant.DISABLED);
         return HtResultInfoWrapper.success();
     }
@@ -57,7 +56,7 @@ public class UserHelperController {
     @RequestMapping("delete")
     @HtPermissionAnno(HtUserResEnum.RES_USER_DELETE)
     @HtRepeatedSubmitAnno
-    public ResultBinder delete(@RequestParam("ids") String ids) {
+    public HtResultBinder delete(@RequestParam("ids") String ids) {
         userService.deleteUser(ids);
         return HtResultInfoWrapper.success();
     }
@@ -73,9 +72,9 @@ public class UserHelperController {
     @RequestMapping("bind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
-    public ResultBinder bindPhone(@RequestParam("userName") String userName,
-                                  @RequestParam("tel") String tel,
-                                  @RequestParam("otp") String otp) {
+    public HtResultBinder bindPhone(@RequestParam("userName") String userName,
+                                    @RequestParam("tel") String tel,
+                                    @RequestParam("otp") String otp) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.PHONE_NOT_MATCHED);
@@ -94,9 +93,9 @@ public class UserHelperController {
     @RequestMapping("unbind/phone")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
-    public ResultBinder unbindPhone(@RequestParam("userName") String userName,
-                                    @RequestParam("tel") String tel,
-                                    @RequestParam("otp") String otp) {
+    public HtResultBinder unbindPhone(@RequestParam("userName") String userName,
+                                      @RequestParam("tel") String tel,
+                                      @RequestParam("otp") String otp) {
         boolean matched = tel.matches(HtCommonRegPattern.REG_PHONE);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.PHONE_NOT_MATCHED);
@@ -115,9 +114,9 @@ public class UserHelperController {
     @RequestMapping("bind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
-    public ResultBinder bindEmail(@RequestParam("userName") String userName,
-                                  @RequestParam("email") String email,
-                                  @RequestParam("otp") String otp) {
+    public HtResultBinder bindEmail(@RequestParam("userName") String userName,
+                                    @RequestParam("email") String email,
+                                    @RequestParam("otp") String otp) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.MAIL_NOT_MATCHED);
@@ -136,9 +135,9 @@ public class UserHelperController {
     @RequestMapping("unbind/email")
     @HtPermissionAnno(HtUserResEnum.RES_USER_BIND)
     @HtRepeatedSubmitAnno
-    public ResultBinder unbindEmail(@RequestParam("userName") String userName,
-                                    @RequestParam("email") String email,
-                                    @RequestParam("otp") String otp) {
+    public HtResultBinder unbindEmail(@RequestParam("userName") String userName,
+                                      @RequestParam("email") String email,
+                                      @RequestParam("otp") String otp) {
         boolean matched = email.matches(HtCommonRegPattern.REG_MAIL);
         if (!matched) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.MAIL_NOT_MATCHED);
@@ -146,7 +145,7 @@ public class UserHelperController {
         return innerBind(userName, otp, email, u -> u.setEmail(""));
     }
 
-    private ResultBinder innerBind(String userName, String otp, String hkey, Consumer<UserInfo> c) {
+    private HtResultBinder innerBind(String userName, String otp, String hkey, Consumer<UserInfo> c) {
         String key = JedisKeyPrefixEnum.HUSER_OTP.getPrefix();
         return Optional.ofNullable(cacheUtil.hget(key, hkey))
                 .map(o -> {

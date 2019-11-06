@@ -5,8 +5,8 @@ import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.bootssm.pojo.sys.user.UserInfoQuery;
 import com.tequeno.bootssm.pojo.sys.user.UserModel;
 import com.tequeno.bootssm.service.user.UserService;
+import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.constants.HtZeroOneConstant;
-import com.tequeno.common.constants.ResultBinder;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
@@ -40,7 +40,7 @@ public class UserInfoController {
 
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
-    public ResultBinder page(@RequestBody UserInfoQuery userQ) {
+    public HtResultBinder page(@RequestBody UserInfoQuery userQ) {
         userQ.setPageSize(3);
         PageInfo<UserInfo> pager = userService.findPager(userQ);
         System.out.println(pager);
@@ -52,7 +52,7 @@ public class UserInfoController {
 
     @RequestMapping("list")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
-    public ResultBinder list(@RequestBody UserInfoQuery userQ) {
+    public HtResultBinder list(@RequestBody UserInfoQuery userQ) {
         List<UserInfo> userInfoList = userService.getList(userQ);
         if (CollectionUtils.isEmpty(userInfoList)) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_NOT_EXIST);
@@ -62,7 +62,7 @@ public class UserInfoController {
 
     @RequestMapping("one/{id}")
     @HtPermissionAnno(value = HtUserResEnum.RES_USER_QUERY)
-    public ResultBinder one(@PathVariable String id) {
+    public HtResultBinder one(@PathVariable String id) {
         UserInfo userInfo = userService.selectByPrimaryKey(id, JedisKeyPrefixEnum.USER);
         return HtResultInfoWrapper.success(userInfo);
     }
@@ -70,7 +70,7 @@ public class UserInfoController {
     @RequestMapping("addOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_ADD)
     @HtRepeatedSubmitAnno
-    public ResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
+    public HtResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.validate(userModel, result);
         userService.addUser(userModel);
         return HtResultInfoWrapper.success();
@@ -79,7 +79,7 @@ public class UserInfoController {
     @RequestMapping("updateOne")
     @HtPermissionAnno(HtUserResEnum.RES_USER_UPDATE)
     @HtRepeatedSubmitAnno
-    public ResultBinder updateOne(@RequestBody UserModel userModel, BindingResult result) {
+    public HtResultBinder updateOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.updateValidate(userModel, result);
         userService.updateUser(userModel);
         return HtResultInfoWrapper.success();
@@ -87,7 +87,7 @@ public class UserInfoController {
 
     @RequestMapping("login")
     @HtRepeatedSubmitAnno
-    public ResultBinder login(@RequestParam("userName") String userName, @RequestParam("password") String password) {
+    public HtResultBinder login(@RequestParam("userName") String userName, @RequestParam("password") String password) {
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
             token.setRememberMe(true);
@@ -114,7 +114,7 @@ public class UserInfoController {
 
     @RequestMapping("logout")
     @HtRepeatedSubmitAnno
-    public ResultBinder logout() {
+    public HtResultBinder logout() {
         Subject user = SecurityUtils.getSubject();
         user.logout();
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGOUT);

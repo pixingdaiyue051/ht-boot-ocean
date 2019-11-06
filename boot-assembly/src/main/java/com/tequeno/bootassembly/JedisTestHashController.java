@@ -1,6 +1,6 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.redis.JedisCacheUtil;
@@ -20,27 +20,27 @@ public class JedisTestHashController {
     private JedisCacheUtil cacheUtil;
 
     @RequestMapping("set")
-    public ResultBinder set(@RequestParam("key") String key,
-                            @RequestParam("hashKey") String hashKey,
-                            @RequestParam("hashValue") Object hashValue) {
+    public HtResultBinder set(@RequestParam("key") String key,
+                              @RequestParam("hashKey") String hashKey,
+                              @RequestParam("hashValue") Object hashValue) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hset(key, hashKey, hashValue));
     }
 
     @RequestMapping("setObject")
-    public ResultBinder set(@RequestParam("key") String key, @RequestBody Map<String, Object> map) {
+    public HtResultBinder set(@RequestParam("key") String key, @RequestBody Map<String, Object> map) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hmset(key, map));
     }
 
     @RequestMapping("get")
-    public ResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
+    public HtResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hget(key, hashKey));
     }
 
     @RequestMapping("getObject")
-    public ResultBinder getObject(@RequestParam("key") String key) {
+    public HtResultBinder getObject(@RequestParam("key") String key) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hmget(key));
     }

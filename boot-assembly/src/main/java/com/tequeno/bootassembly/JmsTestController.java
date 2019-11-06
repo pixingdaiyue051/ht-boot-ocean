@@ -1,9 +1,11 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.constants.ResultBinder;
+import com.tequeno.common.constants.HtResultBinder;
+import com.tequeno.common.mq.HtJmsModel;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.mq.JmsPublisher;
 import com.tequeno.config.mq.JmsScheduledPublisher;
+import com.tequeno.config.mq.JmsSimplePublisher;
+import com.tequeno.config.mq.ScheduleMessagePostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,22 +16,58 @@ import org.springframework.web.bind.annotation.RestController;
 public class JmsTestController {
 
     @Autowired
-    private JmsPublisher publisher;
+    private JmsSimplePublisher publisher;
 
     @Autowired
     private JmsScheduledPublisher scheduledPublisher;
 
     @RequestMapping("queue")
-    public ResultBinder queue(@RequestParam("param") String param) {
-        publisher.sendQueue(param);
-        scheduledPublisher.sendQueue(param);
+    public HtResultBinder queue(@RequestParam("msg") String msg) {
+        HtJmsModel model = new HtJmsModel();
+        model.setMsg(msg);
+        publisher.sendQueue(model);
         return HtResultInfoWrapper.success();
     }
 
     @RequestMapping("topic")
-    public ResultBinder topic(@RequestParam("param") String param) {
-        publisher.sendTopic(param);
-        scheduledPublisher.sendTopic(param);
+    public HtResultBinder topic(@RequestParam("msg") String msg) {
+        HtJmsModel model = new HtJmsModel();
+        model.setMsg(msg);
+        publisher.sendTopic(model);
+        return HtResultInfoWrapper.success();
+    }
+
+    @RequestMapping("sche/queue")
+    public HtResultBinder queue(@RequestParam("msg") String msg,
+                                @RequestParam(value = "delay", required = false) Long delay,
+                                @RequestParam(value = "repeat", required = false) Integer repeat,
+                                @RequestParam(value = "period", required = false) Long period,
+                                @RequestParam(value = "cron", required = false) String cron) {
+        HtJmsModel model = new HtJmsModel();
+        model.setMsg(msg);
+        ScheduleMessagePostProcessor postProcessor = new ScheduleMessagePostProcessor();
+        postProcessor.setDelay(delay);
+        postProcessor.setRepeat(repeat);
+        postProcessor.setPeriod(period);
+        postProcessor.setCron(cron);
+        scheduledPublisher.sendQueue(model, postProcessor);
+        return HtResultInfoWrapper.success();
+    }
+
+    @RequestMapping("sche/topic")
+    public HtResultBinder topic(@RequestParam("msg") String msg,
+                                @RequestParam(value = "delay", required = false) Long delay,
+                                @RequestParam(value = "repeat", required = false) Integer repeat,
+                                @RequestParam(value = "period", required = false) Long period,
+                                @RequestParam(value = "cron", required = false) String cron) {
+        HtJmsModel model = new HtJmsModel();
+        model.setMsg(msg);
+        ScheduleMessagePostProcessor postProcessor = new ScheduleMessagePostProcessor();
+        postProcessor.setDelay(delay);
+        postProcessor.setRepeat(repeat);
+        postProcessor.setPeriod(period);
+        postProcessor.setCron(cron);
+        scheduledPublisher.sendTopic(model, postProcessor);
         return HtResultInfoWrapper.success();
     }
 }

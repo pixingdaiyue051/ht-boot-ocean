@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "a1805480-f631-42da-8f4d-8e1154b109cb",
+		"name": "outter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "otp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8511/outter/otp/phone/15767657653",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8511",
+					"path": [
+						"outter",
+						"otp",
+						"phone",
+						"15767657653"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c9546d22-474e-45af-9bfc-2c922329cd0d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0da6959e-3fcb-413e-a327-191a5bb64942",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
