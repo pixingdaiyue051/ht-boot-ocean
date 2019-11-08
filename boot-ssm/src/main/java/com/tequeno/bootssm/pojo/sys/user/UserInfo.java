@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Table(name = "um_user_info")
 public class UserInfo extends BaseEntity {
 
-    private static final long serialVersionUID = -403886687529880018L;
+    private final static long serialVersionUID = -403886687529880018L;
 
     private String userName;
 

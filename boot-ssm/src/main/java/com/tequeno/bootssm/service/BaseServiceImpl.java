@@ -27,6 +27,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     }
 
     @Override
+    @Deprecated
     public List<T> selectAll() {
         return mapper.selectAll();
     }

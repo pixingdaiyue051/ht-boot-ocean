@@ -15,7 +15,7 @@ public class HtEncoderUtil {
         try {
             MessageDigest md = MessageDigest.getInstance(ALGORITHM_MD5);
             byte[] encode = Base64.getEncoder().encode(md.digest(str.getBytes(CHARSET_UTF8)));
-            String encode2 = new String(encode);
+            String encode2 = new String(encode, CHARSET_UTF8);
             return encode2;
         } catch (Exception e) {
             throw new HtCommonException(HtUserErrorEnum.PASSWORD_ENCODE_FAILED);

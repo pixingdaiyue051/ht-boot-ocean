@@ -1,6 +1,6 @@
 package com.tequeno.bootssm.pojo.sys.res;
 
-public class VUserRoleRes {
+public class ViewUserRoleRes {
     private Long userId;
 
     private String userName;

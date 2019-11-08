@@ -2,7 +2,7 @@ package com.tequeno.bootssm.pojo.sys.user;
 
 public class UserModel extends UserInfo {
 
-    private static final long serialVersionUID = -1074474632361537219L;
+    private final static long serialVersionUID = -1074474632361537219L;
 
     private String password;
 

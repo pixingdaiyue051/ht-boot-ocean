@@ -2,10 +2,7 @@ package com.tequeno.config.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +13,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.PatternTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.io.IOException;
 
 @Configuration
 public class RedisConfig {
@@ -32,7 +26,6 @@ public class RedisConfig {
      *
      * @return
      */
-//    @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -68,7 +61,7 @@ public class RedisConfig {
             RedisConnection connection = factory.getConnection();
             logger.info("redis正常启动,对应connection:{}", connection);
         } catch (Exception e) {
-            logger.info("redis未开启");
+            logger.info("redis未开启", e);
         }
         return template;
     }
@@ -93,19 +86,11 @@ public class RedisConfig {
         return new JedisMessageListener();
     }
 
-    @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(factory);
-        container.addMessageListener(messageListener(), patternTopic());
-        return container;
-    }
-
-    private class MyNullKeySerializer extends JsonSerializer<Object> {
-        @Override
-        public void serialize(Object nullKey, JsonGenerator jsonGenerator, SerializerProvider unused)
-                throws IOException {
-            jsonGenerator.writeFieldName("");
-        }
-    }
+//    @Bean
+//    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
+//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+//        container.setConnectionFactory(factory);
+//        container.addMessageListener(messageListener(), patternTopic());
+//        return container;
+//    }
 }

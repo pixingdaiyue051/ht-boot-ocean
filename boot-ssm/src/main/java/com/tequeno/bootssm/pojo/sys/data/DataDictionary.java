@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Table(name = "um_data_dictionary")
 public class DataDictionary extends BaseEntity {
 
-    private static final long serialVersionUID = -4610934219433753563L;
+    private final static long serialVersionUID = -4610934219433753563L;
 
     private String typeCode;
 

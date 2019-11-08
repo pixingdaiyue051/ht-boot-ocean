@@ -6,11 +6,26 @@ import java.util.List;
 
 public class EmailWrapper {
 
-    private String subject;// 邮件主题，必须
-    private String toEmail;// 邮件地址，必须
-    private String toName;// 收件人姓名，非必须
-    private String emailMsg;// 邮件内容，可以是html信息，必须
-    private List<EmailAttachment> attachments;// 附件，非必须
+    /**
+     * 邮件主题，必须
+     */
+    private String subject;
+    /**
+     * 邮件地址，必须
+     */
+    private String toEmail;
+    /**
+     * 收件人姓名，非必须
+     */
+    private String toName;
+    /**
+     * 邮件内容，可以是html信息，必须
+     */
+    private String emailMsg;
+    /**
+     * 附件，非必须
+     */
+    private List<EmailAttachment> attachments;
 
     public EmailWrapper() {
     }

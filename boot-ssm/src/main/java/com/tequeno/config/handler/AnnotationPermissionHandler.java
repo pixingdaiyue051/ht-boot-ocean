@@ -1,7 +1,7 @@
 package com.tequeno.config.handler;
 
 import com.tequeno.bootssm.pojo.sys.res.ResourceInfo;
-import com.tequeno.bootssm.pojo.sys.res.VUserRoleRes;
+import com.tequeno.bootssm.pojo.sys.res.ViewUserRoleRes;
 import com.tequeno.bootssm.service.res.ResourceService;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
@@ -50,7 +50,7 @@ public class AnnotationPermissionHandler {
             String msg = Arrays.stream(permissionEnums)
                     .map(p -> resourceService.selectResByResCode(p.getCode()))
                     .filter(r -> {
-                        VUserRoleRes vUserRoleRes = resourceService.selectUserRes(userName, r.getResCode());
+                        ViewUserRoleRes vUserRoleRes = resourceService.selectUserRes(userName, r.getResCode());
                         return vUserRoleRes == null || !r.getResCode().equals(vUserRoleRes.getResCode());
                     })
                     .map(ResourceInfo::getResZhName)
@@ -63,7 +63,7 @@ public class AnnotationPermissionHandler {
             }
         } else {
             // 只要有一种权限就放行
-            Optional<VUserRoleRes> any = Arrays.stream(permissionEnums)
+            Optional<ViewUserRoleRes> any = Arrays.stream(permissionEnums)
                     .map(p -> resourceService.selectUserRes(userName, p.getCode()))
                     .filter(r -> null != r)
                     .findAny();

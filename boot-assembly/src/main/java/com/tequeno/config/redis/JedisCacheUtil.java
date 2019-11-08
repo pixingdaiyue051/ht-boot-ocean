@@ -22,12 +22,12 @@ public class JedisCacheUtil {
     /**
      * 超时时间需要大于0
      */
-    private final long ZERO = HtZeroOneConstant.ZERO_L;
+    private final static long ZERO = HtZeroOneConstant.ZERO_L;
 
     /**
      * 获得锁是否成功 1 成功 0 失败
      */
-    private final Long SUCCESS = HtZeroOneConstant.ONE_L;
+    private final static Long SUCCESS = HtZeroOneConstant.ONE_L;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -108,7 +108,7 @@ public class JedisCacheUtil {
     public boolean del(String... key) {
         try {
             if (key != null && key.length > HtZeroOneConstant.ZERO_I) {
-                if (key.length == HtZeroOneConstant.ZERO_I) {
+                if (key.length == HtZeroOneConstant.ONE_I) {
                     redisTemplate.delete(key[HtZeroOneConstant.ZERO_I]);
                 } else {
                     redisTemplate.delete(CollectionUtils.arrayToList(key));

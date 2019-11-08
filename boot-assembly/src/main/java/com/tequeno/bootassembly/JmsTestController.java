@@ -5,7 +5,7 @@ import com.tequeno.common.mq.HtJmsModel;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.mq.JmsScheduledPublisher;
 import com.tequeno.config.mq.JmsSimplePublisher;
-import com.tequeno.config.mq.ScheduleMessagePostProcessor;
+import com.tequeno.config.mq.ScheduledMessagePostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +45,7 @@ public class JmsTestController {
                                 @RequestParam(value = "cron", required = false) String cron) {
         HtJmsModel model = new HtJmsModel();
         model.setMsg(msg);
-        ScheduleMessagePostProcessor postProcessor = new ScheduleMessagePostProcessor();
+        ScheduledMessagePostProcessor postProcessor = new ScheduledMessagePostProcessor();
         postProcessor.setDelay(delay);
         postProcessor.setRepeat(repeat);
         postProcessor.setPeriod(period);
@@ -62,7 +62,7 @@ public class JmsTestController {
                                 @RequestParam(value = "cron", required = false) String cron) {
         HtJmsModel model = new HtJmsModel();
         model.setMsg(msg);
-        ScheduleMessagePostProcessor postProcessor = new ScheduleMessagePostProcessor();
+        ScheduledMessagePostProcessor postProcessor = new ScheduledMessagePostProcessor();
         postProcessor.setDelay(delay);
         postProcessor.setRepeat(repeat);
         postProcessor.setPeriod(period);

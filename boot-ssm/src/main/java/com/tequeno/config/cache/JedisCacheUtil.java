@@ -22,12 +22,12 @@ public class JedisCacheUtil {
     /**
      * 超时时间需要大于0
      */
-    private final long ZERO = HtZeroOneConstant.ZERO_L;
+    private final static long ZERO = HtZeroOneConstant.ZERO_L;
 
     /**
      * 获得锁是否成功 1 成功 0 失败
      */
-    private final Long SUCCESS = HtZeroOneConstant.ONE_L;
+    private final static Long SUCCESS = HtZeroOneConstant.ONE_L;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -108,7 +108,7 @@ public class JedisCacheUtil {
     public boolean del(String... key) {
         try {
             if (key != null && key.length > HtZeroOneConstant.ZERO_I) {
-                if (key.length == HtZeroOneConstant.ZERO_I) {
+                if (key.length == HtZeroOneConstant.ONE_I) {
                     redisTemplate.delete(key[HtZeroOneConstant.ZERO_I]);
                 } else {
                     redisTemplate.delete(CollectionUtils.arrayToList(key));
@@ -244,26 +244,6 @@ public class JedisCacheUtil {
     }
 
     /**
-     * 将map整体存入hash表,并设置失效时间
-     *
-     * @param key  键
-     * @param map  对应多个键值
-     * @param time 时间(秒)
-     * @return true成功 false失败
-     */
-    public boolean hmset(String key, Map<String, Object> map, long time) {
-        try {
-            check(key, time);
-            redisTemplate.opsForHash().putAll(key, map);
-            expire(key, time);
-            return true;
-        } catch (Exception e) {
-            logger.info("JedisCacheUtil.hmset调用失败");
-            return false;
-        }
-    }
-
-    /**
      * 向一张hash表中放入数据,如果不存在将创建
      *
      * @param key       键
@@ -274,27 +254,6 @@ public class JedisCacheUtil {
     public boolean hset(String key, String hashKey, Object hashValue) {
         try {
             redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            return true;
-        } catch (Exception e) {
-            logger.info("JedisCacheUtil.hset调用失败");
-            return false;
-        }
-    }
-
-    /**
-     * 向一张hash表中放入数据,如果不存在将创建,并设置失效时间
-     *
-     * @param key       键
-     * @param hashKey   项
-     * @param hashValue 值
-     * @param time      时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
-     * @return true 成功 false失败
-     */
-    public boolean hset(String key, String hashKey, Object hashValue, long time) {
-        try {
-            check(key, hashKey, time);
-            redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            expire(key, time);
             return true;
         } catch (Exception e) {
             logger.info("JedisCacheUtil.hset调用失败");

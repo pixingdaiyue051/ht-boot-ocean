@@ -10,11 +10,11 @@ public enum JedisKeyPrefixEnum {
 
     HDICT("HDICT:", "数据字典hash"),
     HUSER_PASSWORD("HPASSWORD", "用户密码模块"),
-    HUSER_OTP("HOTP", "验证码"),
     HUSER_RES("HUSERRES:", "用户权限"),
     HROLE("HROLE", "角色模块"),
     HRES("HRES", "权限模块"),
 
+    OTP("OTP:", "验证码"),
     LOCK("LOCK:", "分布式锁"),
     ;
     private String prefix;

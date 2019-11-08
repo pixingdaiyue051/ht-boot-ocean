@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisSessionDao extends EnterpriseCacheSessionDAO {
 
-    private final long SESSION_TIMEOUT = HtPropertyConstant.SESSION_TIMEOUT;
+    private final static long SESSION_TIMEOUT = HtPropertyConstant.SESSION_TIMEOUT;
 
     @Autowired
     private RedisTemplate redisTemplate;

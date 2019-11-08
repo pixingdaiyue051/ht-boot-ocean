@@ -152,10 +152,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     @Transactional(rollbackFor = Exception.class)
     public void bindPhoneOrEmail(String userName, Consumer<UserInfo> c) {
         UserInfo userInfoDb = this.selectByUsername(userName);
-        UserInfo user2BUpdated = new UserInfo();
-        user2BUpdated.setId(userInfoDb.getId());
-        c.accept(user2BUpdated);
-        updateSelective(user2BUpdated.getId(), user2BUpdated, JedisKeyPrefixEnum.USER);
+        UserInfo user2BeUpdated = new UserInfo();
+        user2BeUpdated.setId(userInfoDb.getId());
+        c.accept(user2BeUpdated);
+        updateSelective(user2BeUpdated.getId(), user2BeUpdated, JedisKeyPrefixEnum.USER);
         cacheUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userName));
     }
 }

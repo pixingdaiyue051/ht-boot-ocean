@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Table(name = "um_resource_info")
 public class ResourceInfo extends BaseEntity {
 
-    private static final long serialVersionUID = 220700261847671111L;
+    private final static long serialVersionUID = 220700261847671111L;
 
     private Long pid;
 

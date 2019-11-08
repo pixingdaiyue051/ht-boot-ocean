@@ -4,7 +4,7 @@ import com.tequeno.common.enums.HtErrorInterface;
 
 public class HtCommonException extends RuntimeException {
 
-    private static final long serialVersionUID = -1864815202498090353L;
+    private final static long serialVersionUID = -1864815202498090353L;
 
     private HtErrorInterface errorImpl;
 

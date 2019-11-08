@@ -12,30 +12,30 @@ public class HtCommonConstant {
     /**
      * 默认分页的查询方法,返回dto
      */
-    public static final String SELECTALLBYCONDITION = "selectAllByCondition";
+    public final static String SELECTALLBYCONDITION = "selectAllByCondition";
     /**
      * 默认分页的查询方法,返回map
      */
-    public static final String SELECTMAPBYCONDITION = "selectMapByCondition";
+    public final static String SELECTMAPBYCONDITION = "selectMapByCondition";
     /**
      * 自定义方法关键字(主要用于判断,表达式右边的值无所谓)
      */
-    public static final String ANOTHERMETHOD = "anotherMethod";
+    public final static String ANOTHERMETHOD = "anotherMethod";
     /**
      * 排序关键字
      */
-    public static final String ORDERBY = "orderby";
+    public final static String ORDERBY = "orderby";
     /**
      * modalMap中加载成功与否标志
      */
-    public static final String SUCCESS = "success";
+    public final static String SUCCESS = "success";
     /**
      * modalMap中加载失败时的提示词
      */
-    public static final String ERRORMSG = "errorMsg";
+    public final static String ERRORMSG = "errorMsg";
     /**
      * modalMap中加载成功时的提示词
      */
-    public static final String DATA = "data";
+    public final static String DATA = "data";
 
 }

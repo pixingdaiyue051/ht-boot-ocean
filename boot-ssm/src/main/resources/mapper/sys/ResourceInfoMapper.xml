@@ -53,7 +53,7 @@
             RES_CODE = #{resCode}
         </if>
     </delete>
-    <select id="selectUserRes" resultType="com.tequeno.bootssm.pojo.sys.res.VUserRoleRes">
+    <select id="selectUserRes" resultType="com.tequeno.bootssm.pojo.sys.res.ViewUserRoleRes">
         SELECT * FROM V_USER_RES WHERE 1 = 1
         <if test="userId != null">
             AND userId = #{userId}

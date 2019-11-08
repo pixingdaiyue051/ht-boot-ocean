@@ -13,7 +13,7 @@ import javax.jms.Message;
  * @author : hexk
  * @date : 2019-11-06 13:36
  **/
-public class ScheduleMessagePostProcessor implements MessagePostProcessor {
+public class ScheduledMessagePostProcessor implements MessagePostProcessor {
 
     private Long delay;
 

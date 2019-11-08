@@ -7,11 +7,11 @@ import java.time.format.DateTimeFormatter;
 
 public class HtDateUtil {
 
-    public static String DATE_PATTRN = "yyyy-MM-dd";
+    public final static String DATE_PATTRN = "yyyy-MM-dd";
 
-    public static String TIME_PATTRN = "HH:mm:ss";
+    public final static String TIME_PATTRN = "HH:mm:ss";
 
-    public static String DATE_TIME_PATTRN = "yyyy-MM-dd HH:mm:ss";
+    public final static String DATE_TIME_PATTRN = "yyyy-MM-dd HH:mm:ss";
 
     public static String nowDate() {
         return LocalDate.now().toString();

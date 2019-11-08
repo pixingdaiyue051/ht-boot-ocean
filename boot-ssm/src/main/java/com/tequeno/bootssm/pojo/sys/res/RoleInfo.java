@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Table(name = "um_role_info")
 public class RoleInfo extends BaseEntity {
 
-    private static final long serialVersionUID = 5814857732906911449L;
+    private final static long serialVersionUID = 5814857732906911449L;
 
     private String roleCode;
 

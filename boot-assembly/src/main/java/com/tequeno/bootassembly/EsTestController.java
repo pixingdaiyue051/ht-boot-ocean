@@ -28,8 +28,8 @@
 //@RestController
 //@RequestMapping("test/book")
 //public class BookController {
-//    private static final String INDEX = "book";
-//    private static final String TYPE = "novel";
+//    private final static String INDEX = "book";
+//    private final static String TYPE = "novel";
 //
 //    @Autowired
 //    private TransportClient client;

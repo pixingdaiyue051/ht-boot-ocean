@@ -2,7 +2,10 @@ package com.tequeno.config.handler;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,7 +30,7 @@ public class HttpAspectHandler {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         Signature s = joinPoint.getSignature();
-        logger.info("{}.{}方法,开始执行...", s.getDeclaringType().getSimpleName(), s.getName());
+        logger.info("{}.{}方法,开始执行...", s.getDeclaringTypeName(), s.getName());
         logger.info("url={}", request.getRequestURI());
         logger.info("method={}", request.getMethod());
         logger.info("args={}", joinPoint.getArgs());

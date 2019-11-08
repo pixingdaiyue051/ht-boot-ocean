@@ -22,8 +22,8 @@ public class AreaController {
     private AreaService areaService;
 
     @RequestMapping("list")
-    public HtResultBinder list(@RequestBody AreaQuery areaQ) {
-        List<Area> list = areaService.getList(areaQ);
+    public HtResultBinder list(@RequestBody AreaQuery areaQuery) {
+        List<Area> list = areaService.getList(areaQuery);
         return HtResultInfoWrapper.success(list);
     }
 

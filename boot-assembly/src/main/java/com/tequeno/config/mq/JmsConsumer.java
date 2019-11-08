@@ -18,43 +18,43 @@ public class JmsConsumer {
 
     private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
 
-    @JmsListener(destination = HtJmsConstant.TOPIC_SCHEDULED_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
-    public void onScheduledTopicMessage(Message msg) {
-        try {
-            ObjectMessage objectMessage = (ObjectMessage) msg;
-            HtJmsModel model = (HtJmsModel) objectMessage.getObject();
-            logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SCHEDULED_NAME, model);
-        } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
-        }
-    }
-
-    @JmsListener(destination = HtJmsConstant.QUEUE_SCHEDULED_NAME, containerFactory = HtJmsConstant.QUEUE_CONTAINER_FACTORY)
-    public void onScheduledQueueMessage(HtJmsModel model) {
-        try {
-            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SCHEDULED_NAME, model);
-        } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
-        }
-    }
-
-    @JmsListener(destination = HtJmsConstant.TOPIC_SIMPLE_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
-    public void onSimpleTopicMessage(Message msg) {
-        try {
-            ObjectMessage objectMessage = (ObjectMessage) msg;
-            HtJmsModel model = (HtJmsModel) objectMessage.getObject();
-            logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SIMPLE_NAME, model);
-        } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
-        }
-    }
-
-    @JmsListener(destination = HtJmsConstant.QUEUE_SIMPLE_NAME, containerFactory = HtJmsConstant.QUEUE_CONTAINER_FACTORY)
-    public void onSimpleQueueMessage(HtJmsModel model) {
-        try {
-            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SIMPLE_NAME, model);
-        } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
-        }
-    }
+//    @JmsListener(destination = HtJmsConstant.TOPIC_SCHEDULED_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
+//    public void onScheduledTopicMessage(Message msg) {
+//        try {
+//            ObjectMessage objectMessage = (ObjectMessage) msg;
+//            HtJmsModel model = (HtJmsModel) objectMessage.getObject();
+//            logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SCHEDULED_NAME, model);
+//        } catch (Exception e) {
+//            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+//        }
+//    }
+//
+//    @JmsListener(destination = HtJmsConstant.QUEUE_SCHEDULED_NAME, containerFactory = HtJmsConstant.QUEUE_CONTAINER_FACTORY)
+//    public void onScheduledQueueMessage(HtJmsModel model) {
+//        try {
+//            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SCHEDULED_NAME, model);
+//        } catch (Exception e) {
+//            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+//        }
+//    }
+//
+//    @JmsListener(destination = HtJmsConstant.TOPIC_SIMPLE_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
+//    public void onSimpleTopicMessage(Message msg) {
+//        try {
+//            ObjectMessage objectMessage = (ObjectMessage) msg;
+//            HtJmsModel model = (HtJmsModel) objectMessage.getObject();
+//            logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SIMPLE_NAME, model);
+//        } catch (Exception e) {
+//            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+//        }
+//    }
+//
+//    @JmsListener(destination = HtJmsConstant.QUEUE_SIMPLE_NAME, containerFactory = HtJmsConstant.QUEUE_CONTAINER_FACTORY)
+//    public void onSimpleQueueMessage(HtJmsModel model) {
+//        try {
+//            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SIMPLE_NAME, model);
+//        } catch (Exception e) {
+//            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+//        }
+//    }
 }

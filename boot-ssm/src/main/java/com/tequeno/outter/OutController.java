@@ -62,9 +62,9 @@ public class OutController {
     }
 
     private String actualGetOtp(String hkey) {
-        String key = JedisKeyPrefixEnum.HUSER_OTP.getPrefix();
+        String key = JedisKeyPrefixEnum.OTP.assemblyKey(hkey);
         String otpCode = HtCommonMethodUtil.getNonceStr(HtPropertyConstant.OTP_LENGTH);
-        cacheUtil.hset(key, hkey, otpCode, HtPropertyConstant.OTP_EXPIRED);
+        cacheUtil.set(key, otpCode, HtPropertyConstant.OTP_EXPIRED);
         return otpCode;
     }
 }

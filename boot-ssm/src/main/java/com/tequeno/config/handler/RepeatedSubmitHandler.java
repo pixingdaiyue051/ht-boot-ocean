@@ -30,7 +30,7 @@ public class RepeatedSubmitHandler {
     @Around("repeatedSubmitAspect() && @annotation(repeatedSubmitAnno)")
     public Object doAdviceAround(ProceedingJoinPoint joinPoint, HtRepeatedSubmitAnno repeatedSubmitAnno) throws Throwable {
         Signature s = joinPoint.getSignature();
-        String key = JedisKeyPrefixEnum.LOCK.assemblyKey(s.getDeclaringType().getSimpleName() + s.getName());
+        String key = JedisKeyPrefixEnum.LOCK.assemblyKey(String.format("%s.%s", s.getDeclaringTypeName(), s.getName()));
         String value = UUID.randomUUID().toString();
         boolean isGetLock = cacheUtil.tryLock(key, value, repeatedSubmitAnno.expireTime());
         if (isGetLock) {

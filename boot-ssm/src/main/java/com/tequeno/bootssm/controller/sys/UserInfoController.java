@@ -40,9 +40,9 @@ public class UserInfoController {
 
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
-    public HtResultBinder page(@RequestBody UserInfoQuery userQ) {
-        userQ.setPageSize(3);
-        PageInfo<UserInfo> pager = userService.findPager(userQ);
+    public HtResultBinder page(@RequestBody UserInfoQuery userQuery) {
+        userQuery.setPageSize(3);
+        PageInfo<UserInfo> pager = userService.findPager(userQuery);
         System.out.println(pager);
         if (pager.getTotal() > HtZeroOneConstant.ZERO_I) {
             return HtResultInfoWrapper.success(pager);
@@ -52,8 +52,8 @@ public class UserInfoController {
 
     @RequestMapping("list")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
-    public HtResultBinder list(@RequestBody UserInfoQuery userQ) {
-        List<UserInfo> userInfoList = userService.getList(userQ);
+    public HtResultBinder list(@RequestBody UserInfoQuery userQuery) {
+        List<UserInfo> userInfoList = userService.getList(userQuery);
         if (CollectionUtils.isEmpty(userInfoList)) {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_NOT_EXIST);
         }

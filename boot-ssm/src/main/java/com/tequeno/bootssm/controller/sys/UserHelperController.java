@@ -146,7 +146,7 @@ public class UserHelperController {
     }
 
     private HtResultBinder innerBind(String userName, String otp, String hkey, Consumer<UserInfo> c) {
-        String key = JedisKeyPrefixEnum.HUSER_OTP.getPrefix();
+        String key = JedisKeyPrefixEnum.OTP.getPrefix();
         return Optional.ofNullable(cacheUtil.hget(key, hkey))
                 .map(o -> {
                     if (!otp.equals(o)) {
