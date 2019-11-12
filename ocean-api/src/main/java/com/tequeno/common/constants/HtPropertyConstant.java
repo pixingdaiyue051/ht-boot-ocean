@@ -7,6 +7,8 @@ public class HtPropertyConstant {
      */
     public final static String NUMBER_STR = "0123456789";
 
+    public final static String LETTER_STR = "abcdefghijklmnopqrstuvwxyz";
+
     /**
      * 验证码长度
      */
@@ -46,4 +48,14 @@ public class HtPropertyConstant {
      * rememberme 默认 cipher key
      */
     public final static String DEFAULT_CIPHER_KEY = "4AvVhmFLUs0KTA3Kprsdag==";
+
+    /**
+     * 系统默认使用UTF-8编码
+     */
+    public final static String CHARSET_UTF8 = "UTF-8";
+
+    /**
+     * MD5关键字
+     */
+    public final static String ALGORITHM_MD5 = "MD5";
 }

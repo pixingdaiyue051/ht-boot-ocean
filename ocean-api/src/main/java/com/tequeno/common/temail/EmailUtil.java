@@ -1,6 +1,7 @@
 package com.tequeno.common.temail;
 
 import com.tequeno.common.constants.HtCommonRegPattern;
+import com.tequeno.common.constants.HtPropertyConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
@@ -13,7 +14,7 @@ public class EmailUtil {
     private final static String SSL_PORT = "465";
     private final static String USER_NAME = "pixingdaiyue051@163.com";
     private final static String PASSWORD = "pixingdaiyue051";
-    private final static String CHARSET = "UTF-8";
+    private final static String CHARSET = HtPropertyConstant.CHARSET_UTF8;
 
     public static EmailRespone send(EmailWrapper wrapper) {
         EmailRespone respone = new EmailRespone();
