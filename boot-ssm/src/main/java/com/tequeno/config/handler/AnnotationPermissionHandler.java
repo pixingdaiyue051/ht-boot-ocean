@@ -40,7 +40,7 @@ public class AnnotationPermissionHandler {
 
     @Around("permissionAspect() && @annotation(permissionAnno) ")
     public Object doAdviceAroundPermission(ProceedingJoinPoint joinPoint, HtPermissionAnno permissionAnno) throws Throwable {
-        logger.info("doAdviceAroundPermission");
+        logger.debug("doAdviceAroundPermission");
         HtPermissionAnno.Logical logical = permissionAnno.logical();
         HtUserResEnum[] permissionEnums = permissionAnno.value();
         Subject user = SecurityUtils.getSubject();

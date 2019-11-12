@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="60000" debug="true">
     <!-- 定义日志文件 输出位置以下是API内的默认位置 -->
-    <!-- <property name="log_dir" value="/home/hadmin/data/logs/src" /> -->
-    <property name="log_dir" value="/logs/ht-boot-ocean/boot-ssm" />
+    <!-- <property name="log_dir" value="/home/hadmin/data/logs/src"/> -->
+    <property name="log_dir" value="/logs/ht-boot-ocean/boot-ssm"/>
     <!-- 日志最大的历史 30天 -->
-    <property name="maxHistory" value="30" />
+    <property name="maxHistory" value="30"/>
     <!-- 异步输出日志最大缓冲默认256 -->
-    <property name="queueSize" value="1024" />
+    <property name="queueSize" value="1024"/>
     <!-- 默认值为queueSize/5的即如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->  
     <!-- 为了保留所有的events，可以将这个值设置为0 -->
-    <property name="discardingThreshold" value="10" />
+    <property name="discardingThreshold" value="10"/>
     <!-- 自定义日志输出格式 -->
     <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss} %level %caller{1} - %msg%n"/>
     <!-- 字符集编码格式 -->
-    <property name="charset" value="UTF-8" />
+    <property name="charset" value="UTF-8"/>
 
 	<!-- 控制输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -114,23 +114,25 @@
     <logger name="org.mybatis"/>
     <logger name="org.apache.ibatis" level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
+        <appender-ref ref="AsyncDebug"/>
+        <appender-ref ref="AsyncInfo"/>
     </logger>
     <logger name="java.sql" level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
+        <appender-ref ref="AsyncDebug"/>
+        <appender-ref ref="AsyncInfo"/>
     </logger>
     <logger name="com.tequeno.bootssm.mapper" level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
+        <appender-ref ref="AsyncDebug"/>
     </logger>
 
     <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="AsyncInfo" />
-        <appender-ref ref="AsyncWarn" />
-    	<appender-ref ref="AsyncError" />
-        <appender-ref ref="AsyncDebug" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="AsyncDebug"/>
+        <appender-ref ref="AsyncInfo"/>
+        <appender-ref ref="AsyncWarn"/>
+    	<appender-ref ref="AsyncError"/>
     </root>
      
 </configuration>

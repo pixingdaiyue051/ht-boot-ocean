@@ -28,15 +28,15 @@ public class TimeLineAspectHandler {
 
     @Before("controllerAspect()")
     public void doAdviceBeforeTimeLine() {
-        logger.info("doAdviceBeforeTimeLine");
+        logger.debug("doAdviceBeforeTimeLine");
         this.beginSecond = System.currentTimeMillis();
     }
 
     @After("controllerAspect()")
     public void doAdviceAfterTimeLine(JoinPoint joinPoint) {
-        logger.info("doAdviceAfterTimeLine");
+        logger.debug("doAdviceAfterTimeLine");
         this.endSecond = System.currentTimeMillis();
         Signature s = joinPoint.getSignature();
-        logger.info("{}.{}方法,执行时间为{}ms", s.getDeclaringType().getSimpleName(), s.getName(), endSecond - beginSecond);
+        logger.debug("{}.{}方法,执行时间为{}ms", s.getDeclaringTypeName(), s.getName(), endSecond - beginSecond);
     }
 }

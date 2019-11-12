@@ -59,9 +59,9 @@ public class RedisConfig {
         try {
             // 如果没有异常则表示redis
             RedisConnection connection = factory.getConnection();
-            logger.info("redis正常启动,对应connection:{}", connection);
+            logger.debug("redis正常启动,对应connection:{}", connection);
         } catch (Exception e) {
-            logger.info("redis未开启", e);
+            logger.debug("redis未开启", e);
         }
         return template;
     }

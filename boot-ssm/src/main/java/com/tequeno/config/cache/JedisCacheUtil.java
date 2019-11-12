@@ -45,7 +45,7 @@ public class JedisCacheUtil {
             redisTemplate.expire(key, time, TimeUnit.SECONDS);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.expire调用失败");
+            logger.debug("JedisCacheUtil.expire调用失败");
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class JedisCacheUtil {
             check(key);
             return redisTemplate.getExpire(key, TimeUnit.SECONDS);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.getExpire调用失败");
+            logger.debug("JedisCacheUtil.getExpire调用失败");
             return ZERO;
         }
     }
@@ -77,7 +77,7 @@ public class JedisCacheUtil {
             check(key);
             return redisTemplate.hasKey(key);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hasKey调用失败");
+            logger.debug("JedisCacheUtil.hasKey调用失败");
             return false;
         }
     }
@@ -95,7 +95,7 @@ public class JedisCacheUtil {
             Set keys = redisTemplate.keys(pattern);
             return keys;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.keys调用失败");
+            logger.debug("JedisCacheUtil.keys调用失败");
             return null;
         }
     }
@@ -116,7 +116,7 @@ public class JedisCacheUtil {
             }
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.del调用失败");
+            logger.debug("JedisCacheUtil.del调用失败");
             return false;
         }
     }
@@ -134,7 +134,7 @@ public class JedisCacheUtil {
             }
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.del调用失败");
+            logger.debug("JedisCacheUtil.del调用失败");
             return false;
         }
     }
@@ -150,7 +150,7 @@ public class JedisCacheUtil {
             check(key);
             return redisTemplate.opsForValue().get(key);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.get调用失败");
+            logger.debug("JedisCacheUtil.get调用失败");
             return null;
         }
     }
@@ -168,7 +168,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.set调用失败");
+            logger.debug("JedisCacheUtil.set调用失败");
             return false;
         }
     }
@@ -187,7 +187,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.set调用失败");
+            logger.debug("JedisCacheUtil.set调用失败");
             return false;
         }
     }
@@ -204,7 +204,7 @@ public class JedisCacheUtil {
             check(key, hashKey);
             return redisTemplate.opsForHash().get(key, hashKey);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hget调用失败");
+            logger.debug("JedisCacheUtil.hget调用失败");
             return null;
         }
     }
@@ -220,7 +220,7 @@ public class JedisCacheUtil {
             check(key);
             return redisTemplate.opsForHash().entries(key);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hmget调用失败");
+            logger.debug("JedisCacheUtil.hmget调用失败");
             return null;
         }
     }
@@ -238,7 +238,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForHash().putAll(key, map);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hmset调用失败");
+            logger.debug("JedisCacheUtil.hmset调用失败");
             return false;
         }
     }
@@ -256,7 +256,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForHash().put(key, hashKey, hashValue);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hset调用失败");
+            logger.debug("JedisCacheUtil.hset调用失败");
             return false;
         }
     }
@@ -273,7 +273,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForHash().delete(key, hashKey);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hdel调用失败");
+            logger.debug("JedisCacheUtil.hdel调用失败");
             return false;
         }
     }
@@ -290,7 +290,7 @@ public class JedisCacheUtil {
             check(key, hashKey);
             return redisTemplate.opsForHash().hasKey(key, hashKey);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.hasHashKey调用失败");
+            logger.debug("JedisCacheUtil.hasHashKey调用失败");
             return false;
         }
     }
@@ -301,7 +301,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForList().leftPush(key, value);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.lpush调用失败");
+            logger.debug("JedisCacheUtil.lpush调用失败");
             return false;
         }
     }
@@ -312,7 +312,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForList().leftPushAll(key, c);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.lpushCollection调用失败");
+            logger.debug("JedisCacheUtil.lpushCollection调用失败");
             return false;
         }
     }
@@ -323,7 +323,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForList().rightPush(key, value);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.rpush调用失败");
+            logger.debug("JedisCacheUtil.rpush调用失败");
             return false;
         }
     }
@@ -334,7 +334,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForList().rightPushAll(key, c);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.rpushCollection调用失败");
+            logger.debug("JedisCacheUtil.rpushCollection调用失败");
             return false;
         }
     }
@@ -345,7 +345,7 @@ public class JedisCacheUtil {
             redisTemplate.opsForSet().add(key, obj);
             return true;
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.sadd调用失败");
+            logger.debug("JedisCacheUtil.sadd调用失败");
             return false;
         }
     }
@@ -355,7 +355,7 @@ public class JedisCacheUtil {
             check(key);
             return redisTemplate.opsForSet().members(key);
         } catch (Exception e) {
-            logger.info("JedisCacheUtil.smembers调用失败");
+            logger.debug("JedisCacheUtil.smembers调用失败");
             return null;
         }
     }
@@ -402,11 +402,11 @@ public class JedisCacheUtil {
             RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
             Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
             if (SUCCESS.equals(result)) {
-                logger.info("尝试获取分布式锁-key[{}]requestId[{}]成功", lockKey, requestId);
+                logger.debug("尝试获取分布式锁-key[{}]requestId[{}]成功", lockKey, requestId);
                 return true;
             }
         } catch (Exception e) {
-            logger.error("尝试获取分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
+            logger.warn("尝试获取分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
         }
         return false;
     }
@@ -425,7 +425,7 @@ public class JedisCacheUtil {
             Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId);
             return SUCCESS.equals(result);
         } catch (Exception e) {
-            logger.error("尝试释放分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
+            logger.warn("尝试释放分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
             return false;
         }
     }
