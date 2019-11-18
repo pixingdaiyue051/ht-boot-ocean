@@ -1,23 +1,23 @@
-package com.tequeno.config.mq;
-
-import com.tequeno.common.enums.HtCommonErrorEnum;
-import com.tequeno.common.mq.HtJmsConstant;
-import com.tequeno.common.mq.HtJmsModel;
-import com.tequeno.common.utils.HtCommonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Component;
-
-import javax.jms.JMSConsumer;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
-@Component
-public class JmsConsumer {
-
-    private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
-
+//package com.tequeno.config.mq;
+//
+//import com.tequeno.common.enums.HtCommonErrorEnum;
+//import com.tequeno.common.mq.HtJmsConstant;
+//import com.tequeno.common.mq.HtJmsModel;
+//import com.tequeno.common.utils.HtCommonException;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.jms.annotation.JmsListener;
+//import org.springframework.stereotype.Component;
+//
+//import javax.jms.JMSConsumer;
+//import javax.jms.Message;
+//import javax.jms.ObjectMessage;
+//
+//@Component
+//public class JmsConsumer {
+//
+//    private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
+//
 //    @JmsListener(destination = HtJmsConstant.TOPIC_SCHEDULED_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
 //    public void onScheduledTopicMessage(Message msg) {
 //        try {
@@ -57,4 +57,4 @@ public class JmsConsumer {
 //            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
 //        }
 //    }
-}
+//}

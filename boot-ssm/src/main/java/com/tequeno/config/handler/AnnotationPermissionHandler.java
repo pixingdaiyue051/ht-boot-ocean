@@ -3,6 +3,7 @@ package com.tequeno.config.handler;
 import com.tequeno.bootssm.pojo.sys.res.ResourceInfo;
 import com.tequeno.bootssm.pojo.sys.res.ViewUserRoleRes;
 import com.tequeno.bootssm.service.res.ResourceService;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.enums.HtUserResEnum;
@@ -21,6 +22,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,7 +67,7 @@ public class AnnotationPermissionHandler {
             // 只要有一种权限就放行
             Optional<ViewUserRoleRes> any = Arrays.stream(permissionEnums)
                     .map(p -> resourceService.selectUserRes(userName, p.getCode()))
-                    .filter(r -> null != r)
+                    .filter(Objects::nonNull)
                     .findAny();
             if (any.isPresent()) {
                 return joinPoint.proceed();
@@ -73,7 +75,7 @@ public class AnnotationPermissionHandler {
                 String msg = Arrays.stream(permissionEnums)
                         .map(p -> resourceService.selectResByResCode(p.getCode()).getResZhName())
                         .collect(Collectors.joining(","));
-                if (permissionEnums.length > 1) {
+                if (permissionEnums.length > HtZeroOneConstant.ONE_I) {
                     msg = String.format(HtAssemConstants.NEED_ONE_LEAST_PERMISSION, msg);
                 } else {
                     msg = String.format(HtAssemConstants.NEED_SPECIFIC_PERMISSION, msg);

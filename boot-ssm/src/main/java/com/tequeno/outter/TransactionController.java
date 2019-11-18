@@ -4,8 +4,6 @@ import com.tequeno.bootssm.service.area.AreaService;
 import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +21,7 @@ public class TransactionController {
                 areaService.testInsertUser(i);
                 areaService.testInsertArea(i);
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return HtResultInfoWrapper.success();

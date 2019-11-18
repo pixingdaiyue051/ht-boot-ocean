@@ -41,22 +41,31 @@ public class JedisTestController {
     }
 
     /**
-     * @param pattern
+     * @param key
      * @return
      */
-    @RequestMapping("keys/{pattern}")
-    public HtResultBinder keys(@PathVariable String pattern) {
-        return HtResultInfoWrapper.success(cacheUtil.keys(pattern));
+    @RequestMapping("get")
+    public HtResultBinder get(@RequestParam("key") String key) {
+        key = JedisKeyPrefixEnum.TEST.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.get(key));
     }
 
     /**
      * @param key
      * @return
      */
-    @RequestMapping("get/{key}")
-    public HtResultBinder get(@PathVariable String key) {
-        key = JedisKeyPrefixEnum.TEST.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.get(key));
+    @RequestMapping("has/{key}")
+    public HtResultBinder has(@PathVariable String key) {
+        return HtResultInfoWrapper.success(cacheUtil.hasKey(key));
+    }
+
+    /**
+     * @param pattern
+     * @return
+     */
+    @RequestMapping("keys/{pattern}")
+    public HtResultBinder keys(@PathVariable String pattern) {
+        return HtResultInfoWrapper.success(cacheUtil.keys(pattern));
     }
 
     /**
@@ -70,29 +79,11 @@ public class JedisTestController {
 
     /**
      * @param key
-     * @return
-     */
-    @RequestMapping("has/{key}")
-    public HtResultBinder has(@PathVariable String key) {
-        return HtResultInfoWrapper.success(cacheUtil.hasKey(key));
-    }
-
-    /**
-     * @param key
-     * @return
-     */
-    @RequestMapping("hasHash/{key}")
-    public HtResultBinder hasHash(@RequestParam String key, @RequestParam String hashKey) {
-        return HtResultInfoWrapper.success(cacheUtil.hasHashKey(key, hashKey));
-    }
-
-    /**
-     * @param key
      * @param time
      * @return
      */
-    @RequestMapping("expire")
-    public HtResultBinder expire(@RequestParam("key") String key, @RequestParam("time") long time) {
+    @RequestMapping("expire/{key}/{time}")
+    public HtResultBinder expire(@PathVariable String key, @PathVariable long time) {
         return HtResultInfoWrapper.success(cacheUtil.expire(key, time));
     }
 

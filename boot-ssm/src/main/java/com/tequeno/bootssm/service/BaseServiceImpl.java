@@ -4,7 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.config.cache.JedisCacheUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -14,6 +17,8 @@ import java.util.Optional;
 
 public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
 
+    private final static Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
+
     @Autowired
     protected D mapper;
 
@@ -21,7 +26,6 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     protected JedisCacheUtil cacheUtil;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public T selectByPrimaryKey(Object id) {
         return mapper.selectByPrimaryKey(id);
     }
@@ -48,31 +52,30 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
             PageHelper.startPage(currentPage, pageSize);
             return new PageInfo<>(this.actualQuery(q, superClass));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.debug("BaseServiceImpl.findPager出错:", e);
         }
         return null;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int insertSelective(T entity) {
         return mapper.insertSelective(entity);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int updateSelective(T entity) {
         return mapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int deleteByPrimaryKey(Object id) {
         return mapper.deleteByPrimaryKey(id);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public T selectByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
         Object o = Optional.ofNullable(cacheUtil.get(key)).orElseGet(() -> {
@@ -84,7 +87,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int updateSelective(Object id, T entity, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
         cacheUtil.del(key);
@@ -92,7 +95,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int deleteByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
         cacheUtil.del(key);
@@ -109,7 +112,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
             Method m = mapper.getClass().getDeclaredMethod(methodName, q.getClass());
             return (List<T>) m.invoke(mapper, q);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.debug("BaseServiceImpl.actualQuery出错:", e);
         }
         return null;
     }

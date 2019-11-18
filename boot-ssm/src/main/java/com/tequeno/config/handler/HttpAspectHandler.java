@@ -30,27 +30,27 @@ public class HttpAspectHandler {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         Signature s = joinPoint.getSignature();
-        logger.debug("{}.{}方法,开始执行...", s.getDeclaringTypeName(), s.getName());
-        logger.debug("url={}", request.getRequestURI());
-        logger.debug("method={}", request.getMethod());
-        logger.debug("args={}", joinPoint.getArgs());
+        logger.debug("[{}.{}]方法,开始执行...", s.getDeclaringTypeName(), s.getName());
+        logger.debug("url:[{}]", request.getRequestURI());
+        logger.debug("method:[{}]", request.getMethod());
+        logger.debug("args:[{}]", joinPoint.getArgs());
     }
 
     @After("controllerAspect()")
     public void doAdviceAfterHttp(JoinPoint joinPoint) {
         logger.debug("doAdviceAfterHttp");
         Signature s = joinPoint.getSignature();
-        logger.debug("{}.{}方法,开始执行...", s.getDeclaringTypeName(), s.getName());
+        logger.debug("[{}.{}]方法,开始执行...", s.getDeclaringTypeName(), s.getName());
     }
 
 //    @AfterReturning(returning = "obj", pointcut = "controllerAspect()")
 //    public void doAfterReturningHttp(Object obj) {
 //        logger.debug("doAfterReturningHttp");
-//        logger.debug("response={}", obj);
+//        logger.debug("response:[{}]", obj);
 //    }
 
 //    @AfterThrowing(throwing = "error", pointcut = "controllerAspect()")
 //    public void doAfterThrowingHttp(Object obj) {
-//        logger.debug("response={}", obj);
+//        logger.debug("response:[{}]", obj);
 //    }
 }

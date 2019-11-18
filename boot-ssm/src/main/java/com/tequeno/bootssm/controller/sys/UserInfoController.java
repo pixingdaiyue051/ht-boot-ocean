@@ -94,19 +94,19 @@ public class UserInfoController {
             Subject user = SecurityUtils.getSubject();
             user.login(token);
         } catch (UnknownAccountException e) {
-            logger.error("用户名{}错误，未找到对应用户", userName);
+            logger.error("用户名[{}]错误,未找到对应用户", userName);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
         } catch (IncorrectCredentialsException e) {
-            logger.error("账号{}的密码{}不正确", userName, password);
+            logger.error("账号[{}]的密码[{}]不正确", userName, password);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
         } catch (LockedAccountException e) {
-            logger.error("账号{}被锁定", userName);
+            logger.error("账号[{}]被锁定", userName);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_LOCKED);
         } catch (DisabledAccountException e) {
-            logger.error("账号{}被禁用", userName);
+            logger.error("账号[{}]被禁用", userName);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_DISABLED);
         } catch (AuthenticationException e) {
-            logger.error("{}登录失败", userName, e);
+            logger.error("[{}]登录失败", userName, e);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.LOGIN_FAILED);
         }
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);

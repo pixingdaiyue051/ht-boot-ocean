@@ -20,8 +20,6 @@ public class TimeLineAspectHandler {
 
     private long beginSecond;
 
-    private long endSecond;
-
     @Pointcut("execution(public * com.tequeno.bootssm.controller..*.*(..))")
     public void controllerAspect() {
     }
@@ -35,8 +33,8 @@ public class TimeLineAspectHandler {
     @After("controllerAspect()")
     public void doAdviceAfterTimeLine(JoinPoint joinPoint) {
         logger.debug("doAdviceAfterTimeLine");
-        this.endSecond = System.currentTimeMillis();
+        long endSecond = System.currentTimeMillis();
         Signature s = joinPoint.getSignature();
-        logger.debug("{}.{}方法,执行时间为{}ms", s.getDeclaringTypeName(), s.getName(), endSecond - beginSecond);
+        logger.debug("[{}.{}]方法,执行时间为[{}]ms", s.getDeclaringTypeName(), s.getName(), endSecond - beginSecond);
     }
 }

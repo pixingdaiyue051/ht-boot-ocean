@@ -6,7 +6,6 @@ import com.tequeno.bootssm.service.area.AreaService;
 import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +32,12 @@ public class AreaController {
     }
 
     @RequestMapping("addOne")
-    @Transactional(rollbackFor = Exception.class)
     public HtResultBinder addOne(@RequestBody Area area) {
         areaService.insertSelective(area);
         return HtResultInfoWrapper.success();
     }
 
     @RequestMapping("updateOne")
-    @Transactional(rollbackFor = Exception.class)
     public HtResultBinder updateOne(@RequestBody Area area) {
         areaService.updateSelective(area);
         return HtResultInfoWrapper.success();

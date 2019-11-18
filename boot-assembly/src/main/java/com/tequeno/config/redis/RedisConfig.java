@@ -7,12 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -59,7 +56,7 @@ public class RedisConfig {
         try {
             // 如果没有异常则表示redis
             RedisConnection connection = factory.getConnection();
-            logger.debug("redis正常启动,对应connection:{}", connection);
+            logger.debug("redis正常启动:{}", connection);
         } catch (Exception e) {
             logger.debug("redis未开启", e);
         }
@@ -71,21 +68,21 @@ public class RedisConfig {
         return new JedisCacheUtil();
     }
 
-    @Bean
-    public ChannelTopic channelTopic() {
-        return new ChannelTopic("string-topic");
-    }
-
-    @Bean
-    public PatternTopic patternTopic() {
-        return new PatternTopic("*");
-    }
-
-    @Bean
-    public MessageListener messageListener() {
-        return new JedisMessageListener();
-    }
-
+//    @Bean
+//    public ChannelTopic channelTopic() {
+//        return new ChannelTopic("string-topic");
+//    }
+//
+//    @Bean
+//    public PatternTopic patternTopic() {
+//        return new PatternTopic("*");
+//    }
+//
+//    @Bean
+//    public MessageListener messageListener() {
+//        return new JedisMessageListener();
+//    }
+//
 //    @Bean
 //    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
 //        RedisMessageListenerContainer container = new RedisMessageListenerContainer();

@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public HtResultBinder exceptionHandle(HttpServletRequest request, Exception e) {
-        logger.warn("访问url:{}时捕获到程序异常", request.getRequestURI(), e);
+        logger.warn("访问url:[{}]时捕获到程序异常", request.getRequestURI(), e);
         if (e instanceof HtCommonException) {
             return HtResultInfoWrapper.fail(((HtCommonException) e).getErrorImpl());
         }

@@ -18,9 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -34,7 +36,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     private RoleInfoMapper roleMapper;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void addUser(UserModel userModel) {
         // 1.写入用户信息
         UserInfo userInfo = new UserInfo();
@@ -51,7 +53,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void updateUser(UserModel userModel) {
 //         1.先执行查询，获取数据库或缓存中的用户信息
         UserInfo userInDb = Optional.ofNullable(super.selectByPrimaryKey(userModel.getId(), JedisKeyPrefixEnum.USER))
@@ -94,7 +96,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void enableDisableUser(String ids, int enableStatus) {
         if (StringUtils.isBlank(ids)) {
             throw new HtCommonException(HtCommonErrorEnum.PARAMETER_NOT_VALID);
@@ -119,7 +121,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void deleteUser(String ids) {
         if (StringUtils.isBlank(ids)) {
             throw new HtCommonException(HtCommonErrorEnum.PARAMETER_NOT_VALID);
@@ -131,7 +133,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         // 没有查找到用户的id不处理
         Arrays.stream(idsStr)
                 .map(id -> this.selectByPrimaryKey(Long.valueOf(id), JedisKeyPrefixEnum.USER))
-                .filter(u -> null != u)
+                .filter(Objects::nonNull)
                 .forEach(u -> {
 //                    1.删除用户与以用户id为key的缓存
                     this.deleteByPrimaryKey(u.getId(), JedisKeyPrefixEnum.USER);
@@ -149,7 +151,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void bindPhoneOrEmail(String userName, Consumer<UserInfo> c) {
         UserInfo userInfoDb = this.selectByUsername(userName);
         UserInfo user2BeUpdated = new UserInfo();

@@ -19,6 +19,12 @@ public class JedisTestHashController {
     @Autowired
     private JedisCacheUtil cacheUtil;
 
+    /**
+     * @param key
+     * @param hashKey
+     * @param hashValue
+     * @return
+     */
     @RequestMapping("set")
     public HtResultBinder set(@RequestParam("key") String key,
                               @RequestParam("hashKey") String hashKey,
@@ -27,21 +33,57 @@ public class JedisTestHashController {
         return HtResultInfoWrapper.success(cacheUtil.hset(key, hashKey, hashValue));
     }
 
+    /**
+     * @param key
+     * @param map
+     * @return
+     */
     @RequestMapping("setObject")
     public HtResultBinder set(@RequestParam("key") String key, @RequestBody Map<String, Object> map) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hmset(key, map));
     }
 
+    /**
+     * @param key
+     * @param hashKey
+     * @return
+     */
     @RequestMapping("get")
     public HtResultBinder get(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hget(key, hashKey));
     }
 
+    /**
+     * @param key
+     * @return
+     */
     @RequestMapping("getObject")
     public HtResultBinder getObject(@RequestParam("key") String key) {
         key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.hmget(key));
+    }
+
+    /**
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    @RequestMapping("del")
+    public HtResultBinder delete(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.hdel(key, hashKey));
+    }
+
+    /**
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    @RequestMapping("has")
+    public HtResultBinder hasHash(@RequestParam("key") String key, @RequestParam("hashKey") String hashKey) {
+        key = JedisKeyPrefixEnum.HTEST.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.hasHashKey(key, hashKey));
     }
 }
