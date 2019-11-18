@@ -440,7 +440,7 @@ public class JedisCacheUtil {
      */
     public boolean tryLock(String lockKey, String requestId, long expireTime) {
         try {
-            String script = "if redis.call('setNx',KEYS[1],ARGV[1]) then if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('expire',KEYS[1],ARGV[2]) else return 0 end end";
+            String script = "local result = redis.call('setNX',KEYS[1],ARGV[1]) if(result == 1) then result = redis.call('expire',KEYS[1],ARGV[2]) end return result";
             RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
             Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
             if (SUCCESS.equals(result)) {
@@ -462,7 +462,7 @@ public class JedisCacheUtil {
      */
     public boolean releaseLock(String lockKey, String requestId) {
         try {
-            String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+            String script = "local result = redis.call('get',KEYS[1]) if(result) then result = redis.call('del',KEYS[1]) else result = 0 end return result";
             RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
             Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId);
             return SUCCESS.equals(result);

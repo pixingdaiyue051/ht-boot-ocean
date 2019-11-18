@@ -2,8 +2,12 @@ package com.tequeno.config.handler;
 
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
+import com.tequeno.common.enums.JedisMsgKeyEnum;
+import com.tequeno.common.mq.HtJmsModel;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.mq.JmsScheduledPublisher;
+import com.tequeno.config.mq.ScheduledMessagePostProcessor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -23,6 +27,9 @@ public class RepeatedSubmitHandler {
     @Autowired
     private JedisCacheUtil cacheUtil;
 
+    @Autowired
+    private JmsScheduledPublisher scheduledPublisher;
+
     @Pointcut("@annotation(com.tequeno.config.handler.HtRepeatedSubmitAnno)")
     public void repeatedSubmitAspect() {
     }
@@ -34,6 +41,14 @@ public class RepeatedSubmitHandler {
         String value = UUID.randomUUID().toString();
         boolean isGetLock = cacheUtil.tryLock(key, value, repeatedSubmitAnno.expireTime());
         if (isGetLock) {
+            // 测试释放锁接口是否可用
+            HtJmsModel model = new HtJmsModel();
+            model.setCode(JedisMsgKeyEnum.DEL_LOCK.getChanel());
+            model.setMsg(key);
+            model.setData(value);
+            ScheduledMessagePostProcessor postProcessor = new ScheduledMessagePostProcessor();
+            postProcessor.setDelay(10000L);
+            scheduledPublisher.sendQueue(model, postProcessor);
 //            cacheUtil.releaseLock(key, value);
             return joinPoint.proceed();
         }

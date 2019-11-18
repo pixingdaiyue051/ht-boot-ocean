@@ -2,6 +2,7 @@ package com.tequeno.common.enums;
 
 public enum JedisMsgKeyEnum {
     TEST("MSG:TEST", "测试用例"),
+    DEL_LOCK("DEL:LOCK", "测试分布式锁释放接口"),
     ;
     private String chanel;
     private String desc;

@@ -1,11 +1,14 @@
 //package com.tequeno.config.mq;
 //
 //import com.tequeno.common.enums.HtCommonErrorEnum;
+//import com.tequeno.common.enums.JedisMsgKeyEnum;
 //import com.tequeno.common.mq.HtJmsConstant;
 //import com.tequeno.common.mq.HtJmsModel;
 //import com.tequeno.common.utils.HtCommonException;
+//import com.tequeno.config.cache.JedisCacheUtil;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
+//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.jms.annotation.JmsListener;
 //import org.springframework.stereotype.Component;
 //
@@ -17,6 +20,9 @@
 //public class JmsConsumer {
 //
 //    private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
+//
+//    @Autowired
+//    private JedisCacheUtil cacheUtil;
 //
 //    @JmsListener(destination = HtJmsConstant.TOPIC_SCHEDULED_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
 //    public void onScheduledTopicMessage(Message msg) {
@@ -33,6 +39,11 @@
 //    public void onScheduledQueueMessage(HtJmsModel model) {
 //        try {
 //            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SCHEDULED_NAME, model);
+//            if (JedisMsgKeyEnum.DEL_LOCK.getChanel().equals(model.getCode())) {
+//                String key = model.getMsg();
+//                String value = model.getData().toString();
+//                cacheUtil.releaseLock(key, value);
+//            }
 //        } catch (Exception e) {
 //            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
 //        }
