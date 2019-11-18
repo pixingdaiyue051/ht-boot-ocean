@@ -1,0 +1,677 @@
+{
+	"info": {
+		"_postman_id": "0ec4a831-6c18-416e-9a1b-c6d6e88db3fe",
+		"name": "testredis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "jedislist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/list",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "keyspattern",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/keys/*",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"keys",
+						"*"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "has",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/has/HTEST:rainbow",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"has",
+						"HTEST:rainbow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "keydel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/del/TEST:six",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"del",
+						"TEST:six"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "keyexpire",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/expire/TEST:six/10",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"expire",
+						"TEST:six",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lock",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/lock/six/100000",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"lock",
+						"six",
+						"100000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "release",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/release/six",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"release",
+						"six"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/set?key=six&value=6",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"set"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "six"
+						},
+						{
+							"key": "value",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setObject",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"one\": 1,\n    \"two\": 2,\n    \"three\": 3,\n    \"four\": 4,\n    \"five\": 5,\n    \"six\": 6,\n    \"seven\": 7,\n    \"eight\": 8,\n    \"nine\": 9,\n    \"ten\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/setObject",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"setObject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/get?key=six",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"get"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "six"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hashhas",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/hash/has?key=number&hashKey=2",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"hash",
+						"has"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "number"
+						},
+						{
+							"key": "hashKey",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hashset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/hash/set?key=number&hashKey=2&hashValue=2",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"hash",
+						"set"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "number"
+						},
+						{
+							"key": "hashKey",
+							"value": "2"
+						},
+						{
+							"key": "hashValue",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hashsetObject",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"spring\": \"spring\",\n    \"summer\": \"summer\",\n    \"autumn\": \"autumn\",\n    \"winter\": \"winter\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/hash/setObject?key=season",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"hash",
+						"setObject"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "season"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hashget",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/hash/get?key=number&hashKey=2",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"hash",
+						"get"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "number"
+						},
+						{
+							"key": "hashKey",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hashgetObject",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/hash/getObject?key=rainbow",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"hash",
+						"getObject"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "rainbow"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "jedissendmsg",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8500/test/jedis/send?chanel=MSG:TEST&msg=533gggs",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"jedis",
+						"send"
+					],
+					"query": [
+						{
+							"key": "chanel",
+							"value": "MSG:TEST"
+						},
+						{
+							"key": "msg",
+							"value": "533gggs"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c9546d22-474e-45af-9bfc-2c922329cd0d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0da6959e-3fcb-413e-a327-191a5bb64942",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

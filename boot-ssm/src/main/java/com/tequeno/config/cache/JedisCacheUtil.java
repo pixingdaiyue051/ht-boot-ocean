@@ -399,7 +399,7 @@ public class JedisCacheUtil {
      */
     public boolean tryLock(String lockKey, String requestId, long expireTime) {
         try {
-            String script = "local result = redis.call('setNX',KEYS[1],ARGV[1]) if(result == 1) then result = redis.call('expire',KEYS[1],ARGV[2]) end return result";
+            String script = "local result = redis.call('setNX',KEYS[1],ARGV[1]) if(result == 1) then result = redis.call('pexpire',KEYS[1],ARGV[2]) end return result";
             RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
             Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
             if (SUCCESS.equals(result)) {

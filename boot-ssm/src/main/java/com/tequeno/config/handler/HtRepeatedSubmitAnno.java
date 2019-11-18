@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public @interface HtRepeatedSubmitAnno {
 
-    long expireTime() default 1L;
+    long expireTime() default 1000L;
 }

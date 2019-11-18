@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -111,5 +112,26 @@ public class JedisTestController {
     public HtResultBinder send(@RequestParam("chanel") String chanel, @RequestParam("msg") String msg) {
         cacheUtil.sendMsg(chanel, msg);
         return HtResultInfoWrapper.success();
+    }
+
+    /**
+     * @param key
+     * @param time
+     * @return
+     */
+    @RequestMapping("lock/{key}/{time}")
+    public HtResultBinder lock(@PathVariable String key, @PathVariable long time) {
+        key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.tryLock(key, UUID.randomUUID().toString(), time));
+    }
+
+    /**
+     * @param key
+     * @return
+     */
+    @RequestMapping("release/{key}")
+    public HtResultBinder release(@PathVariable String key) {
+        key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
+        return HtResultInfoWrapper.success(cacheUtil.releaseLock(key, null));
     }
 }
