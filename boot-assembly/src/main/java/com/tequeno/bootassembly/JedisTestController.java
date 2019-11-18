@@ -91,7 +91,6 @@ public class JedisTestController {
      * @return
      */
     @RequestMapping("list")
-    @SuppressWarnings("all")
     public HtResultBinder list() {
         Map map1 = (Map) cacheUtil.keys(JedisKeyPrefixEnum.TEST.assemblyKey("*"))
                 .stream()

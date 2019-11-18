@@ -90,6 +90,7 @@ public class JedisCacheUtil {
      * @param pattern
      * @return
      */
+    @Deprecated
     public Set keys(String pattern) {
         try {
             Set keys = redisTemplate.keys(pattern);
