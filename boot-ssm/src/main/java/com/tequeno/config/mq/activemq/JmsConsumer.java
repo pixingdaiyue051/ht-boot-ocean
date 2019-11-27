@@ -39,7 +39,7 @@
 //    public void onScheduledQueueMessage(HtJmsModel model) {
 //        try {
 //            logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SCHEDULED_NAME, model);
-//            if (JedisMsgKeyEnum.DEL_LOCK.getChanel().equals(model.getCode())) {
+//            if (JedisMsgKeyEnum.RELEASE_LOCK.getChanel().equals(model.getCode())) {
 //                String key = model.getMsg();
 //                String value = model.getData().toString();
 //                cacheUtil.releaseLock(key, value);

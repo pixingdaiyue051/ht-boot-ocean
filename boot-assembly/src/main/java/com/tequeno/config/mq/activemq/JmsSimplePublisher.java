@@ -1,4 +1,4 @@
-package com.tequeno.config.mq;
+package com.tequeno.config.mq.activemq;
 
 import com.tequeno.common.mq.HtJmsConstant;
 import com.tequeno.common.mq.HtJmsModel;

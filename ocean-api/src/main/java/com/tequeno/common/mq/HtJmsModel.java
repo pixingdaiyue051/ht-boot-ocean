@@ -10,6 +10,8 @@ public class HtJmsModel implements Serializable {
 
     private Object data;
 
+    private Integer timeLevel;
+
     public String getCode() {
         return code;
     }
@@ -32,6 +34,14 @@ public class HtJmsModel implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Integer getTimeLevel() {
+        return timeLevel;
+    }
+
+    public void setTimeLevel(Integer timeLevel) {
+        this.timeLevel = timeLevel;
     }
 
     @Override

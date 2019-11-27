@@ -1,4 +1,4 @@
-package com.tequeno.config.mq;
+package com.tequeno.config.mq.activemq;
 
 import org.apache.activemq.ScheduledMessage;
 import org.apache.commons.lang3.StringUtils;

@@ -11,7 +11,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jms/sche/topic?msg=eeeeeee&delay=10000",
+					"raw": "127.0.0.1:8500/test/active/sche/topic?msg=eeeeeee&delay=10000",
 					"host": [
 						"127",
 						"0",
@@ -21,9 +21,87 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jms",
+						"active",
 						"sche",
 						"topic"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "eeeeeee"
+						},
+						{
+							"key": "repeat",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "period",
+							"value": "10000",
+							"disabled": true
+						},
+						{
+							"key": "cron",
+							"value": "*/5 * * * *",
+							"disabled": true
+						},
+						{
+							"key": "delay",
+							"value": "10000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toipcsimple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/active/topic?msg=eeeeeee",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"active",
+						"topic"
+					],
+					"query": [
+						{
+							"key": "msg",
+							"value": "eeeeeee"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "queue",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8500/test/active/sche/queue?msg=eeeeeee&delay=10000",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8500",
+					"path": [
+						"test",
+						"active",
+						"sche",
+						"queue"
 					],
 					"query": [
 						{
@@ -55,12 +133,12 @@
 			"response": []
 		},
 		{
-			"name": "toipcsimple",
+			"name": "queuesimple",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jms/topic?msg=eeeeeee",
+					"raw": "127.0.0.1:8500/test/active/queue?msg=sssssssss",
 					"host": [
 						"127",
 						"0",
@@ -70,13 +148,13 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jms",
-						"topic"
+						"active",
+						"queue"
 					],
 					"query": [
 						{
 							"key": "msg",
-							"value": "eeeeeee"
+							"value": "sssssssss"
 						}
 					]
 				}
@@ -84,12 +162,12 @@
 			"response": []
 		},
 		{
-			"name": "queue",
+			"name": "rocketsync",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jms/sche/queue?msg=eeeeeee&delay=10000&repeat=10&period=10000",
+					"raw": "127.0.0.1:8500/test/rocket/sync?msg=lover",
 					"host": [
 						"127",
 						"0",
@@ -99,30 +177,17 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jms",
-						"sche",
-						"queue"
+						"rocket",
+						"sync"
 					],
 					"query": [
 						{
 							"key": "msg",
-							"value": "eeeeeee"
+							"value": "lover"
 						},
 						{
-							"key": "delay",
-							"value": "10000"
-						},
-						{
-							"key": "repeat",
-							"value": "10"
-						},
-						{
-							"key": "period",
-							"value": "10000"
-						},
-						{
-							"key": "cron",
-							"value": "*/5 * * * *",
+							"key": "timeLevel",
+							"value": "2",
 							"disabled": true
 						}
 					]
@@ -131,12 +196,12 @@
 			"response": []
 		},
 		{
-			"name": "queuesimple",
+			"name": "rocketasync",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jms/queue?msg=sssssssss",
+					"raw": "127.0.0.1:8500/test/rocket/async?msg=vip",
 					"host": [
 						"127",
 						"0",
@@ -146,13 +211,18 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jms",
-						"queue"
+						"rocket",
+						"async"
 					],
 					"query": [
 						{
 							"key": "msg",
-							"value": "sssssssss"
+							"value": "vip"
+						},
+						{
+							"key": "timeLevel",
+							"value": "2",
+							"disabled": true
 						}
 					]
 				}

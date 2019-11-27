@@ -3,17 +3,17 @@ package com.tequeno.bootassembly;
 import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.mq.HtJmsModel;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.mq.JmsScheduledPublisher;
-import com.tequeno.config.mq.JmsSimplePublisher;
-import com.tequeno.config.mq.ScheduledMessagePostProcessor;
+import com.tequeno.config.mq.activemq.JmsScheduledPublisher;
+import com.tequeno.config.mq.activemq.JmsSimplePublisher;
+import com.tequeno.config.mq.activemq.ScheduledMessagePostProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("test/jms")
-public class JmsTestController {
+@RequestMapping("test/active")
+public class ActiveMqTestController {
 
     @Autowired
     private JmsSimplePublisher publisher;

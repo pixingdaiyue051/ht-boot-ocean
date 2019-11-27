@@ -79,6 +79,15 @@ public class JedisTestController {
     }
 
     /**
+     * @param pattern
+     * @return
+     */
+    @RequestMapping("delKey/{pattern}")
+    public HtResultBinder deleteKeysWithPattern(@PathVariable String pattern) {
+        return HtResultInfoWrapper.success(cacheUtil.keysDel(pattern));
+    }
+
+    /**
      * @param key
      * @param time
      * @return
@@ -134,4 +143,5 @@ public class JedisTestController {
         key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
         return HtResultInfoWrapper.success(cacheUtil.releaseLock(key, null));
     }
+
 }
