@@ -26,10 +26,24 @@ mapperLocation: /mapper/**/*.xml
 entityLocation: com.tequeno.bootssm.pojo
 # 自定义
 rocketmq:
-  groupName: r_group
-  topic: r_topic
-# *表示订阅当前topic下所有的tag,配置特殊字符需要使用'(英文半角单引号)
-  subExpression: '*'
+  producerGroup: r_group
   namesrvAddr: 127.0.0.1:9876
-  failedRetry: 0
-  vipEnabled: false
+  producer:
+    retryTimesWhenSendFailed: 2
+    retryTimesWhenSendAsyncFailed: 2
+    vipChannelEnabled: false
+    instanceName: producerInstance
+    sendMsgTimeout: 3000
+    maxMessageSize: 4194304
+  consumer:
+    topic: r_topic
+#   *表示订阅当前topic下所有的tag,配置特殊字符需要使用'(英文半角单引号)
+#   || 表示同时订阅当前topic下多个tag 比如 r_tag_a || r_tag_b
+    subExpression: '*'
+    instanceName: consumerInstance
+#    消费者一次接收消息最大数量
+    consumeMessageBatchMaxSize: 1
+#    以上配置都是默认配置
+    consumeTimeout: 3000 #默认15
+    consumeThreadMin: 10 #默认20
+    consumeThreadMax: 30 #默认20

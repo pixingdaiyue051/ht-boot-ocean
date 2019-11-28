@@ -1,7 +1,6 @@
 package com.tequeno.config.mq.rocketmq;
 
 import com.alibaba.fastjson.JSON;
-import com.tequeno.common.mq.HtJmsConstant;
 import com.tequeno.common.mq.HtJmsModel;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -11,7 +10,6 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,16 +29,11 @@ public class MsgSendProducer {
 
     private final static Logger logger = LoggerFactory.getLogger(MsgSendProducer.class);
 
-    @Value("${rocketmq.topic}")
+    @Value("${rocketmq.consumer.topic}")
     private String topic;
 
     @Autowired
-    @Qualifier(HtJmsConstant.PRODUCER_INSTANCE_NAME_A)
-    private DefaultMQProducer singleMsgProducer;
-
-    @Autowired
-    @Qualifier(HtJmsConstant.PRODUCER_INSTANCE_NAME_B)
-    private DefaultMQProducer batchMsgProducer;
+    private DefaultMQProducer producer;
 
     /**
      * 同步发送一条消息
@@ -74,7 +67,7 @@ public class MsgSendProducer {
             if (null != model.getTimeLevel()) {
                 msg.setDelayTimeLevel(model.getTimeLevel());
             }
-            return singleMsgProducer.send(msg);
+            return producer.send(msg);
         } catch (Exception e) {
             logger.debug("同步发送消息[{}]失败", model, e);
             return null;
@@ -101,12 +94,9 @@ public class MsgSendProducer {
                 }
                 Message msg = new Message(topic, body);
                 msg.setTags(tag);
-                if (null != model.getTimeLevel()) {
-                    msg.setDelayTimeLevel(model.getTimeLevel());
-                }
                 return msg;
             }).collect(Collectors.toList());
-            return batchMsgProducer.send(msgList);
+            return producer.send(msgList);
         } catch (Exception e) {
             logger.debug("同步发送多条消息发送失败", e);
             return null;
@@ -128,7 +118,7 @@ public class MsgSendProducer {
             if (null != model.getTimeLevel()) {
                 msg.setDelayTimeLevel(model.getTimeLevel());
             }
-            singleMsgProducer.send(msg, sendCallback);
+            producer.send(msg, sendCallback);
         } catch (Exception e) {
             logger.debug("异步发送消息[{}]失败", model, e);
         }

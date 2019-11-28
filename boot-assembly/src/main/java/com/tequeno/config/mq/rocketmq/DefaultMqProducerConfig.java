@@ -1,6 +1,5 @@
 package com.tequeno.config.mq.rocketmq;
 
-import com.tequeno.common.mq.HtJmsConstant;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.slf4j.Logger;
@@ -20,47 +19,46 @@ public class DefaultMqProducerConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(DefaultMqProducerConfig.class);
 
-    @Value("${rocketmq.groupName}")
-    private String groupName;
+    @Value("${rocketmq.producerGroup}")
+    private String producerGroup;
 
     @Value("${rocketmq.namesrvAddr}")
     private String namesrvAddr;
 
-    @Value("${rocketmq.failedRetry}")
-    private String failedRetry;
+    @Value("${rocketmq.producer.retryTimesWhenSendFailed}")
+    private String retryTimesWhenSendFailed;
 
-    @Value("${rocketmq.vipEnabled}")
-    private String vipEnabled;
+    @Value("${rocketmq.producer.retryTimesWhenSendAsyncFailed}")
+    private String retryTimesWhenSendAsyncFailed;
 
-    @Bean(HtJmsConstant.PRODUCER_INSTANCE_NAME_A)
-    public DefaultMQProducer producerWithInstanceA() {
+    @Value("${rocketmq.producer.vipChannelEnabled}")
+    private String vipChannelEnabled;
+
+    @Value("${rocketmq.producer.instanceName}")
+    private String instanceName;
+
+    @Value("${rocketmq.producer.sendMsgTimeout}")
+    private String sendMsgTimeout;
+
+    @Value("${rocketmq.producer.maxMessageSize}")
+    private String maxMessageSize;
+
+    @Bean(destroyMethod = "shutdown")
+    public DefaultMQProducer defaultMQProducer() {
         try {
-            DefaultMQProducer producer = generateProducer(HtJmsConstant.PRODUCER_INSTANCE_NAME_A);
+            DefaultMQProducer producer = new DefaultMQProducer(producerGroup);
+            producer.setNamesrvAddr(namesrvAddr);
+            producer.setRetryTimesWhenSendFailed(Integer.parseInt(retryTimesWhenSendFailed));
+            producer.setRetryTimesWhenSendAsyncFailed(Integer.parseInt(retryTimesWhenSendAsyncFailed));
+            producer.setVipChannelEnabled(Boolean.getBoolean(vipChannelEnabled));
+            producer.setInstanceName(instanceName);
+            producer.setSendMsgTimeout(Integer.parseInt(sendMsgTimeout));
+            producer.setMaxMessageSize(Integer.parseInt(maxMessageSize));
+            producer.start();
             return producer;
         } catch (MQClientException e) {
-            logger.debug("rocketmq producer[{}]启动失败", HtJmsConstant.PRODUCER_INSTANCE_NAME_A, e);
+            logger.debug("rocketmq producer[{}]启动失败", instanceName, e);
             return null;
         }
-    }
-
-    @Bean(HtJmsConstant.PRODUCER_INSTANCE_NAME_B)
-    public DefaultMQProducer producerWithInstanceB() {
-        try {
-            DefaultMQProducer producer = generateProducer(HtJmsConstant.PRODUCER_INSTANCE_NAME_B);
-            return producer;
-        } catch (MQClientException e) {
-            logger.debug("rocketmq producer[{}]启动失败", HtJmsConstant.PRODUCER_INSTANCE_NAME_B, e);
-            return null;
-        }
-    }
-
-    private DefaultMQProducer generateProducer(String instanceBName) throws MQClientException {
-        DefaultMQProducer producer = new DefaultMQProducer(groupName);
-        producer.setNamesrvAddr(namesrvAddr);
-        producer.setRetryTimesWhenSendFailed(Integer.parseInt(failedRetry));
-        producer.setVipChannelEnabled(Boolean.getBoolean(vipEnabled));
-        producer.setInstanceName(instanceBName);
-        producer.start();
-        return producer;
     }
 }

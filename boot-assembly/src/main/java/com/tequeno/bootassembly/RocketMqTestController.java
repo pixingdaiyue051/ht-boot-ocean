@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /**
  * 消息发送rest接口
  *
@@ -57,6 +61,21 @@ public class RocketMqTestController {
                         logger.debug("异步发送失败", throwable);
                     }
                 });
+        return HtResultInfoWrapper.success();
+    }
+
+    @RequestMapping("batch")
+    public HtResultBinder batchSend() {
+        List<HtJmsModel> list = IntStream.rangeClosed(1, 10)
+                .boxed()
+                .map(i -> {
+                    HtJmsModel model = new HtJmsModel();
+                    model.setMsg(String.valueOf(i));
+                    model.setTimeLevel(i);
+                    return model;
+                })
+                .collect(Collectors.toList());
+        producer.send(HtJmsConstant.ROCKET_TAG_B, list);
         return HtResultInfoWrapper.success();
     }
 }
