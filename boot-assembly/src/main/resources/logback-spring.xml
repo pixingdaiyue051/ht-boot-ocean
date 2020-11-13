@@ -22,6 +22,27 @@
             <charset>${charset}</charset>
         </encoder>
     </appender>
+    <appender name="RollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/debug-file.log</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+            <charset>${charset}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name ="AsyncDebug" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>${discardingThreshold}</discardingThreshold>
+        <queueSize>${queueSize}</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref ="RollingDebugFile"/>
+    </appender>
     <appender name="RollingInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/info-file.log</fileNamePattern>
@@ -85,45 +106,17 @@
         <!-- 添加附加的appender,最多只能添加一个 -->
         <appender-ref ref ="RollingErrorFile"/>
     </appender>
-    <appender name="RollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/debug-file.log</fileNamePattern>
-            <maxHistory>${maxHistory}</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${pattern}</pattern>
-            <charset>${charset}</charset>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
-    <appender name ="AsyncDebug" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>${discardingThreshold}</discardingThreshold>
-        <queueSize>${queueSize}</queueSize>
-        <!-- 添加附加的appender,最多只能添加一个 -->
-        <appender-ref ref ="RollingDebugFile"/>
-    </appender>
 
 
     <logger name="com.tequeno"/>
     <logger name="java"/>
     <logger name="org.springframework"/>
     <logger name="org.mybatis"/>
-    <logger name="org.apache.ibatis" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
-    <logger name="java.sql" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
-    <logger name="com.tequeno.bootssm.mapper" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AsyncDebug" />
-    </logger>
+    <logger name="org.apache.ibatis" level="DEBUG"/>
+    <logger name="java.sql" level="DEBUG"/>
+    <logger name="com.tequeno.bootssm.mapper" level="DEBUG"/>
+    <logger name="org.apache.activemq" level="INFO"/>
+    <logger name="org.apache.rocketmq" level="INFO"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
