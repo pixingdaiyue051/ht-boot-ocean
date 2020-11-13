@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Aspect
-@Order(0)
+@Order(1)
 public class AnnotationPermissionHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(AnnotationPermissionHandler.class);

@@ -15,14 +15,23 @@ import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.enums.HtUserResEnum;
 import com.tequeno.validators.UserValidator;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -51,7 +60,7 @@ public class UserInfoController {
     }
 
     @RequestMapping("list")
-    @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
+    @HtPermissionAnno(value = {HtUserResEnum.RES_USER_QUERY, HtUserResEnum.RES_USER_UPDATE}, logical = HtPermissionAnno.Logical.OR)
     public HtResultBinder list(@RequestBody UserInfoQuery userQuery) {
         List<UserInfo> userInfoList = userService.getList(userQuery);
         if (CollectionUtils.isEmpty(userInfoList)) {
