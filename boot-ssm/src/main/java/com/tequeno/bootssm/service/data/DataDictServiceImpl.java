@@ -4,6 +4,8 @@ import com.tequeno.bootssm.mapper.sys.DataDictionaryMapper;
 import com.tequeno.bootssm.pojo.sys.data.DataDictionary;
 import com.tequeno.bootssm.pojo.sys.data.DataDictionaryQuery;
 import com.tequeno.bootssm.service.BaseServiceImpl;
+import com.tequeno.common.constants.HtCommonConstant;
+import com.tequeno.common.constants.HtZeroOneConstant;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +31,7 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
                 return null;
             }
             final String key = JedisKeyPrefixEnum.HDICT.assemblyKey(typeCode);
-            dictionaryList.forEach(dict -> {
-                cacheUtil.hset(key, dict.getValueCode(), dict);
-            });
+            dictionaryList.forEach(dict -> cacheUtil.hset(key, dict.getValueCode(), dict));
             return cacheUtil.hmget(key);
         });
         return (Map<String, DataDictionary>) o;
@@ -51,7 +51,7 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
                 return null;
             }
             final String key = JedisKeyPrefixEnum.HDICT.assemblyKey(typeCode);
-            DataDictionary dataDictionary = dictionaryList.get(0);
+            DataDictionary dataDictionary = dictionaryList.get(HtZeroOneConstant.ZERO_I);
             cacheUtil.hset(key, valueCode, dataDictionary);
             return dataDictionary;
         });

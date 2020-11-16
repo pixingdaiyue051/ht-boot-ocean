@@ -6,7 +6,10 @@ import com.tequeno.bootssm.service.BaseService;
 
 public interface AreaService extends BaseService<Area, AreaQuery> {
 
-    void testInsertUser(int i);
+    void testInsertArea1();
 
-    void testInsertArea(int i);
+    void testInsertArea2();
+
+    void testInsertArea3();
+
 }

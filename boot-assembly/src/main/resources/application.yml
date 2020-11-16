@@ -3,22 +3,22 @@ server:
   servlet:
     context-path: /
 spring:
-  redis:
-    database: 1
-  activemq:
-    user: admin
-    password: admin
-    broker-url: tcp://127.0.0.1:61616
-    pool:
-      enabled: true
-      max-connections: 10
-#   自定义
-    trustedPackages: com.tequeno.common.mq,java.util,java.lang
+  application:
+    name: boot-assembly
+  spring:
+    redis:
+      database: 1
 logging:
   config: classpath:logback-spring.xml
-# 自定义
+# activemq
+activemq:
+  user: admin
+  password: admin
+  broker-url: tcp://127.0.0.1:61616
+  trustedPackages: com.tequeno.common.mq,java.util,java.lang
+# rocketmq
 rocketmq:
-  producerGroup: r_group_test
+  producerGroup: r_group
   namesrvAddr: 127.0.0.1:9876
   producer:
     retryTimesWhenSendFailed: 2
@@ -28,14 +28,14 @@ rocketmq:
     sendMsgTimeout: 3000
     maxMessageSize: 4194304
   consumer:
-    topic: r_topic_test
-#   *表示订阅当前topic下所有的tag,配置特殊字符需要使用'(英文半角单引号)
-#   || 表示同时订阅当前topic下多个tag 比如 r_tag_a || r_tag_b
+    topic: r_topic
+    #   *表示订阅当前topic下所有的tag,配置特殊字符需要使用'(英文半角单引号)
+    #   || 表示同时订阅当前topic下多个tag 比如 r_tag_a || r_tag_b
     subExpression: '*'
     instanceName: consumerInstance
-#    消费者一次接收消息最大数量
+    #    消费者一次接收消息最大数量
     consumeMessageBatchMaxSize: 1
-#    以上配置都是默认配置
+    #    以上配置都是默认配置
     consumeTimeout: 3000 #默认15
     consumeThreadMin: 10 #默认20
     consumeThreadMax: 30 #默认20

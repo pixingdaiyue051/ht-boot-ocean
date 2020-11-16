@@ -16,14 +16,13 @@ public class TransactionController {
 
     @RequestMapping("test1")
     public HtResultBinder test1() {
-        for (int i = 0; i < 5; i++) {
-            try {
-                areaService.testInsertUser(i);
-                areaService.testInsertArea(i);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        areaService.testInsertArea1();
+        return HtResultInfoWrapper.success();
+    }
+
+    @RequestMapping("test2")
+    public HtResultBinder test2() {
+        areaService.testInsertArea2();
         return HtResultInfoWrapper.success();
     }
 }

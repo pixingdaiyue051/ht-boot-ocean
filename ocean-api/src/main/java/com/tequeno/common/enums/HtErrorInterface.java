@@ -17,11 +17,10 @@ public interface HtErrorInterface {
     String getMsg();
 
     /**
-     * 复用同一个代码设置不同的提示信息
-     * 不推荐这样用
+     * 因为会涉及到对msg的修改，所以只有默认msg为空的才可以使用该方法
      *
-     * @param msg           提示信息
+     * @param msg 提示信息
      * @return
      */
-    HtErrorInterface setMsgBindReturn(String msg);
+    HtErrorInterface build(String msg);
 }

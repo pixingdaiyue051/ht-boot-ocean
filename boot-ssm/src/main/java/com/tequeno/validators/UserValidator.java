@@ -62,8 +62,8 @@ public class UserValidator implements Validator {
         }
         if (errors.hasErrors()) {
             List<ObjectError> allErrors = errors.getAllErrors();
-            String errMsg = allErrors.stream().map(e -> e.getCode()).collect(Collectors.joining(","));
-            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.setMsgBindReturn(errMsg));
+            String errMsg = allErrors.stream().map(ObjectError::getCode).collect(Collectors.joining(","));
+            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.build(errMsg));
         }
     }
 
@@ -102,8 +102,8 @@ public class UserValidator implements Validator {
         }
         if (errors.hasErrors()) {
             List<ObjectError> allErrors = errors.getAllErrors();
-            String errMsg = allErrors.stream().map(e -> e.getCode()).collect(Collectors.joining(","));
-            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.setMsgBindReturn(errMsg));
+            String errMsg = allErrors.stream().map(ObjectError::getCode).collect(Collectors.joining(","));
+            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.build(errMsg));
         }
     }
 
@@ -152,8 +152,8 @@ public class UserValidator implements Validator {
         }
         if (errors.hasErrors()) {
             List<ObjectError> allErrors = errors.getAllErrors();
-            String errMsg = allErrors.stream().map(e -> e.getCode()).collect(Collectors.joining(","));
-            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.setMsgBindReturn(errMsg));
+            String errMsg = allErrors.stream().map(ObjectError::getCode).collect(Collectors.joining(","));
+            throw new HtCommonException(HtCommonErrorEnum.COMBINE_ERROR.build(errMsg));
         }
     }
 }

@@ -23,7 +23,7 @@ public enum HtUserErrorEnum implements HtErrorInterface {
     USER_DISABLED("1205", "账号被禁用"),
     LOGOUT("1206", "已退出"),
 
-    NOT_PERMITTED("2000", "无访问权限"),
+    NOT_PERMITTED("2000", null),
     ;
     private String code;
     private String msg;
@@ -44,7 +44,7 @@ public enum HtUserErrorEnum implements HtErrorInterface {
     }
 
     @Override
-    public HtErrorInterface setMsgBindReturn(String msg) {
+    public HtErrorInterface build(String msg) {
         this.msg = msg;
         return this;
     }

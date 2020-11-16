@@ -27,6 +27,11 @@ public class Area extends BaseEntity {
         this.priority = priority;
     }
 
+    public Area(String areaName, Integer priority) {
+        this.areaName = areaName;
+        this.priority = priority;
+    }
+
     @Override
     public String toString() {
         return "Area{" +

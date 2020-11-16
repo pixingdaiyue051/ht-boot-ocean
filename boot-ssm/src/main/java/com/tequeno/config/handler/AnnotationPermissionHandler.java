@@ -59,7 +59,7 @@ public class AnnotationPermissionHandler {
                     .collect(Collectors.joining(","));
             if (StringUtils.isNotEmpty(msg)) {
                 msg = String.format(HtAssemConstants.NEED_ALL_PERMISSION, msg);
-                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.setMsgBindReturn(msg));
+                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.build(msg));
             } else {
                 return joinPoint.proceed();
             }
@@ -80,7 +80,7 @@ public class AnnotationPermissionHandler {
                 } else {
                     msg = String.format(HtAssemConstants.NEED_SPECIFIC_PERMISSION, msg);
                 }
-                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.setMsgBindReturn(msg));
+                return HtResultInfoWrapper.fail(HtUserErrorEnum.NOT_PERMITTED.build(msg));
             }
         }
     }

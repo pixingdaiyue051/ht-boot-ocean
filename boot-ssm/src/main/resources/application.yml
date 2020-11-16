@@ -3,15 +3,8 @@ spring:
     active: dev
   application:
     name: boot-ssm
-  activemq:
-    user: admin
-    password: admin
-    broker-url: tcp://127.0.0.1:61616
-    pool:
-      enabled: true
-      max-connections: 10
-#   自定义
-    trustedPackages: com.tequeno.common.mq,java.util,java.lang
+  redis:
+    database: 0
 mapper:
   mappers: tk.mybatis.mapper.common.Mapper
   not-empty: false
@@ -24,7 +17,13 @@ pagehelper:
 # 自定义配置
 mapperLocation: /mapper/**/*.xml
 entityLocation: com.tequeno.bootssm.pojo
-# 自定义
+# activemq
+activemq:
+  user: admin
+  password: admin
+  broker-url: tcp://127.0.0.1:61616
+  trustedPackages: com.tequeno.common.mq,java.util,java.lang
+# rocketmq
 rocketmq:
   producerGroup: r_group
   namesrvAddr: 127.0.0.1:9876

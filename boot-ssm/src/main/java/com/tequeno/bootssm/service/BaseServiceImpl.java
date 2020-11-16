@@ -2,6 +2,7 @@ package com.tequeno.bootssm.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tequeno.common.constants.HtCommonPageInfo;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.config.cache.JedisCacheUtil;
 import org.slf4j.Logger;
@@ -38,19 +39,26 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
 
     @Override
     public List<T> getList(Q q) {
-        return this.actualQuery(q, null);
+        try {
+            Method m = mapper.getClass().getDeclaredMethod(HtCommonPageInfo.SELECT_ALL_BY_CONDITION, q.getClass());
+            return (List<T>) m.invoke(mapper, q);
+        } catch (Exception e) {
+            logger.debug("BaseServiceImpl.getList出错:", e);
+        }
+        return null;
     }
 
     @Override
     public PageInfo<T> findPager(Q q) {
         try {
             Class<?> superClass = q.getClass().getSuperclass();
-            Method method = superClass.getDeclaredMethod("getCurrentPage");
+            Method method = superClass.getDeclaredMethod(HtCommonPageInfo.GET_CURRENT_PAGE);
             Integer currentPage = (Integer) method.invoke(q);
-            method = superClass.getDeclaredMethod("getPageSize");
+            method = superClass.getDeclaredMethod(HtCommonPageInfo.GET_PAGE_SIZE);
             Integer pageSize = (Integer) method.invoke(q);
             PageHelper.startPage(currentPage, pageSize);
-            return new PageInfo<>(this.actualQuery(q, superClass));
+            Method m = mapper.getClass().getDeclaredMethod(HtCommonPageInfo.SELECT_ALL_BY_CONDITION, q.getClass());
+            return new PageInfo<>((List<T>) m.invoke(mapper, q));
         } catch (Exception e) {
             logger.debug("BaseServiceImpl.findPager出错:", e);
         }
@@ -102,18 +110,4 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
         return deleteByPrimaryKey(id);
     }
 
-    private List<T> actualQuery(Q q, Class<?> superClass) {
-        try {
-            if (null == superClass) {
-                superClass = q.getClass().getSuperclass();
-            }
-            Method loadMethod = superClass.getDeclaredMethod("getLoadMethod");
-            String methodName = (String) loadMethod.invoke(q);
-            Method m = mapper.getClass().getDeclaredMethod(methodName, q.getClass());
-            return (List<T>) m.invoke(mapper, q);
-        } catch (Exception e) {
-            logger.debug("BaseServiceImpl.actualQuery出错:", e);
-        }
-        return null;
-    }
 }

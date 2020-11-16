@@ -25,7 +25,7 @@ public class JmsConsumer {
             HtJmsModel model = (HtJmsModel) objectMessage.getObject();
             logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SCHEDULED_NAME, model);
         } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.build(e.getMessage()));
         }
     }
 
@@ -34,7 +34,7 @@ public class JmsConsumer {
         try {
             logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SCHEDULED_NAME, model);
         } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.build(e.getMessage()));
         }
     }
 
@@ -45,7 +45,7 @@ public class JmsConsumer {
             HtJmsModel model = (HtJmsModel) objectMessage.getObject();
             logger.info("接收到[{}]的topic消息:[{}]", HtJmsConstant.TOPIC_SIMPLE_NAME, model);
         } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.build(e.getMessage()));
         }
     }
 
@@ -54,7 +54,7 @@ public class JmsConsumer {
         try {
             logger.info("接收到[{}]的queue消息:[{}]", HtJmsConstant.QUEUE_SIMPLE_NAME, model);
         } catch (Exception e) {
-            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.setMsgBindReturn(e.getMessage()));
+            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.build(e.getMessage()));
         }
     }
 }

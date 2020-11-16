@@ -6,25 +6,17 @@ public class HtCommonQuery {
 
     private Integer pageSize;
 
-    private String loadMethod;
-
     private String orderBy;
 
     public HtCommonQuery() {
-        loadMethod = "selectAllByCondition";
-//        orderBy = "create_time desc";
-        currentPage = 1;
-        pageSize = 10;
+        orderBy = HtCommonPageInfo.ORDER_BY;
+        currentPage = HtCommonPageInfo.CURRENT_PAGE;
+        pageSize = HtCommonPageInfo.PAGE_SIZE;
     }
 
-    public HtCommonQuery(String loadMethod) {
-        this();
-        this.loadMethod = loadMethod;
-    }
 
-    public HtCommonQuery(String loadMethod, String orderBy) {
+    public HtCommonQuery(String orderBy) {
         this();
-        this.loadMethod = loadMethod;
         this.orderBy = orderBy;
     }
 
@@ -42,14 +34,6 @@ public class HtCommonQuery {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public String getLoadMethod() {
-        return loadMethod;
-    }
-
-    public void setLoadMethod(String loadMethod) {
-        this.loadMethod = loadMethod;
     }
 
     public String getOrderBy() {

@@ -50,7 +50,7 @@ public class UserInfoController {
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
     public HtResultBinder page(@RequestBody UserInfoQuery userQuery) {
-        userQuery.setPageSize(3);
+//        userQuery.setPageSize(3);
         PageInfo<UserInfo> pager = userService.findPager(userQuery);
         System.out.println(pager);
         if (pager.getTotal() > HtZeroOneConstant.ZERO_I) {

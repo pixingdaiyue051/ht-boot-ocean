@@ -23,7 +23,7 @@ public enum HtBussnessErrorEnum implements HtErrorInterface {
     }
 
     @Override
-    public HtErrorInterface setMsgBindReturn(String msg) {
+    public HtErrorInterface build(String msg) {
         this.msg = msg;
         return this;
     }

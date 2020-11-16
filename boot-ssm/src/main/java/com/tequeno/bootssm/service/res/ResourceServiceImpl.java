@@ -18,38 +18,46 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
 
     @Override
     public ResourceInfo selectResByResCode(String resCode) {
-        String key = JedisKeyPrefixEnum.HRES.getPrefix();
-        Object o = cacheUtil.hget(key, resCode);
-        Object orElseGet = Optional.ofNullable(o).orElseGet(() -> {
+        String resKey = JedisKeyPrefixEnum.HRES.getPrefix();
+        Object resObj = cacheUtil.hget(resKey, resCode);
+        resObj = Optional.ofNullable(resObj).orElseGet(() -> {
             UserRoleResQuery resQuery = new UserRoleResQuery();
             resQuery.setResCode(resCode);
             List<ResourceInfo> resourceInfos = mapper.selectAllByCondition(resQuery);
             if (CollectionUtils.isNotEmpty(resourceInfos)) {
                 ResourceInfo resourceInfo = resourceInfos.get(HtZeroOneConstant.ZERO_I);
-                cacheUtil.hset(key, resCode, resourceInfo);
+                cacheUtil.hset(resKey, resCode, resourceInfo);
                 return resourceInfo;
             }
             return null;
         });
-        return (ResourceInfo) orElseGet;
+        return (ResourceInfo) resObj;
     }
 
     @Override
     public ViewUserRoleRes selectUserRes(String userName, String resCode) {
-        String key = JedisKeyPrefixEnum.HUSER_RES.assemblyKey(userName);
-        Object o = cacheUtil.hget(key, resCode);
-        Object orElseGet = Optional.ofNullable(o).orElseGet(() -> {
-            UserRoleResQuery query = new UserRoleResQuery();
-            query.setUserName(userName);
-            query.setResCode(resCode);
-            List<ViewUserRoleRes> userResList = mapper.selectUserRes(query);
-            if (CollectionUtils.isNotEmpty(userResList)) {
-                ViewUserRoleRes result = userResList.get(HtZeroOneConstant.ZERO_I);
-                cacheUtil.hset(key, resCode, result);
-                return result;
-            }
-            return null;
+        String userResKey = JedisKeyPrefixEnum.HUSER_RES.assemblyKey(userName);
+        Object userResObj = cacheUtil.hget(userResKey, resCode);
+        userResObj = Optional.ofNullable(userResObj).orElseGet(() -> {
+            String resKey = JedisKeyPrefixEnum.HRES.getPrefix();
+            Object resObj = cacheUtil.hget(resKey, resCode);
+            return Optional.ofNullable(resObj).map(resObjProxy -> {
+                cacheUtil.hset(resKey, resCode, resObjProxy);
+                return resObjProxy;
+            }).orElseGet(() -> {
+                UserRoleResQuery query = new UserRoleResQuery();
+                query.setUserName(userName);
+                query.setResCode(resCode);
+                List<ViewUserRoleRes> userResList = mapper.selectUserRes(query);
+                if (CollectionUtils.isNotEmpty(userResList)) {
+                    ViewUserRoleRes result = userResList.get(HtZeroOneConstant.ZERO_I);
+                    cacheUtil.hset(resKey, resCode, result);
+                    cacheUtil.hset(userResKey, resCode, result);
+                    return result;
+                }
+                return null;
+            });
         });
-        return (ViewUserRoleRes) orElseGet;
+        return (ViewUserRoleRes) userResObj;
     }
 }

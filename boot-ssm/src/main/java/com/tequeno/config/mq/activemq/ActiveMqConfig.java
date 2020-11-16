@@ -20,16 +20,16 @@ import java.util.stream.Collectors;
 @Configuration
 public class ActiveMqConfig {
 
-    @Value("${spring.activemq.user}")
+    @Value("${activemq.user}")
     private String user;
 
-    @Value("${spring.activemq.password}")
+    @Value("${activemq.password}")
     private String password;
 
-    @Value("${spring.activemq.broker-url}")
+    @Value("${activemq.broker-url}")
     private String brokerUrl;
 
-    @Value("${spring.activemq.trustedPackages}")
+    @Value("${activemq.trustedPackages}")
     private String trustedPackages;
 
     @Bean(HtJmsConstant.QUEUE_SCHEDULED_NAME)
