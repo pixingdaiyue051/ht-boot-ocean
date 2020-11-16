@@ -7,7 +7,7 @@ logging:
 ##自定义配置
 jdbc:
   driverClassName: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1/local_demo?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false
+  url: jdbc:mysql://127.0.0.1/local_demo?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
   username: root
   password: root
   # 连接池的配置信息

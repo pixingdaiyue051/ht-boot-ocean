@@ -16,7 +16,7 @@ public class HtCommonPageInfo {
     /**
      * 默认排序
      */
-    public final static String ORDER_BY = "create_time desc";
+    public final static String ORDER_CLAUSE = "create_time desc";
 
     /**
      * 默认起始页码

@@ -36,8 +36,8 @@
         </if>
     </sql>
     <sql id="order_conditions">
-        <if test="orderBy != null and orderBy != ''">
-            order by ${orderBy}
+        <if test="orderClause != null and orderClause != ''">
+            ORDER BY #{orderClause}
         </if>
     </sql>
     <select id="selectAllByCondition" resultMap="BaseResultMap">

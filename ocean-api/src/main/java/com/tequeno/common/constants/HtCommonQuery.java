@@ -6,18 +6,18 @@ public class HtCommonQuery {
 
     private Integer pageSize;
 
-    private String orderBy;
+    private String orderClause;
 
     public HtCommonQuery() {
-        orderBy = HtCommonPageInfo.ORDER_BY;
+        orderClause = HtCommonPageInfo.ORDER_CLAUSE;
         currentPage = HtCommonPageInfo.CURRENT_PAGE;
         pageSize = HtCommonPageInfo.PAGE_SIZE;
     }
 
 
-    public HtCommonQuery(String orderBy) {
+    public HtCommonQuery(String orderClause) {
         this();
-        this.orderBy = orderBy;
+        this.orderClause = orderClause;
     }
 
     public int getCurrentPage() {
@@ -36,11 +36,11 @@ public class HtCommonQuery {
         this.pageSize = pageSize;
     }
 
-    public String getOrderBy() {
-        return orderBy;
+    public String getOrderClause() {
+        return orderClause;
     }
 
-    public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
+    public void setOrderClause(String orderClause) {
+        this.orderClause = orderClause;
     }
 }
