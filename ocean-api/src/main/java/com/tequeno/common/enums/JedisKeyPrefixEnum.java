@@ -33,7 +33,7 @@ public enum JedisKeyPrefixEnum {
         if (key.length > HtZeroOneConstant.ONE_I) {
             return String.format("%s:%s", prefix, Arrays.toString(key));
         }
-        return String.format("%s:%s", prefix, key[0]);
+        return String.format("%s:%s", prefix, key[HtZeroOneConstant.ZERO_I]);
     }
 
     public String getPrefix() {

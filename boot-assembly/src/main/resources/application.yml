@@ -5,9 +5,8 @@ server:
 spring:
   application:
     name: boot-assembly
-  spring:
-    redis:
-      database: 1
+  redis:
+    database: 1
 logging:
   config: classpath:logback-spring.xml
 # activemq

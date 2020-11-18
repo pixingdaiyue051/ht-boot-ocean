@@ -2,6 +2,7 @@ package com.tequeno.config.handler;
 
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
+import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.cache.JedisCacheUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 @Aspect
@@ -36,11 +35,8 @@ public class RepeatedSubmitHandler {
         logger.debug("doAdviceAroundRepeatedSubmit");
         Signature s = joinPoint.getSignature();
         String key = JedisKeyPrefixEnum.LOCK.assemblyKey(s.getDeclaringTypeName(), s.getName());
-        String value = UUID.randomUUID().toString();
-        boolean isGetLock = cacheUtil.tryLock(key, value, repeatedSubmitAnno.expireTime());
-        if (isGetLock) {
-            // 立即释放锁
-//            cacheUtil.releaseLock(key, value);
+        boolean isLocked = cacheUtil.tryLock(key, repeatedSubmitAnno.expireTime());
+        if (isLocked) {
             return joinPoint.proceed();
         }
         return HtResultInfoWrapper.fail(HtCommonErrorEnum.NOT_REPEATED_SUBMIT);

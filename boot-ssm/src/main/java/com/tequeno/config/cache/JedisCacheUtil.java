@@ -1,6 +1,7 @@
 package com.tequeno.config.cache;
 
 import com.tequeno.common.constants.HtZeroOneConstant;
+import com.tequeno.common.enums.JedisLockTimeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class JedisCacheUtil {
@@ -403,30 +408,10 @@ public class JedisCacheUtil {
         }
     }
 
-    public void sendMsg(String chanel, Object message) {
-        redisTemplate.convertAndSend(chanel, message);
-    }
+//    public void sendMsg(String chanel, Object message) {
+//        redisTemplate.convertAndSend(chanel, message);
+//    }
 
-    /**
-     * 按模式匹配获得key
-     * *匹配所有
-     * ?单匹配
-     *
-     * @param pattern
-     * @return
-     */
-    public ArrayList keys(String pattern) {
-        try {
-            String script = "local scanScript = redis.call('scan',0,'match',KEYS[1],'count',1000) return scanScript[2]";
-            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, ArrayList.class);
-            ArrayList result = (ArrayList) redisTemplate.execute(redisScript, redisTemplate.getValueSerializer(), redisTemplate.getKeySerializer(),
-                    Collections.singletonList(pattern));
-            return result;
-        } catch (Exception e) {
-            logger.debug("JedisCacheUtil.keys调用失败", e);
-            return null;
-        }
-    }
 
     /**
      * 模糊匹配key并且删除
@@ -459,22 +444,60 @@ public class JedisCacheUtil {
         }
     }
 
+    public boolean tryLock(String lockKey, JedisLockTimeEnum lockTimeEnum) {
+        return tryLock(lockKey, lockTimeEnum.getExpireTime(), lockTimeEnum.getRetryEvicTime(), lockTimeEnum.getEvicTime());
+    }
+
     /**
      * 获取分布式锁
      *
      * @param lockKey    锁
-     * @param requestId  请求标识
-     * @param expireTime 单位秒
+     * @param expireTime 单位ms
      * @return 是否获取成功
      */
-    public boolean tryLock(String lockKey, String requestId, long expireTime) {
+    public boolean tryLock(String lockKey, long expireTime) {
         try {
-            String script = "local result = redis.call('setNX',KEYS[1],ARGV[1]) if(result == 1) then result = redis.call('pexpire',KEYS[1],ARGV[2]) end return result";
+            String script = "local result = redis.call('setNX',KEYS[1],KEYS[1]) if(result == 1) then result = redis.call('pexpire',KEYS[1],ARGV[1]) end return result";
             DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId, expireTime);
+            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), expireTime);
             return SUCCESS.equals(result);
         } catch (Exception e) {
-            logger.warn("尝试获取分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
+            logger.warn("尝试获取分布式锁-key[{}]异常", lockKey, e);
+            return false;
+        }
+    }
+
+    /**
+     * 获取分布式锁
+     *
+     * @param lockKey       锁
+     * @param expireTime    单位ms
+     * @param retryEvicTime 重试间隔时间 单位ms
+     * @param evicTime      最长重试等待时间 单位ms
+     * @return 是否获取成功
+     */
+    private boolean tryLock(String lockKey, long expireTime, long retryEvicTime, long evicTime) {
+        try {
+            String script = "local result = redis.call('setNX',KEYS[1],KEYS[1]) if(result == 1) then result = redis.call('pexpire',KEYS[1],ARGV[1]) end return result";
+            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
+            List<String> keys = Collections.singletonList(lockKey);
+            boolean isLocked;
+            long startMillSecond = System.currentTimeMillis();
+            do {
+                Object result = redisTemplate.execute(redisScript, keys, expireTime);
+                isLocked = SUCCESS.equals(result);
+                // 已获得锁，无需等待
+                if (isLocked) {
+                    return true;
+                }
+                Thread.sleep(retryEvicTime);
+                // 等待超时，获取锁失败
+                if(System.currentTimeMillis() - startMillSecond > evicTime){
+                    return false;
+                }
+            } while (!isLocked);
+        } catch (Exception e) {
+            logger.warn("尝试获取分布式锁-key[{}]异常", lockKey, e);
         }
         return false;
     }
@@ -482,18 +505,17 @@ public class JedisCacheUtil {
     /**
      * 释放锁
      *
-     * @param lockKey   锁
-     * @param requestId 请求标识
+     * @param lockKey 锁
      * @return 是否释放成功
      */
-    public boolean releaseLock(String lockKey, String requestId) {
+    public boolean releaseLock(String lockKey) {
         try {
             String script = "local result = redis.call('get',KEYS[1]) if(result) then result = redis.call('del',KEYS[1]) else result = 0 end return result";
             DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), requestId);
+            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey));
             return SUCCESS.equals(result);
         } catch (Exception e) {
-            logger.warn("尝试释放分布式锁-key[{}]requestId[{}]异常", lockKey, requestId, e);
+            logger.warn("尝试释放分布式锁-key[{}]异常", lockKey, e);
             return false;
         }
     }

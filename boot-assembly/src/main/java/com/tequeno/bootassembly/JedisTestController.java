@@ -2,14 +2,17 @@ package com.tequeno.bootassembly;
 
 import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
+import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.redis.JedisCacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("test/jedis")
@@ -61,15 +64,6 @@ public class JedisTestController {
     }
 
     /**
-     * @param pattern
-     * @return
-     */
-    @RequestMapping("keys/{pattern}")
-    public HtResultBinder keys(@PathVariable String pattern) {
-        return HtResultInfoWrapper.success(cacheUtil.keys(pattern));
-    }
-
-    /**
      * @param key
      * @return
      */
@@ -97,41 +91,25 @@ public class JedisTestController {
         return HtResultInfoWrapper.success(cacheUtil.expire(key, time));
     }
 
-    /**
-     * @return
-     */
-    @RequestMapping("list")
-    public HtResultBinder list() {
-        Map map1 = (Map) cacheUtil.keys(JedisKeyPrefixEnum.TEST.assemblyKey("*"))
-                .stream()
-                .collect(Collectors.toMap(key -> key, key -> cacheUtil.get(key.toString())));
-        Map map2 = (Map) cacheUtil.keys(JedisKeyPrefixEnum.HTEST.assemblyKey("*"))
-                .stream()
-                .collect(Collectors.toMap(key -> key, key -> cacheUtil.hmget(key.toString())));
-        map1.putAll(map2);
-        return HtResultInfoWrapper.success(map1);
-    }
-
-    /**
-     * @param chanel
-     * @param msg
-     * @return
-     */
-    @RequestMapping("send")
-    public HtResultBinder send(@RequestParam("chanel") String chanel, @RequestParam("msg") String msg) {
-        cacheUtil.sendMsg(chanel, msg);
-        return HtResultInfoWrapper.success();
-    }
+//    /**
+//     * @param chanel
+//     * @param msg
+//     * @return
+//     */
+//    @RequestMapping("send")
+//    public HtResultBinder send(@RequestParam("chanel") String chanel, @RequestParam("msg") String msg) {
+//        cacheUtil.sendMsg(chanel, msg);
+//        return HtResultInfoWrapper.success();
+//    }
 
     /**
      * @param key
-     * @param time
      * @return
      */
-    @RequestMapping("lock/{key}/{time}")
-    public HtResultBinder lock(@PathVariable String key, @PathVariable long time) {
+    @RequestMapping("lock/{key}")
+    public HtResultBinder lock(@PathVariable String key) {
         key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.tryLock(key, UUID.randomUUID().toString(), time));
+        return HtResultInfoWrapper.success(cacheUtil.tryLock(key, JedisLockTimeEnum.QUICK));
     }
 
     /**
@@ -141,7 +119,7 @@ public class JedisTestController {
     @RequestMapping("release/{key}")
     public HtResultBinder release(@PathVariable String key) {
         key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.releaseLock(key, null));
+        return HtResultInfoWrapper.success(cacheUtil.releaseLock(key));
     }
 
 }
