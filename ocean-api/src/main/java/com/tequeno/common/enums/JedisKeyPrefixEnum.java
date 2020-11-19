@@ -20,6 +20,7 @@ public enum JedisKeyPrefixEnum {
 
     OTP("OTP", "验证码"),
     LOCK("LOCK", "分布式锁"),
+    SEQ("SEQ", "流水号"),
     ;
     private String prefix;
     private String msg;

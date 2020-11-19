@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tequeno.common.constants.HtCommonPageInfo;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
-import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.cache.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     protected D mapper;
 
     @Autowired
-    protected JedisCacheUtil cacheUtil;
+    protected RedisUtil redisUtil;
 
     @Override
     public T selectByPrimaryKey(Object id) {
@@ -86,9 +86,9 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     @Override
     public T selectByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
-        Object o = Optional.ofNullable(cacheUtil.get(key)).orElseGet(() -> {
+        Object o = Optional.ofNullable(redisUtil.get(key)).orElseGet(() -> {
             T t = selectByPrimaryKey(id);
-            cacheUtil.set(key, t);
+            redisUtil.set(key, t);
             return t;
         });
         return (T) o;
@@ -98,7 +98,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int updateSelective(Object id, T entity, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
-        cacheUtil.del(key);
+        redisUtil.del(key);
         return updateSelective(entity);
     }
 
@@ -106,7 +106,7 @@ public abstract class BaseServiceImpl<D extends Mapper<T>, T, Q> implements Base
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int deleteByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
-        cacheUtil.del(key);
+        redisUtil.del(key);
         return deleteByPrimaryKey(id);
     }
 

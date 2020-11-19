@@ -1,10 +1,11 @@
 package com.tequeno.bootassembly;
 
 import com.tequeno.common.constants.HtResultBinder;
+import com.tequeno.common.enums.HtSeqPrefixEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.redis.JedisCacheUtil;
+import com.tequeno.config.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("test/jedis")
-public class JedisTestController {
+@RequestMapping("test/redis")
+public class RedisTestController {
 
     @Autowired
-    private JedisCacheUtil cacheUtil;
+    private RedisUtil redisUtil;
 
     /**
      * @param key
@@ -29,7 +30,7 @@ public class JedisTestController {
     @RequestMapping("set")
     public HtResultBinder set(@RequestParam("key") String key, @RequestParam("value") Object value) {
         key = JedisKeyPrefixEnum.TEST.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.set(key, value));
+        return HtResultInfoWrapper.success(redisUtil.set(key, value));
     }
 
     /**
@@ -39,7 +40,7 @@ public class JedisTestController {
     @RequestMapping("setObject")
     public HtResultBinder setObject(@RequestBody Map<String, Object> map) {
         map.forEach((k, v) -> {
-            cacheUtil.set(JedisKeyPrefixEnum.TEST.assemblyKey(k), v);
+            redisUtil.set(JedisKeyPrefixEnum.TEST.assemblyKey(k), v);
         });
         return HtResultInfoWrapper.success();
     }
@@ -51,7 +52,7 @@ public class JedisTestController {
     @RequestMapping("get")
     public HtResultBinder get(@RequestParam("key") String key) {
         key = JedisKeyPrefixEnum.TEST.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.get(key));
+        return HtResultInfoWrapper.success(redisUtil.get(key));
     }
 
     /**
@@ -60,7 +61,7 @@ public class JedisTestController {
      */
     @RequestMapping("has/{key}")
     public HtResultBinder has(@PathVariable String key) {
-        return HtResultInfoWrapper.success(cacheUtil.hasKey(key));
+        return HtResultInfoWrapper.success(redisUtil.hasKey(key));
     }
 
     /**
@@ -69,7 +70,7 @@ public class JedisTestController {
      */
     @RequestMapping("del/{key}")
     public HtResultBinder delete(@PathVariable String key) {
-        return HtResultInfoWrapper.success(cacheUtil.del(key));
+        return HtResultInfoWrapper.success(redisUtil.del(key));
     }
 
     /**
@@ -78,7 +79,7 @@ public class JedisTestController {
      */
     @RequestMapping("delKey/{pattern}")
     public HtResultBinder deleteKeysWithPattern(@PathVariable String pattern) {
-        return HtResultInfoWrapper.success(cacheUtil.keysDel(pattern));
+        return HtResultInfoWrapper.success(redisUtil.keysDel(pattern));
     }
 
     /**
@@ -88,7 +89,7 @@ public class JedisTestController {
      */
     @RequestMapping("expire/{key}/{time}")
     public HtResultBinder expire(@PathVariable String key, @PathVariable long time) {
-        return HtResultInfoWrapper.success(cacheUtil.expire(key, time));
+        return HtResultInfoWrapper.success(redisUtil.expire(key, time));
     }
 
 //    /**
@@ -98,7 +99,7 @@ public class JedisTestController {
 //     */
 //    @RequestMapping("send")
 //    public HtResultBinder send(@RequestParam("chanel") String chanel, @RequestParam("msg") String msg) {
-//        cacheUtil.sendMsg(chanel, msg);
+//        redisUtil.sendMsg(chanel, msg);
 //        return HtResultInfoWrapper.success();
 //    }
 
@@ -109,17 +110,15 @@ public class JedisTestController {
     @RequestMapping("lock/{key}")
     public HtResultBinder lock(@PathVariable String key) {
         key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.tryLock(key, JedisLockTimeEnum.QUICK));
+        return HtResultInfoWrapper.success(redisUtil.tryLock(key, JedisLockTimeEnum.QUICK));
     }
 
     /**
-     * @param key
      * @return
      */
-    @RequestMapping("release/{key}")
-    public HtResultBinder release(@PathVariable String key) {
-        key = JedisKeyPrefixEnum.LOCK.assemblyKey(key);
-        return HtResultInfoWrapper.success(cacheUtil.releaseLock(key));
+    @RequestMapping("seq/{name}")
+    public HtResultBinder seq(@PathVariable String name) {
+        return HtResultInfoWrapper.success(redisUtil.tryGetOnlySequenceNum(HtSeqPrefixEnum.valueOf(name)));
     }
 
 }

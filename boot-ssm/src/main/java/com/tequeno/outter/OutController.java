@@ -10,7 +10,7 @@ import com.tequeno.common.temail.EmailUtil;
 import com.tequeno.common.temail.EmailWrapper;
 import com.tequeno.common.utils.HtCommonMethodUtil;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.cache.RedisUtil;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OutController {
 
     @Autowired
-    private JedisCacheUtil cacheUtil;
+    private RedisUtil redisUtil;
 
     @RequestMapping("success")
     public HtResultBinder success() {
@@ -64,7 +64,7 @@ public class OutController {
     private String actualGetOtp(String hkey) {
         String key = JedisKeyPrefixEnum.OTP.assemblyKey(hkey);
         String otpCode = HtCommonMethodUtil.getNonceStr(HtPropertyConstant.OTP_LENGTH);
-        cacheUtil.set(key, otpCode, HtPropertyConstant.OTP_EXPIRED);
+        redisUtil.set(key, otpCode, HtPropertyConstant.OTP_EXPIRED);
         return otpCode;
     }
 }

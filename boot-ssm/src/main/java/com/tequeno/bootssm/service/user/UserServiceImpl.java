@@ -49,7 +49,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         userPassword.setEncryptPassword(HtLocalMethod.shiroEncode(userModel.getPassword(), userModel.getUserName()));
         passwordMapper.insertSelective(userPassword);
         // 3.密码写入缓存
-        cacheUtil.hset(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), userInfo.getId().toString(), userPassword.getEncryptPassword());
+        redisUtil.hset(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), userInfo.getId().toString(), userPassword.getEncryptPassword());
     }
 
     @Override
@@ -65,9 +65,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         userInfo.setId(userInDb.getId());
         super.updateSelective(userInDb.getId(), userInfo, JedisKeyPrefixEnum.USER);
 //         3.根据用户名删除缓存
-        cacheUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userInDb.getUserName()));
+        redisUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userInDb.getUserName()));
 //        4.发送消息级联更新用户信息
-//        cacheUtil.sendMsg("chanel:userName", userInDb.getUserName() + ":" + userInfo.getUserName());
+//        redisUtil.sendMsg("chanel:userName", userInDb.getUserName() + ":" + userInfo.getUserName());
 //        if (!StringUtils.equals(userInfo.getUserName(), userInDb.getUserName())) {
 //            mapper.syncUpdateName(userInfo.getUserName(), userInDb.getUserName());
 //        }
@@ -76,9 +76,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     @Override
     public UserInfo selectByUsername(String userName) {
         final String key = JedisKeyPrefixEnum.USER.assemblyKey(userName);
-        Object o = Optional.ofNullable(cacheUtil.get(key)).orElseGet(() -> {
+        Object o = Optional.ofNullable(redisUtil.get(key)).orElseGet(() -> {
             UserInfo userInfo = mapper.selectByUsername(userName);
-            cacheUtil.set(key, userInfo);
+            redisUtil.set(key, userInfo);
             return userInfo;
         });
         return (UserInfo) o;
@@ -87,9 +87,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     @Override
     public String selectPasswordByUserId(Long userId) {
         String key = JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix();
-        Object o = Optional.ofNullable(cacheUtil.hget(key, userId.toString())).orElseGet(() -> {
+        Object o = Optional.ofNullable(redisUtil.hget(key, userId.toString())).orElseGet(() -> {
             UserPassword userPassword = passwordMapper.selectByUserId(userId);
-            cacheUtil.hset(key, userPassword.getUserId().toString(), userPassword.getEncryptPassword());
+            redisUtil.hset(key, userPassword.getUserId().toString(), userPassword.getEncryptPassword());
             return userPassword.getEncryptPassword();
         });
         return (String) o;
@@ -116,7 +116,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
                     user2Bupdated.setId(u.getId());
                     this.updateSelective(u.getId(), user2Bupdated, JedisKeyPrefixEnum.USER);
 //         3.根据用户名删除缓存
-                    cacheUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(u.getUserName()));
+                    redisUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(u.getUserName()));
                 });
     }
 
@@ -138,15 +138,15 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
 //                    1.删除用户与以用户id为key的缓存
                     this.deleteByPrimaryKey(u.getId(), JedisKeyPrefixEnum.USER);
 //                    2.删除用户名为key的缓存
-                    cacheUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(u.getUserName()));
+                    redisUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(u.getUserName()));
 //                    3.删除用户用户密码信息
                     passwordMapper.deleteByUserId(u.getId());
 //                    4.删除用户密码缓存
-                    cacheUtil.hdel(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), u.getId().toString());
+                    redisUtil.hdel(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), u.getId().toString());
 //                    5.删除用户角色关联信息,不会直接删除角色信息
                     roleMapper.deleteUserRole(u.getId(), null, null);
 //                    6.删除用户权限缓存
-                    cacheUtil.del(JedisKeyPrefixEnum.HUSER_RES.assemblyKey(u.getUserName()));
+                    redisUtil.del(JedisKeyPrefixEnum.HUSER_RES.assemblyKey(u.getUserName()));
                 });
     }
 
@@ -158,6 +158,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         user2BeUpdated.setId(userInfoDb.getId());
         c.accept(user2BeUpdated);
         updateSelective(user2BeUpdated.getId(), user2BeUpdated, JedisKeyPrefixEnum.USER);
-        cacheUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userName));
+        redisUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userName));
     }
 }

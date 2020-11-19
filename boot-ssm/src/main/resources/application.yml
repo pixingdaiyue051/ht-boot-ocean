@@ -5,6 +5,16 @@ spring:
     name: boot-ssm
   redis:
     database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 276757
+    timeout: 10000ms
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 10000ms
 mapper:
   mappers: tk.mybatis.mapper.common.Mapper
   not-empty: false

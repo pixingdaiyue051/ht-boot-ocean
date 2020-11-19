@@ -5,7 +5,7 @@
 //import com.tequeno.common.mq.HtJmsConstant;
 //import com.tequeno.common.mq.HtJmsModel;
 //import com.tequeno.common.utils.HtCommonException;
-//import com.tequeno.config.cache.JedisCacheUtil;
+//import com.tequeno.config.cache.RedisUtil;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@
 //    private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
 //
 //    @Autowired
-//    private JedisCacheUtil cacheUtil;
+//    private RedisUtil redisUtil;
 //
 //    @JmsListener(destination = HtJmsConstant.TOPIC_SCHEDULED_NAME, containerFactory = HtJmsConstant.TOPIC_CONTAINER_FACTORY)
 //    public void onScheduledTopicMessage(Message msg) {
@@ -42,7 +42,7 @@
 //            if (JedisMsgKeyEnum.RELEASE_LOCK.getChanel().equals(model.getCode())) {
 //                String key = model.getMsg();
 //                String value = model.getData().toString();
-//                cacheUtil.releaseLock(key, value);
+//                redisUtil.releaseLock(key, value);
 //            }
 //        } catch (Exception e) {
 //            throw new HtCommonException(HtCommonErrorEnum.JMS_ERROR.build(e.getMessage()));

@@ -30,6 +30,16 @@ public class HtPropertyConstant {
     public final static long DEFAULT_REDIS_KEY_TIMEOUT = 15552000L;
 
     /**
+     * 序列号 key默认超时时间 60*60*24=1day
+     */
+    public final static long ONE_DAY = 86400L;
+
+    /**
+     * 序列数字后缀
+     */
+    public final static String SEQ_SUFFIX = "0000";
+
+    /**
      * 默认管理的session名称 区别于容器默认session名
      */
     public final static String DEFAULT_SESSION_NAME = "redSessionId";

@@ -19,14 +19,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
     @Override
     public ResourceInfo selectResByResCode(String resCode) {
         String resKey = JedisKeyPrefixEnum.HRES.getPrefix();
-        Object resObj = cacheUtil.hget(resKey, resCode);
+        Object resObj = redisUtil.hget(resKey, resCode);
         resObj = Optional.ofNullable(resObj).orElseGet(() -> {
             UserRoleResQuery resQuery = new UserRoleResQuery();
             resQuery.setResCode(resCode);
             List<ResourceInfo> resourceInfos = mapper.selectAllByCondition(resQuery);
             if (CollectionUtils.isNotEmpty(resourceInfos)) {
                 ResourceInfo resourceInfo = resourceInfos.get(HtZeroOneConstant.ZERO_I);
-                cacheUtil.hset(resKey, resCode, resourceInfo);
+                redisUtil.hset(resKey, resCode, resourceInfo);
                 return resourceInfo;
             }
             return null;
@@ -37,12 +37,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
     @Override
     public ViewUserRoleRes selectUserRes(String userName, String resCode) {
         String userResKey = JedisKeyPrefixEnum.HUSER_RES.assemblyKey(userName);
-        Object userResObj = cacheUtil.hget(userResKey, resCode);
+        Object userResObj = redisUtil.hget(userResKey, resCode);
         userResObj = Optional.ofNullable(userResObj).orElseGet(() -> {
             String resKey = JedisKeyPrefixEnum.HRES.getPrefix();
-            Object resObj = cacheUtil.hget(resKey, resCode);
+            Object resObj = redisUtil.hget(resKey, resCode);
             return Optional.ofNullable(resObj).map(resObjProxy -> {
-                cacheUtil.hset(resKey, resCode, resObjProxy);
+                redisUtil.hset(resKey, resCode, resObjProxy);
                 return resObjProxy;
             }).orElseGet(() -> {
                 UserRoleResQuery query = new UserRoleResQuery();
@@ -51,8 +51,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceInfoMapper, Res
                 List<ViewUserRoleRes> userResList = mapper.selectUserRes(query);
                 if (CollectionUtils.isNotEmpty(userResList)) {
                     ViewUserRoleRes result = userResList.get(HtZeroOneConstant.ZERO_I);
-                    cacheUtil.hset(resKey, resCode, result);
-                    cacheUtil.hset(userResKey, resCode, result);
+                    redisUtil.hset(resKey, resCode, result);
+                    redisUtil.hset(userResKey, resCode, result);
                     return result;
                 }
                 return null;

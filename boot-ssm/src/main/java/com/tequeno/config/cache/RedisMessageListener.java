@@ -1,4 +1,4 @@
-//package com.tequeno.config.redis;
+//package com.tequeno.config.cache;
 //
 //import com.tequeno.common.enums.JedisMsgKeyEnum;
 //import org.slf4j.Logger;
@@ -9,9 +9,9 @@
 //import org.springframework.data.redis.core.RedisTemplate;
 //import org.springframework.data.redis.serializer.RedisSerializer;
 //
-//public class JedisMessageListener implements MessageListener {
+//public class RedisMessageListener implements MessageListener {
 //
-//    private final static Logger logger = LoggerFactory.getLogger(JedisMessageListener.class);
+//    private final static Logger logger = LoggerFactory.getLogger(RedisMessageListener.class);
 //
 //    @Autowired
 //    private RedisTemplate redisTemplate;

@@ -54,9 +54,10 @@ public class RedisConfig {
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.afterPropertiesSet();
         try {
-            // 如果没有异常则表示redis
+            // 如果没有异常则表示redis正常启动
             RedisConnection connection = factory.getConnection();
             logger.debug("redis正常启动:{}", connection);
+            connection.close();
         } catch (Exception e) {
             logger.debug("redis未开启", e);
         }
@@ -64,8 +65,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public JedisCacheUtil jedisCacheUtil() {
-        return new JedisCacheUtil();
+    public RedisUtil jedisredisUtil() {
+        return new RedisUtil();
     }
 
 //    @Bean

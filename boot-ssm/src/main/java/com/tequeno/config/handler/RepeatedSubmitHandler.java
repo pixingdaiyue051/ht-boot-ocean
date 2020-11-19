@@ -2,9 +2,8 @@ package com.tequeno.config.handler;
 
 import com.tequeno.common.enums.HtCommonErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
-import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.cache.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +23,7 @@ public class RepeatedSubmitHandler {
     private final static Logger logger = LoggerFactory.getLogger(RepeatedSubmitHandler.class);
 
     @Autowired
-    private JedisCacheUtil cacheUtil;
+    private RedisUtil redisUtil;
 
     @Pointcut("@annotation(com.tequeno.config.handler.HtRepeatedSubmitAnno)")
     public void repeatedSubmitAspect() {
@@ -35,7 +34,7 @@ public class RepeatedSubmitHandler {
         logger.debug("doAdviceAroundRepeatedSubmit");
         Signature s = joinPoint.getSignature();
         String key = JedisKeyPrefixEnum.LOCK.assemblyKey(s.getDeclaringTypeName(), s.getName());
-        boolean isLocked = cacheUtil.tryLock(key, repeatedSubmitAnno.expireTime());
+        boolean isLocked = redisUtil.tryLock(key, repeatedSubmitAnno.expireTime());
         if (isLocked) {
             return joinPoint.proceed();
         }

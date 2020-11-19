@@ -10,7 +10,7 @@ import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
 import com.tequeno.common.utils.HtCommonException;
 import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.cache.JedisCacheUtil;
+import com.tequeno.config.cache.RedisUtil;
 import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.enums.HtUserResEnum;
@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 public class UserHelperController {
 
     @Autowired
-    private JedisCacheUtil cacheUtil;
+    private RedisUtil redisUtil;
 
     @Autowired
     private UserService userService;
@@ -147,13 +147,13 @@ public class UserHelperController {
 
     private HtResultBinder innerBind(String userName, String otp, String hkey, Consumer<UserInfo> c) {
         String key = JedisKeyPrefixEnum.OTP.getPrefix();
-        return Optional.ofNullable(cacheUtil.hget(key, hkey))
+        return Optional.ofNullable(redisUtil.hget(key, hkey))
                 .map(o -> {
                     if (!otp.equals(o)) {
                         throw new HtCommonException(HtCommonErrorEnum.WRONG_OTP);
                     }
                     userService.bindPhoneOrEmail(userName, c);
-                    cacheUtil.hdel(key, hkey);
+                    redisUtil.hdel(key, hkey);
                     return HtResultInfoWrapper.success();
                 })
                 .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OTP_NULL_OR_EXIPRED));

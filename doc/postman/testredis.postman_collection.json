@@ -6,12 +6,12 @@
 	},
 	"item": [
 		{
-			"name": "jedislist",
+			"name": "redislist",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/list",
+					"raw": "127.0.0.1:8500/test/redis/list",
 					"host": [
 						"127",
 						"0",
@@ -21,7 +21,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"list"
 					]
 				}
@@ -34,7 +34,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/keys/TEST:*",
+					"raw": "127.0.0.1:8500/test/redis/keys/TEST:*",
 					"host": [
 						"127",
 						"0",
@@ -44,7 +44,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"keys",
 						"TEST:*"
 					]
@@ -58,7 +58,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/has/HTEST:rainbow",
+					"raw": "127.0.0.1:8500/test/redis/has/HTEST:rainbow",
 					"host": [
 						"127",
 						"0",
@@ -68,7 +68,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"has",
 						"HTEST:rainbow"
 					]
@@ -98,7 +98,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/del/TEST:six",
+					"raw": "127.0.0.1:8500/test/redis/del/TEST:six",
 					"host": [
 						"127",
 						"0",
@@ -108,7 +108,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"del",
 						"TEST:six"
 					]
@@ -138,7 +138,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/expire/TEST:six/10",
+					"raw": "127.0.0.1:8500/test/redis/expire/TEST:six/10",
 					"host": [
 						"127",
 						"0",
@@ -148,7 +148,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"expire",
 						"TEST:six",
 						"10"
@@ -179,7 +179,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/lock/six/100000",
+					"raw": "127.0.0.1:8500/test/redis/lock/six",
 					"host": [
 						"127",
 						"0",
@@ -189,17 +189,16 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"lock",
-						"six",
-						"100000"
+						"six"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "release",
+			"name": "seq",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -220,7 +219,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/release/six",
+					"raw": "127.0.0.1:8500/test/redis/seq/TEST",
 					"host": [
 						"127",
 						"0",
@@ -230,9 +229,9 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
-						"release",
-						"six"
+						"redis",
+						"seq",
+						"TEST"
 					]
 				}
 			},
@@ -244,7 +243,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/set?key=six&value=6",
+					"raw": "127.0.0.1:8500/test/redis/set?key=six&value=6",
 					"host": [
 						"127",
 						"0",
@@ -254,7 +253,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"set"
 					],
 					"query": [
@@ -293,7 +292,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/setObject",
+					"raw": "127.0.0.1:8500/test/redis/setObject",
 					"host": [
 						"127",
 						"0",
@@ -303,7 +302,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"setObject"
 					]
 				}
@@ -332,7 +331,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/get?key=six",
+					"raw": "127.0.0.1:8500/test/redis/get?key=six",
 					"host": [
 						"127",
 						"0",
@@ -342,7 +341,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"get"
 					],
 					"query": [
@@ -377,7 +376,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/hash/has?key=number&hashKey=2",
+					"raw": "127.0.0.1:8500/test/redis/hash/has?key=number&hashKey=2",
 					"host": [
 						"127",
 						"0",
@@ -387,7 +386,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"hash",
 						"has"
 					],
@@ -427,7 +426,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/hash/set?key=number&hashKey=2&hashValue=2",
+					"raw": "127.0.0.1:8500/test/redis/hash/set?key=number&hashKey=2&hashValue=2",
 					"host": [
 						"127",
 						"0",
@@ -437,7 +436,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"hash",
 						"set"
 					],
@@ -481,7 +480,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/hash/setObject?key=season",
+					"raw": "127.0.0.1:8500/test/redis/hash/setObject?key=season",
 					"host": [
 						"127",
 						"0",
@@ -491,7 +490,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"hash",
 						"setObject"
 					],
@@ -527,7 +526,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/hash/get?key=number&hashKey=2",
+					"raw": "127.0.0.1:8500/test/redis/hash/get?key=number&hashKey=2",
 					"host": [
 						"127",
 						"0",
@@ -537,7 +536,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"hash",
 						"get"
 					],
@@ -577,7 +576,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/hash/getObject?key=rainbow",
+					"raw": "127.0.0.1:8500/test/redis/hash/getObject?key=rainbow",
 					"host": [
 						"127",
 						"0",
@@ -587,7 +586,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"hash",
 						"getObject"
 					],
@@ -602,7 +601,7 @@
 			"response": []
 		},
 		{
-			"name": "jedissendmsg",
+			"name": "redissendmsg",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -623,7 +622,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/jedis/send?chanel=MSG:TEST&msg=533gggs",
+					"raw": "127.0.0.1:8500/test/redis/send?chanel=MSG:TEST&msg=533gggs",
 					"host": [
 						"127",
 						"0",
@@ -633,7 +632,7 @@
 					"port": "8500",
 					"path": [
 						"test",
-						"jedis",
+						"redis",
 						"send"
 					],
 					"query": [

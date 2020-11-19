@@ -23,7 +23,7 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
         if (StringUtils.isBlank(typeCode)) {
             return null;
         }
-        Object o = Optional.ofNullable(cacheUtil.hmget(typeCode)).orElseGet(() -> {
+        Object o = Optional.ofNullable(redisUtil.hmget(typeCode)).orElseGet(() -> {
             DataDictionaryQuery dictQuery = new DataDictionaryQuery();
             dictQuery.setTypeCode(typeCode);
             List<DataDictionary> dictionaryList = mapper.selectAllByCondition(dictQuery);
@@ -31,8 +31,8 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
                 return null;
             }
             final String key = JedisKeyPrefixEnum.HDICT.assemblyKey(typeCode);
-            dictionaryList.forEach(dict -> cacheUtil.hset(key, dict.getValueCode(), dict));
-            return cacheUtil.hmget(key);
+            dictionaryList.forEach(dict -> redisUtil.hset(key, dict.getValueCode(), dict));
+            return redisUtil.hmget(key);
         });
         return (Map<String, DataDictionary>) o;
     }
@@ -42,7 +42,7 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
         if (StringUtils.isBlank(typeCode) || StringUtils.isBlank(valueCode)) {
             return null;
         }
-        Object o = Optional.ofNullable(cacheUtil.hget(typeCode, valueCode)).orElseGet(() -> {
+        Object o = Optional.ofNullable(redisUtil.hget(typeCode, valueCode)).orElseGet(() -> {
             DataDictionaryQuery dictQuery = new DataDictionaryQuery();
             dictQuery.setTypeCode(typeCode);
             dictQuery.setValueCode(valueCode);
@@ -52,7 +52,7 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDictionaryMapper, D
             }
             final String key = JedisKeyPrefixEnum.HDICT.assemblyKey(typeCode);
             DataDictionary dataDictionary = dictionaryList.get(HtZeroOneConstant.ZERO_I);
-            cacheUtil.hset(key, valueCode, dataDictionary);
+            redisUtil.hset(key, valueCode, dataDictionary);
             return dataDictionary;
         });
         return (DataDictionary) o;
