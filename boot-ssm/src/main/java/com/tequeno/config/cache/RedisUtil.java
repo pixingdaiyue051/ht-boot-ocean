@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class RedisUtil {
 
     private final static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
@@ -513,6 +515,11 @@ public class RedisUtil {
         return false;
     }
 
+    /**
+     * 生成全局唯一流水号
+     * @param htSeqPrefixEnum 流水号前缀
+     * @return
+     */
     public String tryGetOnlySequenceNum(HtSeqPrefixEnum htSeqPrefixEnum) {
         try {
             String now = HtDateUtil.nowDateNum();

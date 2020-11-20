@@ -64,11 +64,6 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
-    public RedisUtil jedisredisUtil() {
-        return new RedisUtil();
-    }
-
 //    @Bean
 //    public ChannelTopic channelTopic() {
 //        return new ChannelTopic("string-topic");
