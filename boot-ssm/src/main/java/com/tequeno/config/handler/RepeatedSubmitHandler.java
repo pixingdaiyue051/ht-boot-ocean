@@ -38,6 +38,6 @@ public class RepeatedSubmitHandler {
         if (isLocked) {
             return joinPoint.proceed();
         }
-        return HtResultInfoWrapper.fail(HtCommonErrorEnum.NOT_REPEATED_SUBMIT);
+        return HtResultInfoWrapper.fail(HtCommonErrorEnum.DO_NOT_REPEAT_SUBMIT);
     }
 }
