@@ -1,6 +1,7 @@
 package com.tequeno.config.handler;
 
 import com.tequeno.config.cache.RedisUtil;
+import com.tequeno.iou.anno.HtRepeatedSubmitAnno;
 import com.tequeno.iou.enums.HtCommonErrorEnum;
 import com.tequeno.iou.enums.JedisKeyPrefixEnum;
 import com.tequeno.iou.utils.HtResultInfoWrapper;
@@ -26,7 +27,7 @@ public class RepeatedSubmitHandler {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Pointcut("@annotation(com.tequeno.config.handler.HtRepeatedSubmitAnno)")
+    @Pointcut("@annotation(com.tequeno.iou.anno.HtRepeatedSubmitAnno)")
     public void repeatedSubmitAspect() {
     }
 

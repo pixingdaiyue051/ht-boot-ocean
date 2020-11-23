@@ -1,8 +1,8 @@
 package com.tequeno.iou.controller.sys;
 
 import com.tequeno.config.cache.RedisUtil;
-import com.tequeno.config.handler.HtPermissionAnno;
-import com.tequeno.config.handler.HtRepeatedSubmitAnno;
+import com.tequeno.iou.anno.HtPermissionAnno;
+import com.tequeno.iou.anno.HtRepeatedSubmitAnno;
 import com.tequeno.iou.constants.HtCommonRegPattern;
 import com.tequeno.iou.constants.HtResultBinder;
 import com.tequeno.iou.constants.HtZeroOneConstant;

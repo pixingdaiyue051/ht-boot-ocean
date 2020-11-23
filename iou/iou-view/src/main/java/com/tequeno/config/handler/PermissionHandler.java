@@ -1,5 +1,6 @@
 package com.tequeno.config.handler;
 
+import com.tequeno.iou.anno.HtPermissionAnno;
 import com.tequeno.iou.constants.HtZeroOneConstant;
 import com.tequeno.iou.enums.HtUserErrorEnum;
 import com.tequeno.iou.enums.HtUserResEnum;
@@ -36,7 +37,7 @@ public class PermissionHandler {
     @Autowired
     private ResourceService resourceService;
 
-    @Pointcut("@annotation(com.tequeno.config.handler.HtPermissionAnno)")
+    @Pointcut("@annotation(com.tequeno.iou.anno.HtPermissionAnno)")
     public void permissionAspect() {
     }
 

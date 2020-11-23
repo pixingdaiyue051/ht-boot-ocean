@@ -1,4 +1,4 @@
-package com.tequeno.config.handler;
+package com.tequeno.iou.anno;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

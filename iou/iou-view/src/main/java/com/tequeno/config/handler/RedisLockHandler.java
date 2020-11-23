@@ -1,6 +1,7 @@
 package com.tequeno.config.handler;
 
 import com.tequeno.config.cache.RedisUtil;
+import com.tequeno.iou.anno.HtRedisLockAnno;
 import com.tequeno.iou.enums.HtCommonErrorEnum;
 import com.tequeno.iou.enums.JedisKeyPrefixEnum;
 import com.tequeno.iou.utils.HtCommonException;
@@ -25,7 +26,7 @@ public class RedisLockHandler {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Pointcut("@annotation(com.tequeno.config.handler.HtRedisLockAnno)")
+    @Pointcut("@annotation(com.tequeno.iou.anno.HtRedisLockAnno)")
     public void redisLockAspect() {
     }
 
