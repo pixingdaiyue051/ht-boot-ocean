@@ -1,9 +1,10 @@
-cd iou-api
+cd ../../ssm/
+cd ocean-api
 call mvn clean install -Dmaven.test.skip=true
 
-cd ../iou-service
+cd ../boot-assembly
 call mvn clean install -Dmaven.test.skip=true
 
-cd ../iou-view
+cd ../boot-ssm
 call mvn clean install -Dmaven.test.skip=true
 pause
