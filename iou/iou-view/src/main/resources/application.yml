@@ -1,0 +1,80 @@
+server:
+  port: 8512
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: iou-view
+  redis:
+    database: 2
+    host: 127.0.0.1
+    port: 6379
+    password: 276757
+    timeout: 10000
+    jedis:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 10000
+logging:
+  config: classpath:logback.xml
+mybatisConfigLocation: mybatis-config.xml
+##自定义配置
+jdbc:
+  driverClassName: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1/local_demo?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+  username: root
+  password: root
+  # 连接池的配置信息
+  # 初始化大小，最小，最大
+  initialSize: 2
+  minIdle: 2
+  maxActive: 10
+  # 配置获取连接等待超时的时间
+  maxWait: 60000
+  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+  timeBetweenEvictionRunsMillis: 60000
+  # 配置一个连接在池中最小生存的时间，单位是毫秒
+  minEvictableIdleTimeMillis: 300000
+mapper:
+  mappers: tk.mybatis.mapper.common.Mapper
+  not-empty: false
+  identity: mysql
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+# 自定义配置
+mapperLocation: /mapper/**/*.xml
+entityLocation: com.tequeno.iou.pojo
+# activemq
+activemq:
+  user: admin
+  password: admin
+  broker-url: tcp://127.0.0.1:61616
+  trustedPackages: com.tequeno.common.mq,java.util,java.lang
+# rocketmq
+rocketmq:
+  producerGroup: r_group
+  namesrvAddr: 127.0.0.1:9876
+  producer:
+    retryTimesWhenSendFailed: 2
+    retryTimesWhenSendAsyncFailed: 2
+    vipChannelEnabled: false
+    instanceName: producerInstance
+    sendMsgTimeout: 3000
+    maxMessageSize: 4194304
+  consumer:
+    topic: r_topic
+#   *表示订阅当前topic下所有的tag,配置特殊字符需要使用'(英文半角单引号)
+#   || 表示同时订阅当前topic下多个tag 比如 r_tag_a || r_tag_b
+    subExpression: '*'
+    instanceName: consumerInstance
+#    消费者一次接收消息最大数量
+    consumeMessageBatchMaxSize: 1
+#    以上配置都是默认配置
+    consumeTimeout: 3000 #默认15
+    consumeThreadMin: 10 #默认20
+    consumeThreadMax: 30 #默认20
