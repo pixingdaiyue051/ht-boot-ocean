@@ -18,5 +18,5 @@ public @interface HtRedisLockAnno {
      *
      * @return
      */
-    JedisLockTimeEnum value() default JedisLockTimeEnum.QUICK;
+    JedisLockTimeEnum value() default JedisLockTimeEnum.COMMON;
 }

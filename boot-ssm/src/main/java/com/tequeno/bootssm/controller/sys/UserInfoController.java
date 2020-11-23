@@ -5,7 +5,6 @@ import com.tequeno.bootssm.pojo.sys.user.UserInfo;
 import com.tequeno.bootssm.pojo.sys.user.UserInfoQuery;
 import com.tequeno.bootssm.pojo.sys.user.UserModel;
 import com.tequeno.bootssm.service.user.UserService;
-import com.tequeno.common.constants.HtPropertyConstant;
 import com.tequeno.common.constants.HtResultBinder;
 import com.tequeno.common.enums.HtUserErrorEnum;
 import com.tequeno.common.enums.JedisKeyPrefixEnum;
@@ -14,7 +13,6 @@ import com.tequeno.config.handler.HtPermissionAnno;
 import com.tequeno.config.handler.HtRepeatedSubmitAnno;
 import com.tequeno.enums.HtUserResEnum;
 import com.tequeno.validators.UserValidator;
-import org.apache.el.stream.Stream;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -23,7 +21,6 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.servlet.SimpleCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -57,24 +51,11 @@ public class UserInfoController {
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
     public HtResultBinder page(HttpServletRequest request, HttpServletResponse response, @RequestBody UserInfoQuery userQuery) {
-//        Cookie[] cookies = request.getCookies();
-//        System.out.println(cookies);
-//        Arrays.stream(cookies).forEach(cookieProxy -> {
-//            System.out.println(cookieProxy.getName());
-//            System.out.println(cookieProxy.getValue());
-//            System.out.println(cookieProxy.getMaxAge());
-//        });
-
-//        userQuery.setCurrentPage(100);
-//        userQuery.setPageSize(1);
         PageInfo<UserInfo> pager = userService.findPager(userQuery);
         if (null != pager) {
             return HtResultInfoWrapper.success(pager);
         }
         return HtResultInfoWrapper.fail();
-//        return Optional.ofNullable(pager)
-//                .map(HtResultInfoWrapper::success)
-//                .orElse(HtResultInfoWrapper.fail());
     }
 
     @RequestMapping("list")
@@ -113,7 +94,6 @@ public class UserInfoController {
     }
 
     @RequestMapping("login")
-    @HtRepeatedSubmitAnno
     public HtResultBinder login(HttpServletRequest request, HttpServletResponse response,
                                 @RequestParam("userName") String userName, @RequestParam("password") String password) {
         try {
@@ -121,15 +101,6 @@ public class UserInfoController {
             token.setRememberMe(true);
             Subject subject = SecurityUtils.getSubject();
             subject.login(token);
-
-//            SimpleCookie simpleCookie = new SimpleCookie();
-//            simpleCookie.setName("lang");
-//            simpleCookie.setValue("lang of value");
-//            simpleCookie.setName("userAccount");
-//            simpleCookie.setValue("admin");
-//            simpleCookie.setComment("lang type");
-//            simpleCookie.setMaxAge(HtPropertyConstant.DEFAULT_REMEMBERME_COOKIE_TIMEOUT);
-//            simpleCookie.saveTo(request, response);
         } catch (UnknownAccountException e) {
             logger.error("用户名[{}]错误,未找到对应用户", userName);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
@@ -150,7 +121,6 @@ public class UserInfoController {
     }
 
     @RequestMapping("logout")
-    @HtRepeatedSubmitAnno
     public HtResultBinder logout() {
         Subject user = SecurityUtils.getSubject();
         user.logout();
