@@ -22,6 +22,8 @@ public enum HtUserErrorEnum implements HtErrorInterface {
     USER_LOCKED("1204", "账号被锁定"),
     USER_DISABLED("1205", "账号被禁用"),
     LOGOUT("1206", "已退出"),
+    CAPTCHA_ERROR("1207", "验证码输入有误"),
+    CAPTCHA_GEN_ERROR("1208", "图片验证码生成失败"),
 
     NOT_PERMITTED("2000", null),
     ;

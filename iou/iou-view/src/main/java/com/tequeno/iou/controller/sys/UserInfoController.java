@@ -3,6 +3,7 @@ package com.tequeno.iou.controller.sys;
 import com.github.pagehelper.PageInfo;
 import com.tequeno.iou.anno.HtPermissionAnno;
 import com.tequeno.iou.anno.HtRepeatedSubmitAnno;
+import com.tequeno.iou.constants.HtPropertyConstant;
 import com.tequeno.iou.constants.HtResultBinder;
 import com.tequeno.iou.enums.HtUserErrorEnum;
 import com.tequeno.iou.enums.HtUserResEnum;
@@ -51,7 +52,7 @@ public class UserInfoController {
 
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
-    public HtResultBinder page(HttpServletRequest request, HttpServletResponse response, @RequestBody UserInfoQuery userQuery) {
+    public HtResultBinder page(HttpServletRequest request, @RequestBody UserInfoQuery userQuery) {
         PageInfo<UserInfo> pager = userService.findPager(userQuery);
         if (null != pager) {
             return HtResultInfoWrapper.success(pager);
@@ -96,9 +97,14 @@ public class UserInfoController {
     }
 
     @RequestMapping("login")
-    public HtResultBinder login(HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("userName") String userName, @RequestParam("password") String password) {
+    public HtResultBinder login(HttpServletRequest request,
+                                @RequestParam("userName") String userName,
+                                @RequestParam("password") String password,
+                                @RequestParam("captcha") String captcha) {
         try {
+//            if (!checkCaptcha(captcha, request)) {
+//                return HtResultInfoWrapper.fail(HtUserErrorEnum.CAPTCHA_ERROR);
+//            }
             UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
             token.setRememberMe(true);
             Subject subject = SecurityUtils.getSubject();
@@ -120,6 +126,11 @@ public class UserInfoController {
             return HtResultInfoWrapper.fail(HtUserErrorEnum.LOGIN_FAILED);
         }
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);
+    }
+
+    private boolean checkCaptcha(String captcha, HttpServletRequest request) {
+        Object captchaInSession = request.getSession().getAttribute(HtPropertyConstant.CAPTCHA);
+        return captcha.equals(captchaInSession);
     }
 
     @RequestMapping("logout")

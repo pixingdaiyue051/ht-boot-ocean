@@ -9,15 +9,24 @@ public class HtPropertyConstant {
 
     public final static String LETTER_STR = "abcdefghijklmnopqrstuvwxyz";
 
+    public final static String CAPTCHA = "captcha";
+
+    public final static String CAPTCHA_TYPE = "png";
+
     /**
      * 验证码长度
      */
-    public final static int OTP_LENGTH = 6;
+    public final static int OTP_LENGTH = 4;
 
     /**
-     * 验证码失效时间 60*10=10min
+     * 验证码重新获取时间间隔 60*1000=1min
      */
-    public final static long OTP_EXPIRED = 600L;
+    public final static long OTP_RETRY = 60000L;
+
+    /**
+     * 验证码失效时间 5*60*1000=5min
+     */
+    public final static long OTP_EXPIRED = 300000L;
 
     /**
      * session超时时间 60*30=30min
@@ -25,14 +34,14 @@ public class HtPropertyConstant {
     public final static long SESSION_TIMEOUT = 1800L;
 
     /**
-     * redis key默认超时时间 60*60*24*180=180day
+     * redis key默认超时时间 30*24*60*60*1000=30day
      */
-    public final static long DEFAULT_REDIS_KEY_TIMEOUT = 15552000L;
+    public final static long DEFAULT_REDIS_KEY_TIMEOUT = 2592000000L;
 
     /**
-     * 序列号 key默认超时时间 60*60*24=1day
+     * 序列号 key默认超时时间 24*60*60*1000=1day
      */
-    public final static long ONE_DAY = 86400L;
+    public final static long ONE_DAY = 86400000L;
 
     /**
      * 序列数字后缀

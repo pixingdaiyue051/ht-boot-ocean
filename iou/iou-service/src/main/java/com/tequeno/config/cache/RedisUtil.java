@@ -43,33 +43,17 @@ public class RedisUtil {
      * 指定缓存失效时间
      *
      * @param key  键
-     * @param time 时间(秒)
+     * @param time 时间(ms)
      * @return
      */
     public boolean expire(String key, long time) {
         try {
             check(key, time);
-            redisTemplate.expire(key, time, TimeUnit.SECONDS);
+            redisTemplate.expire(key, time, TimeUnit.MILLISECONDS);
             return true;
         } catch (Exception e) {
             logger.debug("RedisUtil.expire调用失败", e);
             return false;
-        }
-    }
-
-    /**
-     * 根据key 获取过期时间
-     *
-     * @param key
-     * @return 时间(秒)
-     */
-    public long getExpire(String key) {
-        try {
-            check(key);
-            return redisTemplate.getExpire(key, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            logger.debug("RedisUtil.getExpire调用失败", e);
-            return ZERO;
         }
     }
 
@@ -167,13 +151,13 @@ public class RedisUtil {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒) time要大于0
+     * @param time  时间(ms) time要大于0
      * @return true成功 false 失败
      */
     public boolean set(String key, Object value, long time) {
         try {
             check(key, value, time);
-            redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(key, value, time, TimeUnit.MILLISECONDS);
             return true;
         } catch (Exception e) {
             logger.debug("RedisUtil.set调用失败", e);
@@ -233,26 +217,6 @@ public class RedisUtil {
     }
 
     /**
-     * 将map整体存入hash表,并设置失效时间
-     *
-     * @param key  键
-     * @param map  对应多个键值
-     * @param time 时间(秒)
-     * @return true成功 false失败
-     */
-    public boolean hmset(String key, Map<String, Object> map, long time) {
-        try {
-            check(key, time);
-            redisTemplate.opsForHash().putAll(key, map);
-            expire(key, time);
-            return true;
-        } catch (Exception e) {
-            logger.debug("RedisUtil.hmset调用失败", e);
-            return false;
-        }
-    }
-
-    /**
      * 向一张hash表中放入数据,如果不存在将创建
      *
      * @param key       键
@@ -263,27 +227,6 @@ public class RedisUtil {
     public boolean hset(String key, String hashKey, Object hashValue) {
         try {
             redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            return true;
-        } catch (Exception e) {
-            logger.debug("RedisUtil.hset调用失败", e);
-            return false;
-        }
-    }
-
-    /**
-     * 向一张hash表中放入数据,如果不存在将创建,并设置失效时间
-     *
-     * @param key       键
-     * @param hashKey   项
-     * @param hashValue 值
-     * @param time      时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
-     * @return true 成功 false失败
-     */
-    public boolean hset(String key, String hashKey, Object hashValue, long time) {
-        try {
-            check(key, hashKey, time);
-            redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            expire(key, time);
             return true;
         } catch (Exception e) {
             logger.debug("RedisUtil.hset调用失败", e);
@@ -527,7 +470,7 @@ public class RedisUtil {
             String key = JedisKeyPrefixEnum.SEQ.assemblyKey(htSeqPrefixEnum.getPrefix() + now);
             String script = "local result = redis.call('setnx', KEYS[1], ARGV[1])\n" +
                     "if(result == 1) then\n" +
-                    "    redis.call('expire', KEYS[1], ARGV[2])\n" +
+                    "    redis.call('pexpire', KEYS[1], ARGV[2])\n" +
                     "    result = tonumber(ARGV[1])\n" +
                     "else\n" +
                     "    result = redis.call('incr', KEYS[1])\n" +
