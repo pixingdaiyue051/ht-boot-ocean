@@ -11,13 +11,13 @@ public class HtDateUtil {
 
     public final static String DATE_PATTRN_NUM = "yyyyMMdd";
 
-    public final static String TIME_PATTRN = "yyyy-MM-dd";
+    public final static String TIME_PATTRN = "HH:mm:ss";
 
     public final static String TIME_PATTRN_NUM = "HHmmss";
 
     public final static String DATE_TIME_PATTRN = "yyyy-MM-dd HH:mm:ss";
 
-    public final static String DATE_TIME_PATTRN_num = "yyyyMMddHHmmss";
+    public final static String DATE_TIME_PATTRN_NUM = "yyyyMMddHHmmss";
 
     public static String nowDate() {
         return LocalDate.now().toString();
@@ -29,6 +29,10 @@ public class HtDateUtil {
 
     public static String nowTime() {
         return LocalTime.now().toString();
+    }
+
+    public static String nowTimeNum() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTRN_NUM));
     }
 
     public static String now() {

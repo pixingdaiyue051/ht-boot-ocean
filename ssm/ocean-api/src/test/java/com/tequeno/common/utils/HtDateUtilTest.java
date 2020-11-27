@@ -9,7 +9,9 @@ public class HtDateUtilTest {
     @Test
     public void test() {
         System.out.println(HtDateUtil.nowDate());
+        System.out.println(HtDateUtil.nowDateNum());
         System.out.println(HtDateUtil.nowTime());
+        System.out.println(HtDateUtil.nowTimeNum());
         System.out.println(HtDateUtil.now());
         final long monthOffset = 0L;
         final int weekOffset = 0;

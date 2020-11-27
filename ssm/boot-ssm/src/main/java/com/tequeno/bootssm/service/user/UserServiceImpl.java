@@ -39,17 +39,15 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void addUser(UserModel userModel) {
         // 1.写入用户信息
-        UserInfo userInfo = new UserInfo();
-        BeanUtils.copyProperties(userModel, userInfo);
-        userInfo.setEnabled(HtZeroOneConstant.ENABLED);
-        super.insertSelective(userInfo);
+        userModel.setEnabled(HtZeroOneConstant.ENABLED);
+        super.insertSelective(userModel);
         // 2.写入加密的密码信息
         UserPassword userPassword = new UserPassword();
-        userPassword.setUserId(userInfo.getId());
-        userPassword.setEncryptPassword(HtLocalMethod.shiroEncode(userModel.getPassword(), userModel.getUserName()));
+        userPassword.setUserId(userModel.getId());
+        userPassword.setEncryptPassword(userModel.getPassword());
         passwordMapper.insertSelective(userPassword);
         // 3.密码写入缓存
-        redisUtil.hset(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), userInfo.getId().toString(), userPassword.getEncryptPassword());
+        redisUtil.hset(JedisKeyPrefixEnum.HUSER_PASSWORD.getPrefix(), userModel.getId().toString(), userPassword.getEncryptPassword());
     }
 
     @Override
@@ -59,11 +57,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfo, U
         UserInfo userInDb = Optional.ofNullable(super.selectByPrimaryKey(userModel.getId(), JedisKeyPrefixEnum.USER))
                 .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OBEJCT_NOT_FETCHED));
 //         2.根据id更新用户信息，并删除缓存
-        userModel.setPassword(null);
-        UserInfo userInfo = new UserInfo();
-        BeanUtils.copyProperties(userModel, userInfo);
-        userInfo.setId(userInDb.getId());
-        super.updateSelective(userInDb.getId(), userInfo, JedisKeyPrefixEnum.USER);
+        userModel.setId(userInDb.getId());
+        super.updateSelective(userInDb.getId(), userModel, JedisKeyPrefixEnum.USER);
 //         3.根据用户名删除缓存
         redisUtil.del(JedisKeyPrefixEnum.USER.assemblyKey(userInDb.getUserName()));
 //        4.发送消息级联更新用户信息
