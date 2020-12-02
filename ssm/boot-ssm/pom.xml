@@ -109,10 +109,10 @@
             <version>4.5.2</version>
         </dependency>
 
-        <!-- 引用ocean-api-->
+        <!-- 引用boot-api-->
         <dependency>
             <groupId>com.tequeno</groupId>
-            <artifactId>ocean-api</artifactId>
+            <artifactId>boot-api</artifactId>
             <version>${api.version}</version>
         </dependency>
     </dependencies>

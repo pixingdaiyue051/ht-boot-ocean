@@ -1,3 +1,7 @@
+server:
+  port: 8520
+  servlet:
+    context-path: /
 spring:
   application:
     #如果指定了spring应用名称，可以缺省dubbo的应用名称，这2个至少要配置1个。缺省dubbo的应用名称时默认值是spring的应用名称
@@ -6,9 +10,9 @@ dubbo:
   application:
     name: dubbo-service
   registry:
-    address: zookeeper://192.168.1.9
-    port: 2181
-    #指定注册到zk上超时时间，ms
+    address: redis://127.0.0.1
+    port: 6379
+    #指定注册到注册中心上超时时间，ms
     timeout: 10000
   #指定dubbo使用的协议、端口
   protocol:

@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "8c729880-f73a-48dc-9efe-f9f9ef4d5c59",
+		"name": "dubbo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8521/test",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8521",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fake",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8521/fake",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8521",
+					"path": [
+						"fake"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

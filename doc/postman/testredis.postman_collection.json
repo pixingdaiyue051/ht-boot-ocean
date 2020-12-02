@@ -11,14 +11,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/list",
+					"raw": "127.0.0.1:8510/test/redis/list",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -34,14 +34,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/keys/TEST:*",
+					"raw": "127.0.0.1:8510/test/redis/keys/TEST:*",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -58,14 +58,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/has/HTEST:rainbow",
+					"raw": "127.0.0.1:8510/test/redis/has/HTEST:rainbow",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -98,14 +98,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/del/TEST:six",
+					"raw": "127.0.0.1:8510/test/redis/del/TEST:six",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -138,14 +138,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/expire/TEST:six/10",
+					"raw": "127.0.0.1:8510/test/redis/expire/TEST:six/10",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -179,14 +179,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/lock/six",
+					"raw": "127.0.0.1:8510/test/redis/lock/six",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -219,14 +219,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/seq/TEST",
+					"raw": "127.0.0.1:8510/test/redis/seq/TEST",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -243,14 +243,14 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/set?key=six&value=6",
+					"raw": "127.0.0.1:8510/test/redis/set?key=six&value=6",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -292,14 +292,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/setObject",
+					"raw": "127.0.0.1:8510/test/redis/setObject",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -331,14 +331,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/get?key=six",
+					"raw": "127.0.0.1:8510/test/redis/get?key=six",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -376,14 +376,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/hash/has?key=number&hashKey=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/has?key=number&hashKey=2",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -426,14 +426,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/hash/set?key=number&hashKey=2&hashValue=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/set?key=number&hashKey=2&hashValue=2",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -480,14 +480,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/hash/setObject?key=season",
+					"raw": "127.0.0.1:8510/test/redis/hash/setObject?key=season",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -526,14 +526,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/hash/get?key=number&hashKey=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/get?key=number&hashKey=2",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -576,14 +576,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/hash/getObject?key=rainbow",
+					"raw": "127.0.0.1:8510/test/redis/hash/getObject?key=rainbow",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
@@ -622,14 +622,14 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8500/test/redis/send?chanel=MSG:TEST&msg=533gggs",
+					"raw": "127.0.0.1:8510/test/redis/send?chanel=MSG:TEST&msg=533gggs",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8500",
+					"port": "8510",
 					"path": [
 						"test",
 						"redis",
