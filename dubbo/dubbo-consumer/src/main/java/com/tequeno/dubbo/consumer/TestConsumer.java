@@ -1,5 +1,6 @@
 package com.tequeno.dubbo.consumer;
 
+import com.tequeno.dubbo.model.TestModel;
 import com.tequeno.dubbo.service.TestService;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,9 @@ public class TestConsumer {
 
     @RequestMapping("fake")
     public String fake() {
+        TestModel model = service.getModel();
+        TestModel testModel = service.getModel(model);
+        System.out.println(testModel);
         return service.fake();
     }
 }
