@@ -16,7 +16,8 @@ dubbo:
   #指定dubbo使用的协议、端口
   protocol:
     name: dubbo
-    port: 20880
+    #如果不指定消费者使用的协议接口，则由注册中心分配
+#    port: 20880
   #启动应用时是否检查注册中心上有没有依赖的服务，默认true
   consumer:
     check: false

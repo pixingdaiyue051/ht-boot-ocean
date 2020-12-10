@@ -9,7 +9,7 @@ import com.tequeno.dubbo.model.TestModel;
 public interface TestService {
 
     default String test() {
-        return "hello world";
+        return "hello test";
     }
 
     String fake();

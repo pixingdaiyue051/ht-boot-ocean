@@ -3,7 +3,6 @@ package com.tequeno.dubbo.service;
 
 import com.tequeno.dubbo.model.TestModel;
 import org.apache.dubbo.config.annotation.Service;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,16 +12,17 @@ import java.util.Collections;
  * @Author: hexk
  */
 @Service
-@Component
 public class TestServiceImpl implements TestService {
 
     @Override
     public String test() {
+        System.out.println("------>test");
         return "hello dubbo";
     }
 
     @Override
     public String fake() {
+        System.out.println("------>fake");
         return "fake";
     }
 

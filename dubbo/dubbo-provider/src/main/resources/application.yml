@@ -1,0 +1,23 @@
+server:
+  port: 8530
+  servlet:
+    context-path: /
+spring:
+  application:
+    #如果指定了spring应用名称，可以缺省dubbo的应用名称，这2个至少要配置1个。缺省dubbo的应用名称时默认值是spring的应用名称
+    name: dubbo-provider
+dubbo:
+  application:
+    name: dubbo-provider
+  registry:
+    address: redis://127.0.0.1
+    port: 6379
+    #指定注册到注册中心上超时时间，ms
+    timeout: 10000
+  #指定dubbo使用的协议、端口
+  protocol:
+    name: dubbo
+    port: 20890
+  #指定实现服务(提供服务）的包
+  scan:
+    base-packages: com.tequeno.dubbo.service

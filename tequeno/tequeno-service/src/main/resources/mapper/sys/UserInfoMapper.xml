@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tequeno.mapper.sys.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.tequeno.pojo.sys.user.UserInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone_num" property="phoneNum" jdbcType="VARCHAR"/>
+        <result column="contact_info" property="contactInfo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ID, USER_NAME, TRUE_NAME, ENABLED, EMAIL, PHONE_NUM, CONTACT_INFO, CREATE_TIME, MODIFY_TIME
+    </sql>
+    <sql id="where_conditions">
+        1 = 1
+        <if test="userName != null and userName != ''">
+            AND USER_NAME = #{userName}
+        </if>
+        <if test="userNameLike != null and userNameLike != ''">
+            AND USER_NAME LIKE CONCAT('%', #{userNameLike},'%')
+        </if>
+        <if test="trueName != null and trueName != ''">
+            AND TRUE_NAME = #{trueName}
+        </if>
+        <if test="trueNameLike != null and trueNameLike != ''">
+            AND TRUE_NAME LIKE CONCAT('%', #{trueNameLike},'%')
+        </if>
+    </sql>
+    <sql id="order_conditions">
+        <if test="orderClause != null and orderClause != ''">
+            ORDER BY #{orderClause}
+        </if>
+    </sql>
+    <select id="selectAllByCondition" resultMap="BaseResultMap">
+        SELECT * FROM UM_USER_INFO
+        <where>
+            <include refid="where_conditions"/>
+        </where>
+        <include refid="order_conditions"/>
+    </select>
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT * FROM um_user_info WHERE user_name = #{userName}
+    </select>
+    <select id="syncUpdateName" statementType="CALLABLE">
+        CALL PROC_UPDATE_USER_NAME(#{oldTrueName},#{newTrueName})
+    </select>
+</mapper>
