@@ -1,40 +1,32 @@
 {
 	"info": {
-		"_postman_id": "0ec4a831-6c18-416e-9a1b-c6d6e88db3fe",
+		"_postman_id": "ad440d2f-7536-4c8b-a5a5-fea4cd654533",
 		"name": "testredis",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "redislist",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "127.0.0.1:8510/test/redis/list",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8510",
-					"path": [
-						"test",
-						"redis",
-						"list"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "keyspattern",
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pattern",
+							"value": "*",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/keys/TEST:*",
+					"raw": "127.0.0.1:8510/test/redis/keys",
 					"host": [
 						"127",
 						"0",
@@ -45,20 +37,41 @@
 					"path": [
 						"test",
 						"redis",
-						"keys",
-						"TEST:*"
+						"keys"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "has",
+			"name": "delKeypattern",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pattern",
+							"value": "TEST:on?",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/has/HTEST:rainbow",
+					"raw": "127.0.0.1:8510/test/redis/delKey",
 					"host": [
 						"127",
 						"0",
@@ -69,8 +82,40 @@
 					"path": [
 						"test",
 						"redis",
-						"has",
-						"HTEST:rainbow"
+						"delKey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "haskey",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "HTEST:rainbow",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "127.0.0.1:8510/test/redis/has",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8510",
+					"path": [
+						"test",
+						"redis",
+						"has"
 					]
 				}
 			},
@@ -89,8 +134,14 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "TEST:six",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -98,7 +149,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/del/TEST:six",
+					"raw": "127.0.0.1:8510/test/redis/del",
 					"host": [
 						"127",
 						"0",
@@ -109,49 +160,7 @@
 					"path": [
 						"test",
 						"redis",
-						"del",
-						"TEST:six"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "keyexpire",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "127.0.0.1:8510/test/redis/expire/TEST:six/10",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8510",
-					"path": [
-						"test",
-						"redis",
-						"expire",
-						"TEST:six",
-						"10"
+						"del"
 					]
 				}
 			},
@@ -170,8 +179,14 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "six",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -179,7 +194,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/lock/six",
+					"raw": "127.0.0.1:8510/test/redis/lock",
 					"host": [
 						"127",
 						"0",
@@ -190,8 +205,7 @@
 					"path": [
 						"test",
 						"redis",
-						"lock",
-						"six"
+						"lock"
 					]
 				}
 			},
@@ -210,8 +224,14 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "USER",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -219,7 +239,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/seq/TEST",
+					"raw": "127.0.0.1:8510/test/redis/seq",
 					"host": [
 						"127",
 						"0",
@@ -230,8 +250,7 @@
 					"path": [
 						"test",
 						"redis",
-						"seq",
-						"TEST"
+						"seq"
 					]
 				}
 			},
@@ -242,8 +261,23 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "TEST:e",
+							"type": "text"
+						},
+						{
+							"key": "value",
+							"value": "3221",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/set?key=six&value=6",
+					"raw": "127.0.0.1:8510/test/redis/set",
 					"host": [
 						"127",
 						"0",
@@ -255,16 +289,6 @@
 						"test",
 						"redis",
 						"set"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "six"
-						},
-						{
-							"key": "value",
-							"value": "6"
-						}
 					]
 				}
 			},
@@ -284,7 +308,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"one\": 1,\n    \"two\": 2,\n    \"three\": 3,\n    \"four\": 4,\n    \"five\": 5,\n    \"six\": 6,\n    \"seven\": 7,\n    \"eight\": 8,\n    \"nine\": 9,\n    \"ten\": 10\n}",
+					"raw": "{\n    \"TEST:one\": 1,\n    \"TEST:two\": 2,\n    \"TEST:three\": 3,\n    \"TEST:four\": 4,\n    \"TEST:five\": 5,\n    \"TEST:six\": 6,\n    \"TEST:seven\": 7,\n    \"TEST:eight\": 8,\n    \"TEST:nine\": 9,\n    \"TEST:ten\": 10\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -322,8 +346,14 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "TEST:six",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -331,7 +361,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/get?key=six",
+					"raw": "127.0.0.1:8510/test/redis/get",
 					"host": [
 						"127",
 						"0",
@@ -343,12 +373,6 @@
 						"test",
 						"redis",
 						"get"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "six"
-						}
 					]
 				}
 			},
@@ -367,8 +391,19 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "HTEST:number",
+							"type": "text"
+						},
+						{
+							"key": "hashKey",
+							"value": "2",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -376,7 +411,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/hash/has?key=number&hashKey=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/has",
 					"host": [
 						"127",
 						"0",
@@ -389,16 +424,6 @@
 						"redis",
 						"hash",
 						"has"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "number"
-						},
-						{
-							"key": "hashKey",
-							"value": "2"
-						}
 					]
 				}
 			},
@@ -417,8 +442,24 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "HTEST:number",
+							"type": "text"
+						},
+						{
+							"key": "hashKey",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "hashValue",
+							"value": "3",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -426,7 +467,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/hash/set?key=number&hashKey=2&hashValue=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/set",
 					"host": [
 						"127",
 						"0",
@@ -439,20 +480,6 @@
 						"redis",
 						"hash",
 						"set"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "number"
-						},
-						{
-							"key": "hashKey",
-							"value": "2"
-						},
-						{
-							"key": "hashValue",
-							"value": "2"
-						}
 					]
 				}
 			},
@@ -480,7 +507,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/hash/setObject?key=season",
+					"raw": "127.0.0.1:8510/test/redis/hash/setObject?key=HTEST:season",
 					"host": [
 						"127",
 						"0",
@@ -497,7 +524,7 @@
 					"query": [
 						{
 							"key": "key",
-							"value": "season"
+							"value": "HTEST:season"
 						}
 					]
 				}
@@ -517,8 +544,19 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "HTEST:number",
+							"type": "text"
+						},
+						{
+							"key": "hashKey",
+							"value": "2",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -526,7 +564,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/hash/get?key=number&hashKey=2",
+					"raw": "127.0.0.1:8510/test/redis/hash/get",
 					"host": [
 						"127",
 						"0",
@@ -539,16 +577,6 @@
 						"redis",
 						"hash",
 						"get"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "number"
-						},
-						{
-							"key": "hashKey",
-							"value": "2"
-						}
 					]
 				}
 			},
@@ -567,8 +595,14 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "HTEST:season",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -576,7 +610,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/hash/getObject?key=rainbow",
+					"raw": "127.0.0.1:8510/test/redis/hash/getObject",
 					"host": [
 						"127",
 						"0",
@@ -589,12 +623,6 @@
 						"redis",
 						"hash",
 						"getObject"
-					],
-					"query": [
-						{
-							"key": "key",
-							"value": "rainbow"
-						}
 					]
 				}
 			},
@@ -613,8 +641,18 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "chanel",
+							"value": "MSG:TEST",
+							"type": "text"
+						},
+						{
+							"key": "msg",
+							"value": "533gggs"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -622,7 +660,7 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:8510/test/redis/send?chanel=MSG:TEST&msg=533gggs",
+					"raw": "127.0.0.1:8510/test/redis/send",
 					"host": [
 						"127",
 						"0",
@@ -634,16 +672,6 @@
 						"test",
 						"redis",
 						"send"
-					],
-					"query": [
-						{
-							"key": "chanel",
-							"value": "MSG:TEST"
-						},
-						{
-							"key": "msg",
-							"value": "533gggs"
-						}
 					]
 				}
 			},
@@ -654,7 +682,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "c9546d22-474e-45af-9bfc-2c922329cd0d",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -664,13 +691,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "0da6959e-3fcb-413e-a327-191a5bb64942",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
