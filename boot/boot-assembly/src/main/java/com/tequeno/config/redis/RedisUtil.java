@@ -9,7 +9,10 @@ import com.tequeno.common.utils.HtDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -43,7 +46,7 @@ public class RedisUtil {
      * 指定缓存失效时间
      *
      * @param key  键
-     * @param time 时间(秒)
+     * @param time 时间(ms)
      * @return
      */
     public boolean expire(String key, long time) {
@@ -61,7 +64,7 @@ public class RedisUtil {
      * 根据key 获取过期时间
      *
      * @param key
-     * @return 时间(秒)
+     * @return 时间(ms)
      */
     public long getExpire(String key) {
         try {
@@ -167,7 +170,7 @@ public class RedisUtil {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒) time要大于0
+     * @param time  时间(ms) time要大于0
      * @return true成功 false 失败
      */
     public boolean set(String key, Object value, long time) {
@@ -237,14 +240,22 @@ public class RedisUtil {
      *
      * @param key  键
      * @param map  对应多个键值
-     * @param time 时间(秒)
+     * @param time 时间(ms)
      * @return true成功 false失败
      */
     public boolean hmset(String key, Map<String, Object> map, long time) {
         try {
             check(key, time);
-            redisTemplate.opsForHash().putAll(key, map);
-            redisTemplate.expire(key, time, TimeUnit.MILLISECONDS);
+            redisTemplate.execute(new SessionCallback() {
+                @Override
+                public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                    redisOperations.multi();
+                    redisOperations.opsForHash().putAll(key, map);
+                    redisOperations.expire(key, time, TimeUnit.MILLISECONDS);
+                    redisOperations.exec();
+                    return null;
+                }
+            });
             return true;
         } catch (Exception e) {
             logger.debug("RedisUtil.hmset调用失败", e);
@@ -276,14 +287,22 @@ public class RedisUtil {
      * @param key       键
      * @param hashKey   项
      * @param hashValue 值
-     * @param time      时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
+     * @param time      时间(ms) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
     public boolean hset(String key, String hashKey, Object hashValue, long time) {
         try {
             check(key, hashKey, time);
-            redisTemplate.opsForHash().put(key, hashKey, hashValue);
-            redisTemplate.expire(key, time, TimeUnit.MILLISECONDS);
+            redisTemplate.execute(new SessionCallback() {
+                @Override
+                public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                    redisOperations.multi();
+                    redisOperations.opsForHash().put(key, hashKey, hashValue);
+                    redisOperations.expire(key, time, TimeUnit.MILLISECONDS);
+                    redisOperations.exec();
+                    return null;
+                }
+            });
             return true;
         } catch (Exception e) {
             logger.debug("RedisUtil.hset调用失败", e);
@@ -421,11 +440,9 @@ public class RedisUtil {
 
     /**
      * 模糊匹配key并且删除
-     * *匹配所有
-     * ?单匹配
      *
-     * @param pattern
-     * @return
+     * @param pattern key模式 *匹配所有 ?单匹配 -区间匹配
+     * @return 被删除的key数量 -1表示异常
      */
     public long keysDel(String pattern) {
         try {
@@ -454,11 +471,9 @@ public class RedisUtil {
 
     /**
      * 模糊匹配key返回key集合
-     * *匹配所有
-     * ?单匹配
      *
-     * @param pattern
-     * @return
+     * @param pattern key模式 *匹配所有 ?单匹配 -区间匹配
+     * @return key集合
      */
     public List keys(String pattern) {
         try {
@@ -478,11 +493,18 @@ public class RedisUtil {
             List result = (List) redisTemplate.execute(redisScript, redisTemplate.getKeySerializer(), redisTemplate.getKeySerializer(), Collections.singletonList(pattern));
             return result;
         } catch (Exception e) {
-            logger.debug("RedisUtil.keysDel调用失败", e);
+            logger.debug("RedisUtil.keys调用失败", e);
             return null;
         }
     }
 
+    /**
+     * 获取分布式锁
+     *
+     * @param lockKey      锁
+     * @param lockTimeEnum 加锁重试策略
+     * @return 是否获取成功
+     */
     public boolean tryLock(String lockKey, JedisLockTimeEnum lockTimeEnum) {
         lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
         return tryLock(lockKey, lockTimeEnum.getExpireTime(), lockTimeEnum.getRetryEvicTime(), lockTimeEnum.getEvicTime());
@@ -555,7 +577,7 @@ public class RedisUtil {
      * 生成全局唯一流水号
      *
      * @param htSeqPrefixEnum 流水号前缀
-     * @return
+     * @return 流水号自增1
      */
     public String tryGetOnlySequenceNum(HtSeqPrefixEnum htSeqPrefixEnum) {
         try {
