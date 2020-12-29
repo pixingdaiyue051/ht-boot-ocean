@@ -1,18 +1,20 @@
 package com.tequeno.bootassembly;
 
 import com.tequeno.common.constants.HtResultBinder;
+import com.tequeno.common.enums.HtSeqPrefixEnum;
+import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.redis.JedisUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @Desription:
@@ -23,47 +25,58 @@ import java.util.Map;
 @RequestMapping("test")
 public class TestController {
 
+    private final static Logger logger = LoggerFactory.getLogger(TestController.class);
+
     @Autowired
     private JedisUtil jedisUtil;
 
-    /**
-     * @param key
-     * @param value
-     * @return
-     */
     @RequestMapping("one")
-    public HtResultBinder one(@RequestParam String key,
-                              @RequestParam String value,
-                              @RequestParam List<File> fileList) {
-        try {
-            System.out.println(URLDecoder.decode(key, "UTF-8"));
-            System.out.println(URLDecoder.decode(value, "UTF-8"));
-            fileList.forEach(f -> System.out.println(f.getName()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return HtResultInfoWrapper.success();
+    public HtResultBinder one() {
+        String key = "TEST:_3";
+        String value = "val_";
+        jedisUtil.stringSet(key, value);
+        String result = jedisUtil.stringGet(key);
+        return HtResultInfoWrapper.success(result);
     }
 
-    /**
-     * @return
-     */
     @RequestMapping("two")
     public HtResultBinder two() {
-        boolean isOk = jedisUtil.tryLock("eed", 100000L);
-        if (isOk) {
-            jedisUtil.hset("H:DE", "sd", "da", 30000L);
-            Map<String, String> map = new HashMap<>(11);
-            map.put("1a", "1a");
-            map.put("2a", "2a");
-            map.put("3a", "3a");
-            map.put("4a", "4a");
-            map.put("5a", "5a");
-            map.put("6a", "6a");
-            jedisUtil.hmset("H:FD", map);
-            List<String> list = jedisUtil.hmget("H:FD");
-            return HtResultInfoWrapper.success(list);
-        }
-        return HtResultInfoWrapper.success(isOk);
+        String key = "TEST:_";
+        String value = "val_";
+        String hashKey = "H:HASTALAVISTA";
+        Map<String, String> map = IntStream.range(0, 1000)
+                .boxed()
+                .parallel()
+                .collect(Collectors.toMap(i -> key + i, i -> value + i));
+
+        List<String> list = IntStream.range(0, 1000)
+                .boxed()
+                .parallel()
+                .map(i -> key + i)
+                .collect(Collectors.toList());
+
+        long l1 = System.currentTimeMillis();
+        boolean result = jedisUtil.stringSet(map);
+//        boolean result = jedisUtil.stringDel(list);
+//        List<String> result = jedisUtil.hashMultiGet(hashKey, list);
+        long l2 = System.currentTimeMillis();
+        logger.info("redis执行[{}]ms", l2 - l1);
+        return HtResultInfoWrapper.success(result);
     }
+
+    @RequestMapping("three")
+    public HtResultBinder three() {
+        String keyPattern = "TEST*";
+        String lockKey = "waa1";
+        long l1 = System.currentTimeMillis();
+//        boolean result = jedisUtil.luaTryLock(lockKey, JedisLockTimeEnum.COMMON.getExpireTime());
+        boolean result = jedisUtil.luaTryLock(lockKey, JedisLockTimeEnum.QUICK);
+//        String result = jedisUtil.luaGetSequenceNum(HtSeqPrefixEnum.DB);
+//        List<String> result = jedisUtil.luaKeysByPattern(keyPattern);
+//        boolean result = jedisUtil.luaDelKeysByPattern(keyPattern);
+        long l2 = System.currentTimeMillis();
+        logger.info("redis执行[{}]ms", l2 - l1);
+        return HtResultInfoWrapper.success(result);
+    }
+
 }

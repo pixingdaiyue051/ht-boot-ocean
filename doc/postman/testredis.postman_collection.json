@@ -676,6 +676,86 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "one",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8510/test/one",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8510",
+					"path": [
+						"test",
+						"one"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "two",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:8510/test/two",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8510",
+					"path": [
+						"test",
+						"two"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "three",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:8510/test/three",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8510",
+					"path": [
+						"test",
+						"three"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
