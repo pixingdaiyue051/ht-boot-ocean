@@ -59,18 +59,38 @@ public class JedisUtil {
     //string 操作//////////////////////////////////////////////////////////////////////
 
     /**
-     * string 设置key使用默认超时时间
+     * string 设置key,使用默认超时时间
      *
      * @param key
      * @param value
      * @return 除非异常否则都是true
      */
-    public boolean stringSet(String key, String value) {
+    public boolean stringSetDefault(String key, String value) {
         return stringSet(key, value, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
     }
 
     /**
-     * string 设置key指定超时时间
+     * string 设置key,不超时
+     *
+     * @param key
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetPersist(String key, String value) {
+        try {
+            fetchJedis();
+            String result = jedis.set(key, value);
+            return JedisUtilHolder.OK.equals(result);
+        } catch (Exception e) {
+            logger.info("stringSetPersist(String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis();
+        }
+    }
+
+    /**
+     * string 设置key,指定超时时间
      *
      * @param key
      * @param value
@@ -91,13 +111,36 @@ public class JedisUtil {
     }
 
     /**
-     * string 同时设置多个key,value使用默认超时时间
+     * string 同时设置多个key,value,使用默认超时时间
      *
      * @param stringMap
      * @return 除非异常否则都是true
      */
-    public boolean stringSet(Map<String, String> stringMap) {
+    public boolean stringSetDefault(Map<String, String> stringMap) {
         return stringSet(stringMap, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * string 同时设置多个key,value,不超时
+     *
+     * @param stringMap
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetPersist(Map<String, String> stringMap) {
+        try {
+            fetchJedis();
+            Pipeline pipe = jedis.pipelined();
+            pipe.multi();
+            stringMap.forEach(pipe::set);
+            pipe.exec();
+            pipe.sync();
+            return true;
+        } catch (Exception e) {
+            logger.info("stringSetPersist(Map)异常:", e);
+            return false;
+        } finally {
+            closeJedis();
+        }
     }
 
     /**
@@ -221,8 +264,29 @@ public class JedisUtil {
      * @param value
      * @return 除非异常否则都是true
      */
-    public boolean hashSet(String key, String field, String value) {
+    public boolean hashSetDefault(String key, String field, String value) {
         return hashSet(key, field, value, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * hash 设置单个key的field,不超时
+     *
+     * @param key
+     * @param field
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean hashSetPersist(String key, String field, String value) {
+        try {
+            fetchJedis();
+            jedis.hset(key, field, value);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashSetPersist(String,String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis();
+        }
     }
 
     /**
@@ -243,7 +307,7 @@ public class JedisUtil {
             tx.exec();
             return true;
         } catch (Exception e) {
-            logger.info("hashSet(long[{}])异常:", expiredTime, e);
+            logger.info("hashSet(String,String,String,long[{}])异常:", expiredTime, e);
             return false;
         } finally {
             closeJedis();
@@ -257,8 +321,28 @@ public class JedisUtil {
      * @param fields
      * @return 除非异常否则都是true
      */
-    public boolean hashMultiSet(String key, Map<String, String> fields) {
+    public boolean hashMultiSetDefault(String key, Map<String, String> fields) {
         return hashMultiSet(key, fields, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * hash 设置同一个key的多个field,不超时
+     *
+     * @param key
+     * @param fields
+     * @return 除非异常否则都是true
+     */
+    public boolean hashMultiSetPersist(String key, Map<String, String> fields) {
+        try {
+            fetchJedis();
+            jedis.hmset(key, fields);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashMultiSetPersist(String,Map)异常:", e);
+            return false;
+        } finally {
+            closeJedis();
+        }
     }
 
     /**
@@ -479,7 +563,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaGetSequenceNum");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/seq_num.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/sequence_num.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -502,10 +586,11 @@ public class JedisUtil {
      * 分布式锁
      *
      * @param lockKey    锁的唯一key
+     * @param token      随机生成token作为删除标志
      * @param expireTime 过期时间,单位ms
      * @return 是否成功加锁
      */
-    public boolean luaTryLock(String lockKey, long expireTime) {
+    public boolean luaTryLock(String lockKey, String token, long expireTime) {
         try {
             fetchJedis();
             lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
@@ -521,10 +606,10 @@ public class JedisUtil {
                 scriptSha = jedis.scriptLoad(script);
                 scriptMap.put("luaTryLock", scriptSha);
             }
-            Object result = jedis.evalsha(scriptSha, 1, lockKey, String.valueOf(expireTime));
+            Object result = jedis.evalsha(scriptSha, 1, lockKey, token, String.valueOf(expireTime));
             return JedisUtilHolder.ONE.equals(result);
         } catch (Exception e) {
-            logger.info("luaTryLock(String,long)异常:", e);
+            logger.info("luaTryLock(String,String,long)异常:", e);
             return false;
         } finally {
             closeJedis();
@@ -535,10 +620,11 @@ public class JedisUtil {
      * 分布式锁
      *
      * @param lockKey      锁的唯一key
+     * @param token        随机生成token作为删除标志
      * @param lockTimeEnum 加锁策略
      * @return 是否成功加锁
      */
-    public boolean luaTryLock(String lockKey, JedisLockTimeEnum lockTimeEnum) {
+    public boolean luaTryLock(String lockKey, String token, JedisLockTimeEnum lockTimeEnum) {
         try {
             fetchJedis();
             lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
@@ -560,7 +646,7 @@ public class JedisUtil {
             long evicTime = lockTimeEnum.getEvicTime();
             long startMillSecond = System.currentTimeMillis();
             do {
-                Object result = jedis.evalsha(scriptSha, 1, lockKey, expireTime);
+                Object result = jedis.evalsha(scriptSha, 1, lockKey, token, expireTime);
                 isLocked = JedisUtilHolder.ONE.equals(result);
                 if (isLocked) {
                     logger.info("根据key[{}]获取锁成功", lockKey);
@@ -575,7 +661,40 @@ public class JedisUtil {
             } while (!isLocked);
             return false;
         } catch (Exception e) {
-            logger.info("luaTryLock(String,JedisLockTimeEnum)异常:", e);
+            logger.info("luaTryLock(String,String,JedisLockTimeEnum)异常:", e);
+            return false;
+        } finally {
+            closeJedis();
+        }
+    }
+
+    /**
+     * 释放分布式锁
+     *
+     * @param lockKey 锁的唯一key
+     * @param token   随机生成token作为删除标志
+     * @return 是否释放锁
+     */
+    public boolean luaReleaseLock(String lockKey, String token) {
+        try {
+            fetchJedis();
+            lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
+            Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
+            String scriptSha = scriptMap.get("luaReleaseLock");
+            if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
+                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/release_lock.lua"), StandardOpenOption.READ);
+                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
+                byte[] b = new byte[inMapper.limit()];
+                inMapper.get(b);
+                String script = new String(b);
+                inChannel.close();
+                scriptSha = jedis.scriptLoad(script);
+                scriptMap.put("luaReleaseLock", scriptSha);
+            }
+            Object result = jedis.evalsha(scriptSha, 1, lockKey, token);
+            return JedisUtilHolder.ONE.equals(result);
+        } catch (Exception e) {
+            logger.info("luaTryLock(String,String)异常:", e);
             return false;
         } finally {
             closeJedis();
@@ -615,6 +734,7 @@ public class JedisUtil {
             }
             return scriptMap;
         }
+
     }
 
     /**
@@ -627,8 +747,9 @@ public class JedisUtil {
         jedisUtil.jedisPool = JedisUtilHolder.initPool();
         long l1 = System.currentTimeMillis();
         String lockKey = "waa";
-        jedisUtil.luaTryLock(lockKey, JedisLockTimeEnum.QUICK);
+        String token = "1609392385486";
+        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
         long l2 = System.currentTimeMillis();
-        logger.info("redis执行[{}]ms", l2 - l1);
+        logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
     }
 }
