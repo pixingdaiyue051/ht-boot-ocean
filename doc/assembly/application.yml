@@ -21,8 +21,10 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: 10000
+  profiles:
+    path: doc/
 logging:
-  config: classpath:logback-spring.xml
+  config: ${spring.config.location}/logback-spring.xml
 # activemq
 activemq:
   user: admin

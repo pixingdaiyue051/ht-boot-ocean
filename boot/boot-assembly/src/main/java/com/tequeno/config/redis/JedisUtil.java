@@ -8,6 +8,7 @@ import com.tequeno.common.utils.HtDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import redis.clients.jedis.Jedis;
@@ -16,6 +17,8 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Transaction;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -40,6 +43,9 @@ public class JedisUtil {
 
     @Autowired
     private JedisPool jedisPool;
+
+    @Value("${spring.profiles.path}")
+    private String profilesPath;
 
     private Jedis jedis;
 
@@ -499,7 +505,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaDelKeysByPattern");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/del_keys_pattern.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/del_keys_pattern.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -531,7 +537,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaKeysByPattern");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/keys_pattern.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/keys_pattern.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -563,7 +569,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaGetSequenceNum");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/sequence_num.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/sequence_num.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -597,7 +603,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaTryLock");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/try_lock.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/try_lock.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -631,7 +637,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaTryLock");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/try_lock.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/try_lock.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -682,7 +688,7 @@ public class JedisUtil {
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
             String scriptSha = scriptMap.get("luaReleaseLock");
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get("doc/lua/release_lock.lua"), StandardOpenOption.READ);
+                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/release_lock.lua"), StandardOpenOption.READ);
                 MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
                 byte[] b = new byte[inMapper.limit()];
                 inMapper.get(b);
@@ -713,17 +719,21 @@ public class JedisUtil {
 
         private static JedisPool initPool() {
             if (null == jedisPool) {
-                JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-                Yaml yaml = new Yaml();
-                InputStream inputStream = JedisUtil.class.getClassLoader().getResourceAsStream("application.yml");
-                Map map = yaml.loadAs(inputStream, Map.class);
-                map = (LinkedHashMap) (map.get("spring"));
-                map = (LinkedHashMap) (map.get("redis"));
-                String host = map.get("host").toString();
-                int port = (int) map.get("port");
-                String password = map.get("password").toString();
-                int timeout = (int) map.get("timeout");
-                jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
+                try {
+                    JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+                    Yaml yaml = new Yaml();
+                    InputStream inputStream = new FileInputStream("doc/assembly/application.yml");
+                    Map map = yaml.loadAs(inputStream, Map.class);
+                    map = (LinkedHashMap) (map.get("spring"));
+                    map = (LinkedHashMap) (map.get("redis"));
+                    String host = map.get("host").toString();
+                    int port = (int) map.get("port");
+                    String password = map.get("password").toString();
+                    int timeout = (int) map.get("timeout");
+                    jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
             return jedisPool;
         }
@@ -745,10 +755,12 @@ public class JedisUtil {
     public static void main(String[] args) {
         JedisUtil jedisUtil = new JedisUtil();
         jedisUtil.jedisPool = JedisUtilHolder.initPool();
-        long l1 = System.currentTimeMillis();
+        jedisUtil.profilesPath = "doc/";
         String lockKey = "waa";
-        String token = "1609392385486";
-        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
+        long l1 = System.currentTimeMillis();
+        String token = String.valueOf(l1);
+        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
+//        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
         long l2 = System.currentTimeMillis();
         logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
     }

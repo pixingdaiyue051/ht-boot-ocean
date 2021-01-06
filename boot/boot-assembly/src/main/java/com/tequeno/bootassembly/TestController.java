@@ -1,6 +1,7 @@
 package com.tequeno.bootassembly;
 
 import com.tequeno.common.constants.HtResultBinder;
+import com.tequeno.common.enums.HtSeqPrefixEnum;
 import com.tequeno.common.enums.JedisLockTimeEnum;
 import com.tequeno.common.utils.HtResultInfoWrapper;
 import com.tequeno.config.redis.JedisUtil;
@@ -33,8 +34,12 @@ public class TestController {
     public HtResultBinder one() {
         String key = "TEST:_3";
         String value = "val_";
-        jedisUtil.stringSetDefault(key, value);
+
+        long l1 = System.currentTimeMillis();
+//        boolean result = jedisUtil.stringSetDefault(key, value);
         String result = jedisUtil.stringGet(key);
+        long l2 = System.currentTimeMillis();
+        logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
         return HtResultInfoWrapper.success(result);
     }
 
@@ -57,10 +62,10 @@ public class TestController {
         long l1 = System.currentTimeMillis();
 //        boolean result = jedisUtil.stringSetDefault(map);
 //        boolean result = jedisUtil.stringDel(list);
-        boolean result = jedisUtil.hashMultiSetDefault(hashKey, map);
-//        List<String> result = jedisUtil.hashMultiGet(hashKey, list);
+//        boolean result = jedisUtil.hashMultiSetDefault(hashKey, map);
+        List<String> result = jedisUtil.hashMultiGet(hashKey, list);
         long l2 = System.currentTimeMillis();
-        logger.info("redis执行[{}]ms", l2 - l1);
+        logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
         return HtResultInfoWrapper.success(result);
     }
 
@@ -69,14 +74,15 @@ public class TestController {
         String keyPattern = "HTEST*";
         String lockKey = "waa";
         long l1 = System.currentTimeMillis();
-        String token = String.valueOf(System.currentTimeMillis());
-        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
+        String token = String.valueOf(l1);
 //        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.COMMON.getExpireTime());
-//        String result = jedisUtil.luaGetSequenceNum(HtSeqPrefixEnum.DB);
+//        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
+//        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
+        String result = jedisUtil.luaGetSequenceNum(HtSeqPrefixEnum.DB);
 //        List<String> result = jedisUtil.luaKeysByPattern(keyPattern);
 //        boolean result = jedisUtil.luaDelKeysByPattern(keyPattern);
         long l2 = System.currentTimeMillis();
-        logger.info("redis执行[{}]ms", l2 - l1);
+        logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
         return HtResultInfoWrapper.success(result);
     }
 
