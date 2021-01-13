@@ -44,7 +44,7 @@ public class JedisUtil {
     @Autowired
     private JedisPool jedisPool;
 
-    @Value("${spring.profiles.path}")
+    @Value("${file.lua}")
     private String profilesPath;
 
     private Jedis jedis;
@@ -503,16 +503,10 @@ public class JedisUtil {
         try {
             fetchJedis();
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaDelKeysByPattern");
+            String scriptSha = scriptMap.get(ScriptEnum.DEL_KEYS_PATTERN.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/del_keys_pattern.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaDelKeysByPattern", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.DEL_KEYS_PATTERN.getLuaFileName()));
+                scriptMap.put(ScriptEnum.DEL_KEYS_PATTERN.getScriptName(), scriptSha);
             }
             Long result = (Long) jedis.evalsha(scriptSha, 1, pattern);
             logger.info("redis删除{}个key", result);
@@ -535,16 +529,10 @@ public class JedisUtil {
         try {
             fetchJedis();
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaKeysByPattern");
+            String scriptSha = scriptMap.get(ScriptEnum.KEYS_PATTERN.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/keys_pattern.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaKeysByPattern", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.KEYS_PATTERN.getLuaFileName()));
+                scriptMap.put(ScriptEnum.KEYS_PATTERN.getScriptName(), scriptSha);
             }
             return (ArrayList<String>) jedis.evalsha(scriptSha, 1, pattern);
         } catch (Exception e) {
@@ -556,36 +544,44 @@ public class JedisUtil {
     }
 
     /**
-     * 获取系统唯一序列号,自增1,key超时时间为1天
+     * 根据时间(年月日),自增1序列
      *
-     * @param htSeqPrefixEnum 序列号前缀
+     * @param key        序列key
+     * @param expireTime 序列号超时时间
      * @return 自增后的序列号(自带前缀), 异常返回null
      */
-    public String luaGetSequenceNum(HtSeqPrefixEnum htSeqPrefixEnum) {
+    public Object luaGetSequenceNum(String key, long expireTime) {
         try {
             fetchJedis();
             String now = HtDateUtil.nowDateNum();
-            String key = JedisKeyPrefixEnum.SEQ.assemblyKey(htSeqPrefixEnum.getPrefix() + now);
+            key = JedisKeyPrefixEnum.SEQ.assemblyKey(key, now);
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaGetSequenceNum");
+            String scriptSha = scriptMap.get(ScriptEnum.SEQUENCE_NUM.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/sequence_num.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaGetSequenceNum", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.SEQUENCE_NUM.getLuaFileName()));
+                scriptMap.put(ScriptEnum.SEQUENCE_NUM.getScriptName(), scriptSha);
             }
-            Object result = jedis.evalsha(scriptSha, 1, key, now + HtPropertyConstant.SEQ_SUFFIX, String.valueOf(HtPropertyConstant.ONE_DAY));
-            return htSeqPrefixEnum.assemblySeq(result);
+            return jedis.evalsha(scriptSha, 1, key, now + HtPropertyConstant.SEQ_SUFFIX, String.valueOf(expireTime));
         } catch (Exception e) {
             logger.info("luaGetSequenceNum(HtSeqPrefixEnum)异常:", e);
             return null;
         } finally {
             closeJedis();
         }
+    }
+
+    /**
+     * 获取系统唯一序列号,超时时间为1天
+     *
+     * @param htSeqPrefixEnum 序列号前缀
+     * @return 自增后的序列号(自带前缀), 异常返回null
+     */
+    public String luaGetSequenceNum(HtSeqPrefixEnum htSeqPrefixEnum) {
+        Object obj = luaGetSequenceNum(htSeqPrefixEnum.getPrefix(), HtPropertyConstant.ONE_DAY);
+        if (null == obj) {
+            return null;
+        }
+        return htSeqPrefixEnum.assemblySeq(obj);
     }
 
     /**
@@ -601,16 +597,10 @@ public class JedisUtil {
             fetchJedis();
             lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaTryLock");
+            String scriptSha = scriptMap.get(ScriptEnum.TRY_LOCK.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/try_lock.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaTryLock", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.TRY_LOCK.getLuaFileName()));
+                scriptMap.put(ScriptEnum.TRY_LOCK.getScriptName(), scriptSha);
             }
             Object result = jedis.evalsha(scriptSha, 1, lockKey, token, String.valueOf(expireTime));
             return JedisUtilHolder.ONE.equals(result);
@@ -635,16 +625,10 @@ public class JedisUtil {
             fetchJedis();
             lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaTryLock");
+            String scriptSha = scriptMap.get(ScriptEnum.TRY_LOCK.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/try_lock.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaTryLock", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.TRY_LOCK.getLuaFileName()));
+                scriptMap.put(ScriptEnum.TRY_LOCK.getScriptName(), scriptSha);
             }
             boolean isLocked;
             String expireTime = String.valueOf(lockTimeEnum.getExpireTime());
@@ -686,16 +670,10 @@ public class JedisUtil {
             fetchJedis();
             lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
             Map<String, String> scriptMap = JedisUtilHolder.getScriptMap();
-            String scriptSha = scriptMap.get("luaReleaseLock");
+            String scriptSha = scriptMap.get(ScriptEnum.RELEASE_LOCK.getScriptName());
             if (null == scriptSha || !jedis.scriptExists(scriptSha)) {
-                FileChannel inChannel = FileChannel.open(Paths.get(profilesPath + "/lua/release_lock.lua"), StandardOpenOption.READ);
-                MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-                byte[] b = new byte[inMapper.limit()];
-                inMapper.get(b);
-                String script = new String(b);
-                inChannel.close();
-                scriptSha = jedis.scriptLoad(script);
-                scriptMap.put("luaReleaseLock", scriptSha);
+                scriptSha = jedis.scriptLoad(loadScriptFromDisk(ScriptEnum.RELEASE_LOCK.getLuaFileName()));
+                scriptMap.put(ScriptEnum.RELEASE_LOCK.getScriptName(), scriptSha);
             }
             Object result = jedis.evalsha(scriptSha, 1, lockKey, token);
             return JedisUtilHolder.ONE.equals(result);
@@ -704,6 +682,40 @@ public class JedisUtil {
             return false;
         } finally {
             closeJedis();
+        }
+    }
+
+    private String loadScriptFromDisk(String luaFileName) throws Exception {
+        FileChannel inChannel = FileChannel.open(Paths.get(profilesPath, luaFileName), StandardOpenOption.READ);
+        MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
+        byte[] b = new byte[inMapper.limit()];
+        inMapper.get(b);
+        String script = new String(b);
+        inChannel.close();
+        return script;
+    }
+
+    private enum ScriptEnum {
+        TRY_LOCK("luaTryLock", "try_lock.lua"),
+        RELEASE_LOCK("luaReleaseLock", "release_lock.lua"),
+        SEQUENCE_NUM("luaGetSequenceNum", "sequence_num.lua"),
+        KEYS_PATTERN("luaKeysByPattern", "keys_pattern.lua"),
+        DEL_KEYS_PATTERN("luaDelKeysByPattern", "del_keys_pattern.lua"),
+        ;
+        private String scriptName;
+        private String luaFileName;
+
+        ScriptEnum(String scriptName, String luaFileName) {
+            this.scriptName = scriptName;
+            this.luaFileName = luaFileName;
+        }
+
+        public String getScriptName() {
+            return scriptName;
+        }
+
+        public String getLuaFileName() {
+            return luaFileName;
         }
     }
 
@@ -744,7 +756,6 @@ public class JedisUtil {
             }
             return scriptMap;
         }
-
     }
 
     /**
@@ -755,7 +766,7 @@ public class JedisUtil {
     public static void main(String[] args) {
         JedisUtil jedisUtil = new JedisUtil();
         jedisUtil.jedisPool = JedisUtilHolder.initPool();
-        jedisUtil.profilesPath = "doc/";
+        jedisUtil.profilesPath = "doc/lua/";
         String lockKey = "waa";
         long l1 = System.currentTimeMillis();
         String token = String.valueOf(l1);

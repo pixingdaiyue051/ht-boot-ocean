@@ -1,5 +1,5 @@
 server:
-  port: 8512
+  port: 8511
   servlet:
     context-path: /
 spring:
@@ -9,7 +9,7 @@ spring:
     database: 2
     host: 127.0.0.1
     port: 6379
-#    password: 276757
+    password: 276757
     timeout: 10000
     jedis:
       pool:
@@ -18,9 +18,7 @@ spring:
         max-active: 8
         max-wait: 10000
 logging:
-  config: classpath:logback.xml
-mybatisConfigLocation: mybatis-config.xml
-##自定义配置
+  config: ${spring.config.location}/logback.xml
 jdbc:
   driverClassName: com.mysql.cj.jdbc.Driver
   url: jdbc:mysql://127.0.0.1/local_demo?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
@@ -41,14 +39,13 @@ mapper:
   mappers: tk.mybatis.mapper.common.Mapper
   not-empty: false
   identity: mysql
+  mapperLocation: classpath*:/mapper/**/*.xml
+  entityLocation: com.tequeno..pojo
 pagehelper:
   helperDialect: mysql
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
-# 自定义配置
-mapperLocation: /mapper/**/*.xml
-entityLocation: com.tequeno..pojo
 # activemq
 activemq:
   user: admin

@@ -17,11 +17,9 @@ public class SqlSessionFactoryConfiguration {
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
-    @Value("${mybatisConfigLocation}")
-    private String mybatisConfigLocation;
-    @Value("${mapperLocation}")
+    @Value("${mapper.mapperLocation}")
     private String mapperLocation;
-    @Value("${entityLocation}")
+    @Value("${mapper.entityLocation}")
     private String entityLocation;
 
     @Bean(name = "sqlSessionFactory")
@@ -29,11 +27,9 @@ public class SqlSessionFactoryConfiguration {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(dataSource);
-        // 加载mybatis-config.xml
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(mybatisConfigLocation));
         // 读取mapper路径
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + mapperLocation));
+        sqlSessionFactoryBean.setMapperLocations(resolver.getResources(mapperLocation));
         // 读取entity路径
         sqlSessionFactoryBean.setTypeAliasesPackage(entityLocation);
         return sqlSessionFactoryBean;

@@ -36,6 +36,12 @@ public class HtResultInfoWrapper {
         return binder;
     }
 
+    public static HtResultBinder fail(String errorMsg) {
+        HtResultBinder binder = fail();
+        binder.setMsg(errorMsg);
+        return binder;
+    }
+
     public static HtResultBinder fail() {
         return fail(HtCommonErrorEnum.FAIL);
     }

@@ -40,7 +40,7 @@ public class JedisConfig {
     @Value("${spring.redis.block-when-exhausted}")
     private boolean blockWhenExhausted;
 
-    @Value("${spring.redis.jms-enabled}")
+    @Value("${spring.redis.jmx-enabled}")
     private boolean jmxEnabled;
 
     @Bean

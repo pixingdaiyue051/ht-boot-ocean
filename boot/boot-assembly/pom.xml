@@ -92,7 +92,12 @@
             <artifactId>rocketmq-client</artifactId>
             <version>4.5.2</version>
         </dependency>
-
+        <!-- 文件上传 -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
         <!-- 引用boot-api-->
         <dependency>
             <groupId>com.tequeno</groupId>

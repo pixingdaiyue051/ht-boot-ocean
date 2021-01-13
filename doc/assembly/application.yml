@@ -14,17 +14,15 @@ spring:
     #    连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
     block-when-exhausted: false
     #    是否启用pool的jmx管理功能, 默认true
-    jms-enabled: false
+    jmx-enabled: false
     jedis:
       pool:
         min-idle: 0
         max-idle: 8
         max-active: 8
         max-wait: 10000
-  profiles:
-    path: doc/
 logging:
-  config: ${spring.config.location}/logback-spring.xml
+  config: ${spring.config.location}/logback.xml
 # activemq
 activemq:
   user: admin
@@ -54,3 +52,7 @@ rocketmq:
     consumeTimeout: 3000 #默认15
     consumeThreadMin: 10 #默认20
     consumeThreadMax: 30 #默认20
+file:
+  upload: /hexk/github/hey-jude/deploy/data/upload/
+  template: /hexk/github/hey-jude/deploy/data/template/
+  lua: /hexk/github/hey-jude/deploy/data/lua/
