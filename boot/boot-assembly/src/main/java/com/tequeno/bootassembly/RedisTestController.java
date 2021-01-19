@@ -1,11 +1,11 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.constants.HtPropertyConstant;
-import com.tequeno.common.constants.HtResultBinder;
-import com.tequeno.common.enums.HtSeqPrefixEnum;
-import com.tequeno.common.enums.JedisLockTimeEnum;
-import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.redis.RedisUtil;
+import com.tequeno.config.RedisUtil;
+import com.tequeno.constants.HtPropertyConstant;
+import com.tequeno.constants.HtResultBinder;
+import com.tequeno.enums.JedisLockTimeEnum;
+import com.tequeno.enums.JedisSeqPrefixEnum;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,14 +78,14 @@ public class RedisTestController {
         return HtResultInfoWrapper.success(redisUtil.keysDel(pattern));
     }
 
-    /**
-     * @param pattern
-     * @return
-     */
-    @RequestMapping("keys")
-    public HtResultBinder matchKeysWithPattern(@RequestParam String pattern) {
-        return HtResultInfoWrapper.success(redisUtil.keys(pattern));
-    }
+//    /**
+//     * @param pattern
+//     * @return
+//     */
+//    @RequestMapping("keys")
+//    public HtResultBinder matchKeysWithPattern(@RequestParam String pattern) {
+//        return HtResultInfoWrapper.success(redisUtil.keys(pattern));
+//    }
 
 //    /**
 //     * @param chanel
@@ -113,7 +113,7 @@ public class RedisTestController {
      */
     @RequestMapping("seq")
     public HtResultBinder seq(@RequestParam String name) {
-        return HtResultInfoWrapper.success(redisUtil.tryGetOnlySequenceNum(HtSeqPrefixEnum.valueOf(name)));
+        return HtResultInfoWrapper.success(redisUtil.tryGetOnlySequenceNum(JedisSeqPrefixEnum.valueOf(name)));
     }
 
 }

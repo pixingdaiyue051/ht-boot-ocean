@@ -1,10 +1,9 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.constants.HtResultBinder;
-import com.tequeno.common.enums.HtSeqPrefixEnum;
-import com.tequeno.common.enums.JedisLockTimeEnum;
-import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.redis.JedisUtil;
+import com.tequeno.config.JedisUtil;
+import com.tequeno.constants.HtResultBinder;
+import com.tequeno.enums.JedisSeqPrefixEnum;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class TestController {
 //        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.COMMON.getExpireTime());
 //        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
 //        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
-        String result = jedisUtil.luaGetSequenceNum(HtSeqPrefixEnum.DB);
+        String result = jedisUtil.luaGetSequenceNum(JedisSeqPrefixEnum.TEST);
 //        List<String> result = jedisUtil.luaKeysByPattern(keyPattern);
 //        boolean result = jedisUtil.luaDelKeysByPattern(keyPattern);
         long l2 = System.currentTimeMillis();

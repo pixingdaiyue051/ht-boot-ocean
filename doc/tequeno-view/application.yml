@@ -6,11 +6,14 @@ spring:
   application:
     name: tequeno-view
   redis:
-    database: 2
+    database: 0
     host: 127.0.0.1
     port: 6379
-    password: 276757
     timeout: 10000
+    #    连接耗尽时是否阻塞, false报异常,true阻塞直到超时, 默认true
+    block-when-exhausted: false
+    #    是否启用pool的jmx管理功能, 默认true
+    jmx-enabled: false
     jedis:
       pool:
         min-idle: 0
@@ -75,3 +78,7 @@ rocketmq:
     consumeTimeout: 3000 #默认15
     consumeThreadMin: 10 #默认20
     consumeThreadMax: 30 #默认20
+file:
+  upload: /hexk/github/hey-jude/deploy/data/upload/
+  template: /hexk/github/hey-jude/deploy/data/template/
+  lua: /doc/lua/

@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly.file;
 
-import com.tequeno.common.constants.HtResultBinder;
-import com.tequeno.common.utils.HtResultInfoWrapper;
+import com.tequeno.constants.HtResultBinder;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

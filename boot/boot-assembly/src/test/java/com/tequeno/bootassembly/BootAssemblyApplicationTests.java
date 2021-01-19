@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.enums.HtSeqPrefixEnum;
-import com.tequeno.config.redis.RedisUtil;
+import com.tequeno.config.RedisUtil;
+import com.tequeno.enums.JedisSeqPrefixEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class BootAssemblyApplicationTests {
 //            executor.execute(() -> {
 //            });
 //        }
-        String sequenceNum = redisUtil.tryGetOnlySequenceNum(HtSeqPrefixEnum.TEST);
+        String sequenceNum = redisUtil.tryGetOnlySequenceNum(JedisSeqPrefixEnum.TEST);
         System.out.println(sequenceNum);
 
     }

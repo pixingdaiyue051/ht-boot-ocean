@@ -1,9 +1,8 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.common.constants.HtPropertyConstant;
-import com.tequeno.common.constants.HtResultBinder;
-import com.tequeno.common.utils.HtResultInfoWrapper;
-import com.tequeno.config.redis.RedisUtil;
+import com.tequeno.config.RedisUtil;
+import com.tequeno.constants.HtResultBinder;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,7 @@ public class RedisTestHashController {
     public HtResultBinder set(@RequestParam String key,
                               @RequestParam String hashKey,
                               @RequestParam Object hashValue) {
-        return HtResultInfoWrapper.success(redisUtil.hset(key, hashKey, hashValue, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT));
+        return HtResultInfoWrapper.success(redisUtil.hset(key, hashKey, hashValue));
     }
 
     /**
@@ -40,7 +39,7 @@ public class RedisTestHashController {
     @RequestMapping("setObject")
     public HtResultBinder set(@RequestParam String key,
                               @RequestBody Map<String, Object> map) {
-        return HtResultInfoWrapper.success(redisUtil.hmset(key, map, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT));
+        return HtResultInfoWrapper.success(redisUtil.hmset(key, map));
     }
 
     /**

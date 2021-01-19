@@ -1,8 +1,8 @@
 package com.tequeno.bootassembly.file;
 
-import com.tequeno.common.constants.HtResultBinder;
-import com.tequeno.common.utils.HtDateUtil;
-import com.tequeno.common.utils.HtResultInfoWrapper;
+import com.tequeno.constants.HtResultBinder;
+import com.tequeno.utils.HtDateUtil;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

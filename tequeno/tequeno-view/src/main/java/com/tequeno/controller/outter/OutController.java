@@ -1,7 +1,7 @@
 package com.tequeno.controller.outter;
 
 import com.tequeno.anno.HtRepeatedSubmitAnno;
-import com.tequeno.config.cache.RedisUtil;
+import com.tequeno.config.RedisUtil;
 import com.tequeno.constants.HtCommonRegPattern;
 import com.tequeno.constants.HtPropertyConstant;
 import com.tequeno.constants.HtResultBinder;

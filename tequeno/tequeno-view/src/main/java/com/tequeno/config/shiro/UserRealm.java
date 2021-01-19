@@ -1,6 +1,6 @@
 package com.tequeno.config.shiro;
 
-import com.tequeno.config.cache.RedisUtil;
+import com.tequeno.config.RedisUtil;
 import com.tequeno.constants.HtZeroOneConstant;
 import com.tequeno.enums.JedisKeyPrefixEnum;
 import com.tequeno.service.user.UserService;

@@ -22,6 +22,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <api.version>1.2.0</api.version>
+        <tequeno.version>1.0.0</tequeno.version>
     </properties>
 
     <dependencies>
@@ -91,6 +92,12 @@
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
             <version>4.5.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- 文件上传 -->
         <dependency>
@@ -108,12 +115,41 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <!-- 引用boot-api-->
+
+        <!-- 引用tequeno-base-api-->
         <dependency>
             <groupId>com.tequeno</groupId>
-            <artifactId>boot-api</artifactId>
-            <version>${api.version}</version>
+            <artifactId>tequeno-base-api</artifactId>
+            <version>${tequeno.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 引用tequeno-redis-service-->
+        <dependency>
+            <groupId>com.tequeno</groupId>
+            <artifactId>tequeno-redis-service</artifactId>
+            <version>${tequeno.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jedis</artifactId>
+                    <groupId>redis.clients</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -134,13 +170,13 @@
                 </configuration>
             </plugin>
             <!--跳过项目运行测试用例-->
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 </project>
