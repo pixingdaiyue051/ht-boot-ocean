@@ -7,21 +7,14 @@ import com.tequeno.constants.HtPropertyConstant;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.enums.HtUserErrorEnum;
 import com.tequeno.enums.JedisKeyPrefixEnum;
-import com.tequeno.utils.HtCaptchaUtil;
-import com.tequeno.utils.HtCommonException;
+import com.tequeno.utils.HtCommonMethodUtil;
 import com.tequeno.utils.HtResultInfoWrapper;
-import org.patchca.service.Captcha;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("outter")
@@ -64,26 +57,25 @@ public class OutController {
         return HtResultInfoWrapper.success(o);
     }
 
-    @RequestMapping("captcha")
-    public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Captcha captcha = HtCaptchaUtil.captchaPic();
-            response.setDateHeader("Expires", 0);
-            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-            response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-            response.setHeader("Pragma", "no-cache");
-            response.setContentType("image/jpeg");
-            request.getSession().setAttribute(HtPropertyConstant.CAPTCHA, captcha.getChallenge());
-            ImageIO.write(captcha.getImage(), HtPropertyConstant.CAPTCHA_TYPE, response.getOutputStream());
-        } catch (IOException e) {
-            throw new HtCommonException(HtUserErrorEnum.CAPTCHA_GEN_ERROR);
-        }
-
-    }
+//    @RequestMapping("captcha")
+//    public void captcha(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            Captcha captcha = HtCaptchaUtil.captchaPic();
+//            response.setDateHeader("Expires", 0);
+//            response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+//            response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+//            response.setHeader("Pragma", "no-cache");
+//            response.setContentType("image/jpeg");
+//            request.getSession().setAttribute(HtPropertyConstant.CAPTCHA, captcha.getChallenge());
+//            ImageIO.write(captcha.getImage(), HtPropertyConstant.CAPTCHA_TYPE, response.getOutputStream());
+//        } catch (Exception e) {
+//            throw new HtCommonException(HtUserErrorEnum.CAPTCHA_GEN_ERROR);
+//        }
+//    }
 
     private String actualGetOtp(String hkey) {
         String key = JedisKeyPrefixEnum.OTP.assemblyKey(hkey);
-        String otpCode = HtCaptchaUtil.captchaOtp();
+        String otpCode = HtCommonMethodUtil.getNonceStr(HtPropertyConstant.OTP_LENGTH);
         redisUtil.set(key, otpCode, HtPropertyConstant.OTP_EXPIRED);
         return otpCode;
     }

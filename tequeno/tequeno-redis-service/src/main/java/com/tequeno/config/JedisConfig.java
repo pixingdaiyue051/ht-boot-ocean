@@ -22,6 +22,9 @@ public class JedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Value("${spring.redis.timeout}")
     private int timeout;
 
@@ -52,6 +55,9 @@ public class JedisConfig {
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
         jedisPoolConfig.setBlockWhenExhausted(blockWhenExhausted);
         jedisPoolConfig.setJmxEnabled(jmxEnabled);
-        return new JedisPool(jedisPoolConfig, host, port, timeout, null, database);
+        if(null == password || "".equals(password) || "null".equals(password)) {
+            password = null;
+        }
+        return new JedisPool(jedisPoolConfig, host, port, timeout, password, database);
     }
 }

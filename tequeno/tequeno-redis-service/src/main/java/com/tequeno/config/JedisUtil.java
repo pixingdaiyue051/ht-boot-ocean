@@ -742,7 +742,8 @@ public class JedisUtil {
                     int database = (int) map.get("database");
                     int port = (int) map.get("port");
                     int timeout = (int) map.get("timeout");
-                    jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, null, database);
+                    String password = (String) map.get("password");
+                    jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password, database);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
