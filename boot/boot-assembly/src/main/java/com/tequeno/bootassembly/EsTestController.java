@@ -15,11 +15,11 @@
 //import org.elasticsearch.index.query.BoolQueryBuilder;
 //import org.elasticsearch.index.query.QueryBuilders;
 //import org.elasticsearch.search.SearchHit;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
 //
+//import javax.annotation.Resource;
 //import java.io.IOException;
 //import java.util.ArrayList;
 //import java.util.List;
@@ -31,7 +31,7 @@
 //    private final static String INDEX = "book";
 //    private final static String TYPE = "novel";
 //
-//    @Autowired
+//    @Resource
 //    private TransportClient client;
 //
 //    @RequestMapping("/novel/{id}")

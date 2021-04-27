@@ -33,4 +33,6 @@ public interface UserService extends BaseService<UserInfo, UserInfoQuery> {
     void deleteUser(String ids);
 
     void bindPhoneOrEmail(String userName, Consumer<UserInfo> c);
+
+    String login(UserModel userModel);
 }

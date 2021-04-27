@@ -14,11 +14,11 @@ import com.tequeno.pojo.sys.user.UserInfo;
 import com.tequeno.service.user.UserService;
 import com.tequeno.utils.HtCommonException;
 import com.tequeno.utils.HtResultInfoWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -26,10 +26,10 @@ import java.util.function.Consumer;
 @RequestMapping("user")
 public class UserHelperController {
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
@@ -156,6 +156,6 @@ public class UserHelperController {
                     redisUtil.hdel(key, hkey);
                     return HtResultInfoWrapper.success();
                 })
-                .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OTP_NULL_OR_EXIPRED));
+                .orElseThrow(() -> new HtCommonException(HtCommonErrorEnum.OTP_NULL_OR_EXPIRED));
     }
 }

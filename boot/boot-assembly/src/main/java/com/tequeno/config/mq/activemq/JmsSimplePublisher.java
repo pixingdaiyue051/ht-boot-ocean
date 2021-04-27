@@ -2,11 +2,11 @@
 //
 //import com.tequeno.common.mq.HtJmsConstant;
 //import com.tequeno.common.mq.HtJmsModel;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.jms.core.JmsTemplate;
 //import org.springframework.stereotype.Component;
 //
+//import javax.annotation.Resource;
 //import javax.jms.Destination;
 //import javax.jms.Queue;
 //import javax.jms.Topic;
@@ -14,14 +14,14 @@
 //@Component
 //public class JmsSimplePublisher {
 //
-//    @Autowired
+//    @Resource
 //    private JmsTemplate jms;
 //
-//    @Autowired
+//    @Resource
 //    @Qualifier(HtJmsConstant.QUEUE_SIMPLE_NAME)
 //    private Queue queue;
 //
-//    @Autowired
+//    @Resource
 //    @Qualifier(HtJmsConstant.TOPIC_SIMPLE_NAME)
 //    private Topic topic;
 //

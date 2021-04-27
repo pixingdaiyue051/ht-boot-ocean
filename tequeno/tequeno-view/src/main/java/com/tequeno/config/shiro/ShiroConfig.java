@@ -1,7 +1,7 @@
 package com.tequeno.config.shiro;
 
 import com.tequeno.constants.HtPropertyConstant;
-import com.tequeno.utils.HtLocalMethod;
+import com.tequeno.utils.HtEncoderUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -10,6 +10,9 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,8 +44,8 @@ public class ShiroConfig {
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(HtLocalMethod.ALGORITHM_SHA256);
-        hashedCredentialsMatcher.setHashIterations(HtLocalMethod.ITER);
+        hashedCredentialsMatcher.setHashAlgorithmName(HtEncoderUtil.ALGORITHM_SHA256);
+        hashedCredentialsMatcher.setHashIterations(HtEncoderUtil.ITER);
         return hashedCredentialsMatcher;
     }
 
@@ -94,5 +97,17 @@ public class ShiroConfig {
         //设置顺序连
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // 配置所有请求
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
     }
 }

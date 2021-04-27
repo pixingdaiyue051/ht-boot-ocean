@@ -9,11 +9,11 @@
 //import org.apache.rocketmq.client.producer.SendResult;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.RestController;
 //
+//import javax.annotation.Resource;
 //import java.util.List;
 //import java.util.stream.Collectors;
 //import java.util.stream.IntStream;
@@ -30,7 +30,7 @@
 //
 //    private final static Logger logger = LoggerFactory.getLogger(RocketMqTestController.class);
 //
-//    @Autowired
+//    @Resource
 //    private MsgSendProducer producer;
 //
 //    @RequestMapping("sync")

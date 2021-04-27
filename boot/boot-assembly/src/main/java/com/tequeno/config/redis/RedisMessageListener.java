@@ -9,11 +9,13 @@
 //import org.springframework.data.redis.core.RedisTemplate;
 //import org.springframework.data.redis.serializer.RedisSerializer;
 //
+//import javax.annotation.Resource;
+//
 //public class RedisMessageListener implements MessageListener {
 //
 //    private final static Logger logger = LoggerFactory.getLogger(RedisMessageListener.class);
 //
-//    @Autowired
+//    @Resource
 //    private RedisTemplate redisTemplate;
 //
 //    /**
@@ -25,7 +27,7 @@
 //        RedisSerializer<?> topicSerializer = redisTemplate.getKeySerializer();
 //        RedisSerializer<?> msgSerializer = redisTemplate.getValueSerializer();
 //        Object channel = topicSerializer.deserialize(message.getChannel());
-//        if(JedisMsgKeyEnum.TEST.getChanel().equals(channel)){
+//        if (JedisMsgKeyEnum.TEST.getChanel().equals(channel)) {
 //            Object body = msgSerializer.deserialize(message.getBody());
 //            logger.info("接收到测试主题:[{}]", channel);
 //            logger.info("接收到测试消息内容:[{}]", body);

@@ -2,23 +2,19 @@ package com.tequeno.config;
 
 import com.tequeno.constants.HtPropertyConstant;
 import com.tequeno.constants.HtZeroOneConstant;
-import com.tequeno.enums.JedisSeqPrefixEnum;
 import com.tequeno.enums.JedisKeyPrefixEnum;
 import com.tequeno.enums.JedisLockTimeEnum;
+import com.tequeno.enums.JedisSeqPrefixEnum;
 import com.tequeno.utils.HtDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -36,7 +32,7 @@ public class RedisUtil {
      */
     private final static Long SUCCESS = HtZeroOneConstant.ONE_L;
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     /**

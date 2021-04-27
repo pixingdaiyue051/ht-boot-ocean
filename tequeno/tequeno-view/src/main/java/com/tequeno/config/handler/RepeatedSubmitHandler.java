@@ -1,7 +1,7 @@
 package com.tequeno.config.handler;
 
-import com.tequeno.config.RedisUtil;
 import com.tequeno.anno.HtRepeatedSubmitAnno;
+import com.tequeno.config.RedisUtil;
 import com.tequeno.enums.HtCommonErrorEnum;
 import com.tequeno.enums.JedisKeyPrefixEnum;
 import com.tequeno.utils.HtResultInfoWrapper;
@@ -13,9 +13,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 @Aspect
@@ -24,7 +25,7 @@ public class RepeatedSubmitHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(RepeatedSubmitHandler.class);
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     @Pointcut("@annotation(com.tequeno.anno.HtRepeatedSubmitAnno)")

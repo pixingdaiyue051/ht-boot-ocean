@@ -6,10 +6,10 @@ import com.tequeno.enums.JedisSeqPrefixEnum;
 import com.tequeno.utils.HtResultInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public class TestController {
 
     private final static Logger logger = LoggerFactory.getLogger(TestController.class);
 
-    @Autowired
+    @Resource
     private JedisUtil jedisUtil;
 
     @RequestMapping("one")
@@ -82,6 +82,7 @@ public class TestController {
 //        boolean result = jedisUtil.luaDelKeysByPattern(keyPattern);
         long l2 = System.currentTimeMillis();
         logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
+//        DigestUtils.sha256Hex()
         return HtResultInfoWrapper.success(result);
     }
 

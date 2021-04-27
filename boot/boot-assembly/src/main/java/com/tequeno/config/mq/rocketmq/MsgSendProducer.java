@@ -9,10 +9,10 @@
 //import org.apache.rocketmq.remoting.common.RemotingHelper;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.stereotype.Component;
 //
+//import javax.annotation.Resource;
 //import java.io.UnsupportedEncodingException;
 //import java.util.Arrays;
 //import java.util.List;
@@ -32,7 +32,7 @@
 //    @Value("${rocketmq.consumer.topic}")
 //    private String topic;
 //
-//    @Autowired
+//    @Resource
 //    private DefaultMQProducer producer;
 //
 //    /**

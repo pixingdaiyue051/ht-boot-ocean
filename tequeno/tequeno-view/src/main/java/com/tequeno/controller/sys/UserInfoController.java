@@ -3,7 +3,7 @@ package com.tequeno.controller.sys;
 import com.github.pagehelper.PageInfo;
 import com.tequeno.anno.HtPermissionAnno;
 import com.tequeno.anno.HtRepeatedSubmitAnno;
-import com.tequeno.constants.HtPropertyConstant;
+import com.tequeno.config.RedisUtil;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.enums.HtUserErrorEnum;
 import com.tequeno.enums.HtUserResEnum;
@@ -13,27 +13,17 @@ import com.tequeno.pojo.sys.user.UserInfoQuery;
 import com.tequeno.pojo.sys.user.UserModel;
 import com.tequeno.service.user.UserService;
 import com.tequeno.utils.HtResultInfoWrapper;
-import com.tequeno.utils.HtLocalMethod;
 import com.tequeno.validators.UserValidator;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -43,11 +33,14 @@ public class UserInfoController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
-    @Autowired
+    @Resource
     private UserValidator validator;
 
-    @Autowired
+    @Resource
     private UserService userService;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @RequestMapping("page")
     @HtPermissionAnno(HtUserResEnum.RES_USER_QUERY)
@@ -81,7 +74,6 @@ public class UserInfoController {
     @HtRepeatedSubmitAnno
     public HtResultBinder addOne(@RequestBody UserModel userModel, BindingResult result) {
         validator.validate(userModel, result);
-        userModel.setPassword(HtLocalMethod.shiroEncode(userModel.getPassword(), userModel.getUserName()));
         userService.addUser(userModel);
         return HtResultInfoWrapper.success();
     }
@@ -95,19 +87,60 @@ public class UserInfoController {
         return HtResultInfoWrapper.success();
     }
 
+//    shiro 登陆/登出
+//    @RequestMapping("login")
+//    public HtResultBinder login(HttpServletRequest request,
+//                                @RequestParam("userName") String userName,
+//                                @RequestParam("password") String password) {
+//        try {
+//            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+//            token.setRememberMe(true);
+//            Subject subject = SecurityUtils.getSubject();
+//            subject.login(token);
+//        } catch (UnknownAccountException e) {
+//            logger.error("用户名[{}]错误,未找到对应用户", userName);
+//            return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
+//        } catch (IncorrectCredentialsException e) {
+//            logger.error("账号[{}]的密码[{}]不正确", userName, password);
+//            return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
+//        } catch (LockedAccountException e) {
+//            logger.error("账号[{}]被锁定", userName);
+//            return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_LOCKED);
+//        } catch (DisabledAccountException e) {
+//            logger.error("账号[{}]被禁用", userName);
+//            return HtResultInfoWrapper.fail(HtUserErrorEnum.USER_DISABLED);
+//        } catch (AuthenticationException e) {
+//            logger.error("[{}]登录失败", userName, e);
+//            return HtResultInfoWrapper.fail(HtUserErrorEnum.LOGIN_FAILED);
+//        }
+//        return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);
+//    }
+//
+//    @RequestMapping("logout")
+//    public HtResultBinder logout() {
+//        Subject user = SecurityUtils.getSubject();
+//        user.logout();
+//        return HtResultInfoWrapper.success(HtUserErrorEnum.LOGOUT);
+//    }
+
+//    @RequestMapping("logout")
+//    public HtResultBinder logout() {
+//        Subject user = SecurityUtils.getSubject();
+//        user.logout();
+//        return HtResultInfoWrapper.success(HtUserErrorEnum.LOGOUT);
+//    }
+
+    //    拦截器 登陆/登出
     @RequestMapping("login")
     public HtResultBinder login(HttpServletRequest request,
                                 @RequestParam("userName") String userName,
-                                @RequestParam("password") String password,
-                                @RequestParam("captcha") String captcha) {
+                                @RequestParam("password") String password) {
         try {
-//            if (!checkCaptcha(captcha, request)) {
-//                return HtResultInfoWrapper.fail(HtUserErrorEnum.CAPTCHA_ERROR);
-//            }
-            UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
-            token.setRememberMe(true);
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(token);
+            UserModel userModel = new UserModel();
+            userModel.setUserName(userName);
+            userModel.setPassword(password);
+            String sign = userService.login(userModel);
+            return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED, sign);
         } catch (UnknownAccountException e) {
             logger.error("用户名[{}]错误,未找到对应用户", userName);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.USERNAME_OR_PASSWORD_ERROR);
@@ -124,18 +157,12 @@ public class UserInfoController {
             logger.error("[{}]登录失败", userName, e);
             return HtResultInfoWrapper.fail(HtUserErrorEnum.LOGIN_FAILED);
         }
-        return HtResultInfoWrapper.success(HtUserErrorEnum.LOGIN_SUCCESSED);
-    }
-
-    private boolean checkCaptcha(String captcha, HttpServletRequest request) {
-        Object captchaInSession = request.getSession().getAttribute(HtPropertyConstant.CAPTCHA);
-        return captcha.equals(captchaInSession);
     }
 
     @RequestMapping("logout")
-    public HtResultBinder logout() {
-        Subject user = SecurityUtils.getSubject();
-        user.logout();
+    public HtResultBinder logout(HttpServletRequest request) {
+        String key = JedisKeyPrefixEnum.SIGN.assemblyKey(request.getHeader(JedisKeyPrefixEnum.SIGN.getPrefix()));
+        redisUtil.del(key);
         return HtResultInfoWrapper.success(HtUserErrorEnum.LOGOUT);
     }
 }

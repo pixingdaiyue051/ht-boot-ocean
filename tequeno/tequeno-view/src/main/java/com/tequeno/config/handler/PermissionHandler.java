@@ -7,8 +7,8 @@ import com.tequeno.enums.HtUserResEnum;
 import com.tequeno.pojo.sys.res.ResourceInfo;
 import com.tequeno.pojo.sys.res.ViewUserRoleRes;
 import com.tequeno.service.res.ResourceService;
-import com.tequeno.utils.HtResultInfoWrapper;
 import com.tequeno.utils.HtAssemConstants;
+import com.tequeno.utils.HtResultInfoWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -18,10 +18,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class PermissionHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(PermissionHandler.class);
 
-    @Autowired
+    @Resource
     private ResourceService resourceService;
 
     @Pointcut("@annotation(com.tequeno.anno.HtPermissionAnno)")

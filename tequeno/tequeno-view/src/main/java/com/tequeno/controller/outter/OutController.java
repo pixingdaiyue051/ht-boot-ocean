@@ -11,10 +11,11 @@ import com.tequeno.utils.HtCommonMethodUtil;
 import com.tequeno.utils.HtResultInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("outter")
@@ -22,7 +23,7 @@ public class OutController {
 
     private final static Logger logger = LoggerFactory.getLogger(OutController.class);
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     @RequestMapping("success")
@@ -75,7 +76,7 @@ public class OutController {
 
     private String actualGetOtp(String hkey) {
         String key = JedisKeyPrefixEnum.OTP.assemblyKey(hkey);
-        String otpCode = HtCommonMethodUtil.getNonceStr(HtPropertyConstant.OTP_LENGTH);
+        String otpCode = HtCommonMethodUtil.getRandomStr(HtPropertyConstant.OTP_LENGTH);
         redisUtil.set(key, otpCode, HtPropertyConstant.OTP_EXPIRED);
         return otpCode;
     }

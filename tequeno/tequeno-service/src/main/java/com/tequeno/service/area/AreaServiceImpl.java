@@ -1,19 +1,20 @@
 package com.tequeno.service.area;
 
+import com.tequeno.mapper.area.AreaMapper;
 import com.tequeno.pojo.area.Area;
 import com.tequeno.pojo.area.AreaQuery;
 import com.tequeno.service.BaseServiceImpl;
-import com.tequeno.mapper.area.AreaMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.Resource;
+
 @Service
 public class AreaServiceImpl extends BaseServiceImpl<AreaMapper, Area, AreaQuery> implements AreaService {
 
-    @Autowired
+    @Resource
     private TransactionTemplate transactionTemplate;
 
     @Override

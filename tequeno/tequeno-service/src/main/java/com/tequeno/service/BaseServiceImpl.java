@@ -4,26 +4,27 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.tequeno.config.RedisUtil;
 import com.tequeno.constants.HtCommonPageInfo;
+import com.tequeno.enums.HtCommonErrorEnum;
 import com.tequeno.enums.JedisKeyPrefixEnum;
+import com.tequeno.utils.HtCommonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Optional;
 
 public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T, Q> {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
-    @Autowired
+    @Resource
     protected D mapper;
 
-    @Autowired
+    @Resource
     protected RedisUtil redisUtil;
 
     @Override
@@ -86,12 +87,16 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     @Override
     public T selectByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
-        Object o = Optional.ofNullable(redisUtil.get(key)).orElseGet(() -> {
-            T t = selectByPrimaryKey(id);
+        Object obj = redisUtil.get(key);
+        if (null != obj) {
+            return (T) obj;
+        }
+        T t = mapper.selectByPrimaryKey(id);
+        if (null != t) {
             redisUtil.set(key, t);
             return t;
-        });
-        return (T) o;
+        }
+        throw new HtCommonException(HtCommonErrorEnum.OBJECT_NOT_FETCHED);
     }
 
     @Override
@@ -99,7 +104,7 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     public int updateSelective(Object id, T entity, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
         redisUtil.del(key);
-        return updateSelective(entity);
+        return mapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override
@@ -107,7 +112,7 @@ public class BaseServiceImpl<D extends Mapper<T>, T, Q> implements BaseService<T
     public int deleteByPrimaryKey(Object id, JedisKeyPrefixEnum prefixEnum) {
         final String key = prefixEnum.assemblyKey(id);
         redisUtil.del(key);
-        return deleteByPrimaryKey(id);
+        return mapper.deleteByPrimaryKey(id);
     }
 
 }

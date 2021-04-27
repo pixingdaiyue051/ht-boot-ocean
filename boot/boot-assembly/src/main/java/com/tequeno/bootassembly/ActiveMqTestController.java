@@ -6,19 +6,20 @@
 //import com.tequeno.config.mq.activemq.JmsScheduledPublisher;
 //import com.tequeno.config.mq.activemq.JmsSimplePublisher;
 //import com.tequeno.config.mq.activemq.ScheduledMessagePostProcessor;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.RestController;
+//
+//import javax.annotation.Resource;
 //
 //@RestController
 //@RequestMapping("test/active")
 //public class ActiveMqTestController {
 //
-//    @Autowired
+//    @Resource
 //    private JmsSimplePublisher publisher;
 //
-//    @Autowired
+//    @Resource
 //    private JmsScheduledPublisher scheduledPublisher;
 //
 //    @RequestMapping("queue")

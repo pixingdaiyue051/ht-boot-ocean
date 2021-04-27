@@ -17,6 +17,7 @@
 //import org.springframework.stereotype.Component;
 //import org.springframework.util.CollectionUtils;
 //
+//import javax.annotation.Resource;
 //import java.util.Collection;
 //import java.util.Collections;
 //import java.util.List;
@@ -39,7 +40,7 @@
 //     */
 //    private final static Long SUCCESS = HtZeroOneConstant.ONE_L;
 //
-//    @Autowired
+//    @Resource
 //    private RedisTemplate redisTemplate;
 //
 //    /**

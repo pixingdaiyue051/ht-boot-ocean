@@ -1,19 +1,19 @@
 package com.tequeno.config;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.IOException;
 
 @Configuration
 public class SqlSessionFactoryConfiguration {
-    @Autowired
+    @Resource
     @Qualifier("dataSource")
     private DataSource dataSource;
     @Value("${mapper.mapperLocation}")
