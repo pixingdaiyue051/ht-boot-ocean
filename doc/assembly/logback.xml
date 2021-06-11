@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="60000" debug="true">
     <!-- 定义日志文件 输出位置以下是API内的默认位置 -->
     <!-- <property name="log_dir" value="/home/hadmin/data/logs/src" /> -->
-    <property name="log_dir" value="/hexk/github/hey-jude/deploy/logs/ht-boot-ocean/boot-assembly" />
+    <property name="log_dir" value="/var/log/ht-boot-ocean/boot-assembly" />
     <!-- 日志最大的历史 30天 -->
     <property name="maxHistory" value="30" />
     <!-- 异步输出日志最大缓冲默认256 -->
@@ -116,7 +116,7 @@
     <logger name="org.apache.activemq" level="INFO"/>
     <logger name="org.apache.rocketmq" level="INFO"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="AsyncDebug" />
         <appender-ref ref="AsyncInfo" />
