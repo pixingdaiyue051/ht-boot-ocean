@@ -1,9 +1,11 @@
 package com.tequeno.bootassembly;
 
 import com.tequeno.config.JedisUtil;
+import com.tequeno.config.RedissonUtil;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.enums.JedisSeqPrefixEnum;
 import com.tequeno.utils.HtResultInfoWrapper;
+import org.redisson.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,12 +25,18 @@ import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("test")
-public class TestController {
+public class JedisTestController {
 
-    private final static Logger logger = LoggerFactory.getLogger(TestController.class);
+    private final static Logger logger = LoggerFactory.getLogger(JedisTestController.class);
 
     @Resource
     private JedisUtil jedisUtil;
+
+    @Resource
+    private RedissonUtil redissonUtil;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @RequestMapping("one")
     public HtResultBinder one() {
@@ -82,8 +91,48 @@ public class TestController {
 //        boolean result = jedisUtil.luaDelKeysByPattern(keyPattern);
         long l2 = System.currentTimeMillis();
         logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
-//        DigestUtils.sha256Hex()
         return HtResultInfoWrapper.success(result);
+    }
+
+    @RequestMapping("four")
+    public HtResultBinder four() throws Exception {
+//        redissonClient.getKeys().deleteByPattern("*");
+//
+//        RMap<String, String> map = redissonClient.getMap("htest:211");
+//        map.fastPut("3","51");
+//        map.fastPut("31","521");
+//        map.forEach((k, v) -> System.out.printf("%s-%s", k, v));
+//
+//        RList<String> list = redissonClient.getList("ltest:211");
+//        list.add("133");
+//        list.add("1133");
+
+//        RRemoteService remoteService = redissonClient.getRemoteService("service:5511");
+//        remoteService.register(JedisUtil.class, jedisUtil);
+
+//        RMapCache<String, String> mapCache = redissonClient.getMapCache("map");
+//        mapCache.put("ws","1112", 1,TimeUnit.MINUTES);
+//        mapCache.put("ws1","111112", 10,TimeUnit.SECONDS);
+
+        RBatch batch = redissonClient.createBatch();
+        RMapAsync<Object, Object> batchMap = batch.getMap("map:e11");
+        batchMap.fastPutAsync("dq", 221);
+        batchMap.fastPutAsync("dq1", 2212);
+        batchMap.fastPutAsync("dq112", 221212);
+        batchMap.expireAsync(1L, TimeUnit.MINUTES);
+
+        batch.getBucket("bucket:kio").trySetAsync("211", 1L, TimeUnit.MINUTES);
+        batch.getBucket("bucket:3132").trySetAsync("211", 1L, TimeUnit.MINUTES);
+        batch.getBucket("bucket:652e2").trySetAsync("211", 1L, TimeUnit.MINUTES);
+        batch.getBucket("bucket:fgf3").trySetAsync("211", 1L, TimeUnit.MINUTES);
+        batch.getBucket("bucket:gr33").trySetAsync("211", 1L, TimeUnit.MINUTES);
+        batch.getBucket("bucket:gr32443").trySetAsync("211", 1L, TimeUnit.MINUTES);
+
+        RFuture<BatchResult<?>> batchResultRFuture = batch.executeAsync();
+        BatchResult<?> batchResult = batchResultRFuture.get(1L, TimeUnit.MINUTES);
+        batchResult.getResponses().forEach(System.out::println);
+
+        return HtResultInfoWrapper.success(true);
     }
 
 }
