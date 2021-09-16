@@ -482,6 +482,18 @@ public class JedisUtil {
         }
     }
 
+    public String time() {
+        try {
+            fetchJedis();
+            return jedis.time().get(0);
+        } catch (Exception e) {
+            logger.info("time()异常:", e);
+        } finally {
+            closeJedis();
+        }
+        return null;
+    }
+
     //lua 操作//////////////////////////////////////////////////////////////////////
 
     /**
@@ -762,8 +774,9 @@ public class JedisUtil {
         String lockKey = "waa";
         long l1 = System.currentTimeMillis();
         String token = String.valueOf(l1);
-        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
+//        boolean result = jedisUtil.luaTryLock(lockKey, token, JedisLockTimeEnum.QUICK);
 //        boolean result = jedisUtil.luaReleaseLock(lockKey, token);
+        boolean result = jedisUtil.luaDelKeysByPattern("family_call_platform:parent_permission*");
         long l2 = System.currentTimeMillis();
         logger.info("redis执行[{}]ms,[{}]", l2 - l1, result);
     }

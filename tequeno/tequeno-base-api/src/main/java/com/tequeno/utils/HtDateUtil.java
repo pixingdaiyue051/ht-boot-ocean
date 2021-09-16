@@ -50,12 +50,12 @@ public class HtDateUtil {
         if (userTime) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTRN);
             LocalDateTime localDateTime = LocalDateTime.now();
-            start = localDateTime.plusDays(1 - localDateTime.getDayOfWeek().getValue() + 7 * weekOffset).withHour(0).withMinute(0).withSecond(0).format(dateTimeFormatter);
-            end = localDateTime.plusDays(7 * (weekOffset + 1) - localDateTime.getDayOfWeek().getValue()).withHour(23).withMinute(59).withSecond(59).format(dateTimeFormatter);
+            start = localDateTime.plusDays(1 - localDateTime.getDayOfWeek().getValue() + 7L * weekOffset).withHour(0).withMinute(0).withSecond(0).format(dateTimeFormatter);
+            end = localDateTime.plusDays(7L * (weekOffset + 1) - localDateTime.getDayOfWeek().getValue()).withHour(23).withMinute(59).withSecond(59).format(dateTimeFormatter);
         } else {
             LocalDate localDate = LocalDate.now();
-            start = localDate.plusDays(1 - localDate.getDayOfWeek().getValue() + 7 * weekOffset).toString();
-            end = localDate.plusDays(7 * (weekOffset + 1) - localDate.getDayOfWeek().getValue()).toString();
+            start = localDate.plusDays(1 - localDate.getDayOfWeek().getValue() + 7L * weekOffset).toString();
+            end = localDate.plusDays(7L * (weekOffset + 1) - localDate.getDayOfWeek().getValue()).toString();
         }
         return new String[]{start, end};
     }

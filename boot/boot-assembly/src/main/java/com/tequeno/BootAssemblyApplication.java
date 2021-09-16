@@ -3,6 +3,7 @@ package com.tequeno;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @SpringBootApplication
@@ -14,6 +15,11 @@ public class BootAssemblyApplication {
         multipartResolver.setMaxUploadSize(20971520);   // 20MB
         multipartResolver.setMaxInMemorySize(1048576);  // 1MB
         return multipartResolver;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     public static void main(String[] args) {
