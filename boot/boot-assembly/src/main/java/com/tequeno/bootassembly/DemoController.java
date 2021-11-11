@@ -1,5 +1,7 @@
-package com.tequeno.bootassembly.enc;
+package com.tequeno.bootassembly;
 
+import com.tequeno.bootassembly.enc.*;
+import com.tequeno.config.JedisUtil;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.utils.HtResultInfoWrapper;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,18 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import java.security.interfaces.RSAKey;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("enc")
-public class EncController {
+@RequestMapping("demo")
+public class DemoController {
+
+    @Resource
+    private JedisUtil jedisUtil;
 
     @RequestMapping("encrypt")
-    public Map<String, Object> encrypt() throws Exception {
-
-        long l1 = System.currentTimeMillis();
-
+    @Encrypt
+    public Map<String, String> encrypt() {
         String dataString = "Do not go gentle into that good night\n" +
                 "\tDylan Thomas\n" +
                 "\t\n" +
@@ -46,39 +51,37 @@ public class EncController {
                 "Curse,bless,me now with your fierce tears,I pray\n" +
                 "Do not go gentle into that good night\n" +
                 "Rage,rage against the dying of the light";
-        String key = AesUtil.getKey();
-        String data = AesUtil.encrypt(dataString, key);
-        String cipher = RsaUtil.encrypt(key, RsaUtil.getJsPublicKey());
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("data", data);
-        result.put("cipher", cipher);
-        result.put("success", true);
+        Map<String, String> result = new HashMap<>();
+        result.put("data", dataString);
         result.put("code", "0");
 
-
-        long l2 = System.currentTimeMillis();
-        System.out.println(l2 - l1);
         return result;
     }
 
     @RequestMapping("decrypt")
-    public HtResultBinder decrypt(@RequestBody Map<String, String> map) throws Exception {
+    @Decrypt
+    public Map<String, String> decrypt(@RequestBody Map<String, String> map) {
+        Map<String, String> res = new HashMap<>();
+        res.put("data", map.get("param1"));
+        res.put("code", "0");
+        return res;
+    }
 
-        long l1 = System.currentTimeMillis();
-
-        String aesKey = RsaUtil.decrypt(map.get("cipher"));
-        String decrypt = AesUtil.decrypt(map.get("data"), aesKey);
-
-        long l2 = System.currentTimeMillis();
-        System.out.println(l2 - l1);
-
-        return HtResultInfoWrapper.success(decrypt);
+    @RequestMapping("handshake")
+    @Handshake
+    public Map<String, String> handshake(@RequestBody Map<String, String> map) {
+        Map<String, String> res = new HashMap<>();
+        res.put("data", "hasta la vista baby");
+        res.put("code", "0");
+        return res;
     }
 
     @RequestMapping("exchange")
-    public String exchange(@RequestParam String publicKey) {
-        RsaUtil.putJsPublicKey(publicKey);
-        return RsaUtil.getPublicKey();
+    public HtResultBinder exchange(@RequestParam String publicKey) {
+        Map<String, String> keyPair = RsaUtil.genKeyPair();
+        keyPair.put(RsaUtil.JS_PUBLIC_KEY, publicKey);
+        jedisUtil.hashMultiSetDefault(SafetyAspect.ENC_KEY, keyPair);
+        return HtResultInfoWrapper.success(keyPair.get(RsaUtil.PUBLIC_KEY));
     }
 }

@@ -8,17 +8,12 @@ import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author raoyu
- * @Date 2020-07-31
- */
 public class RsaUtil {
 
 
@@ -34,19 +29,19 @@ public class RsaUtil {
     private static final String ALGORITHMS = "RSA/ECB/PKCS1Padding";
 
     /**
-     * Map获取公钥的key
+     * 后端公钥
      */
-    private static final String PUBLIC_KEY = "publicKey";
+    public static final String PUBLIC_KEY = "publicKey";
 
     /**
-     * Map获取公钥的key
+     * 前端公钥
      */
-    private static final String JS_PUBLIC_KEY = "jsPublicKey";
+    public static final String JS_PUBLIC_KEY = "jsPublicKey";
 
     /**
-     * Map获取私钥的key
+     * 后端私钥
      */
-    private static final String PRIVATE_KEY = "privateKey";
+    public static final String PRIVATE_KEY = "privateKey";
 
     /**
      * RSA最大加密明文大小
@@ -64,65 +59,35 @@ public class RsaUtil {
     private static final int INITIALIZE_LENGTH = 1024;
 
     /**
-     * 获取私钥
+     * 生成密钥对(公钥和私钥)
+     *
+     * @return
      */
-    public static String getPrivateKey() {
-        Key key = (Key) RsaHolder.keyMap.get(PRIVATE_KEY);
-        return Base64.encodeBase64String(key.getEncoded());
-    }
+    public static Map<String, String> genKeyPair() {
 
-    /**
-     * 获取公钥
-     */
-    public static String getPublicKey() {
-        Key key = (Key) RsaHolder.keyMap.get(PUBLIC_KEY);
-        return Base64.encodeBase64String(key.getEncoded());
-    }
+        Map<String, String> keyMap = new HashMap<>(2);
+        KeyPairGenerator keyPairGen = null;
+        try {
+            keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
 
-    /**
-     * 获取前端公钥
-     */
-    public static String getJsPublicKey() {
-        return RsaHolder.keyMap.get(JS_PUBLIC_KEY).toString();
-    }
-
-    /**
-     * 添加前端公钥
-     */
-    public static void putJsPublicKey(String jsPublicKey) {
-        RsaHolder.keyMap.put(JS_PUBLIC_KEY, jsPublicKey);
-    }
-
-    private static class RsaHolder {
-        private final static Map<String, Object> keyMap = new HashMap<>(2);
-
-        static {
-            /**
-             * 生成密钥对(公钥和私钥)
-             */
-            KeyPairGenerator keyPairGen = null;
-            try {
-                keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-
-                keyPairGen.initialize(INITIALIZE_LENGTH);
-                KeyPair keyPair = keyPairGen.generateKeyPair();
-                RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-                RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-                //公钥
-                keyMap.put(PUBLIC_KEY, publicKey);
-                //私钥
-                keyMap.put(PRIVATE_KEY, privateKey);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            keyPairGen.initialize(INITIALIZE_LENGTH);
+            KeyPair keyPair = keyPairGen.generateKeyPair();
+            //公钥
+            keyMap.put(PUBLIC_KEY, Base64.encodeBase64String(keyPair.getPublic().getEncoded()));
+            //私钥
+            keyMap.put(PRIVATE_KEY, Base64.encodeBase64String(keyPair.getPrivate().getEncoded()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            keyMap = Collections.emptyMap();
         }
+        return keyMap;
     }
 
     /**
      * 公钥加密
      *
      * @param data      源数据
-     * @param publicKey 公钥(前端提供)
+     * @param publicKey 公钥
      */
     public static String encrypt(String data, String publicKey) throws Exception {
         //base64格式的key字符串转Key对象
@@ -155,13 +120,14 @@ public class RsaUtil {
     /**
      * 私钥解密
      *
-     * @param encryptedData 已加密数据(前端使用后端的公钥加密的数据)
+     * @param encryptedData 已加密数据
+     * @param privateKey    私钥
      * @return
      * @throws Exception
      */
-    public static String decrypt(String encryptedData) throws Exception {
+    public static String decrypt(String encryptedData, String privateKey) throws Exception {
         //base64格式的key字符串转Key对象
-        byte[] keyBytes = Base64.decodeBase64(getPrivateKey());
+        byte[] keyBytes = Base64.decodeBase64(privateKey);
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);

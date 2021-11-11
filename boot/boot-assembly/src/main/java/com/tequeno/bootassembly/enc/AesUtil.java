@@ -9,10 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Random;
 
-/**
- * @Author raoyu
- * @Date 2020-07-31
- */
 public class AesUtil {
 
     /**
