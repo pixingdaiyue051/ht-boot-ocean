@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.enc;
+package com.tequeno.bootassembly.trans;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

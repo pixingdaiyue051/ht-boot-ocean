@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.enc;
+package com.tequeno.bootassembly.trans;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;

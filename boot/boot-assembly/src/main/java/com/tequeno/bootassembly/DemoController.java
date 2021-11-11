@@ -1,8 +1,8 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.bootassembly.enc.Encryption;
-import com.tequeno.bootassembly.enc.RsaUtil;
-import com.tequeno.bootassembly.enc.TransmissionAspect;
+import com.tequeno.bootassembly.trans.Encryption;
+import com.tequeno.bootassembly.trans.RsaUtil;
+import com.tequeno.bootassembly.trans.TransmissionAspect;
 import com.tequeno.config.JedisUtil;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.utils.HtResultInfoWrapper;

@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.enc;
+package com.tequeno.bootassembly.trans;
 
 import com.alibaba.fastjson.JSON;
 import com.tequeno.config.JedisUtil;
@@ -23,7 +23,7 @@ public class TransmissionAspect {
     @Resource
     private JedisUtil jedisUtil;
 
-    @Pointcut("@annotation(com.tequeno.bootassembly.enc.Encryption)")
+    @Pointcut("@annotation(com.tequeno.bootassembly.trans.Encryption)")
     public void aspect() {
     }
 

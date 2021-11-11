@@ -9,19 +9,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @SpringBootApplication
 public class BootAssemblyApplication {
 
-    @Bean
-    public CommonsMultipartResolver getCommonsMultipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(20971520);   // 20MB
-        multipartResolver.setMaxInMemorySize(1048576);  // 1MB
-        return multipartResolver;
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(BootAssemblyApplication.class, args);
     }
