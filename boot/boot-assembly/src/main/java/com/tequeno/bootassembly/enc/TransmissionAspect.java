@@ -5,6 +5,7 @@ import com.tequeno.config.JedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,38 +16,29 @@ import java.util.Map;
  */
 @Component
 @Aspect
-public class SafetyAspect {
+public class TransmissionAspect {
 
     public final static String ENC_KEY = "enc_key";
 
     @Resource
     private JedisUtil jedisUtil;
 
-    /**
-     * 返回结果前加密
-     */
-    @Around(value = "@annotation(com.tequeno.bootassembly.enc.Encrypt)")
-    public Object encrypt(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object o = joinPoint.proceed();
-        return this.after(o);
+    @Pointcut("@annotation(com.tequeno.bootassembly.enc.Encryption)")
+    public void aspect() {
     }
 
-    /**
-     * 调用之前解密
-     */
-    @Around(value = "@annotation(com.tequeno.bootassembly.enc.Decrypt)")
-    public Object decrypt(ProceedingJoinPoint joinPoint) throws Throwable {
-        return joinPoint.proceed(this.pre(joinPoint));
-    }
-
-    /**
-     * 请求解密,响应加密
-     */
-    @Around(value = "@annotation(com.tequeno.bootassembly.enc.Handshake)")
-    public Object handshake(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object[] args = this.pre(joinPoint);
-        Object o = joinPoint.proceed(args);
-        return this.after(o);
+    @Around("aspect() && @annotation(encryption)")
+    public Object run(ProceedingJoinPoint joinPoint, Encryption encryption) throws Throwable {
+        if (encryption.value().equals(Encryption.Type.HANDSHAKE)) {
+            return this.after(joinPoint.proceed(this.pre(joinPoint)));
+        }
+        if (encryption.value().equals(Encryption.Type.ENCRYPT)) {
+            return this.after(joinPoint.proceed());
+        }
+        if (encryption.value().equals(Encryption.Type.DECRYPT)) {
+            return joinPoint.proceed(this.pre(joinPoint));
+        }
+        return joinPoint.proceed();
     }
 
     private Object[] pre(ProceedingJoinPoint joinPoint) throws Exception {

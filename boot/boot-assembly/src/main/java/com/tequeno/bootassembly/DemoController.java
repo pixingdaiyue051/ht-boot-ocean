@@ -1,6 +1,8 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.bootassembly.enc.*;
+import com.tequeno.bootassembly.enc.Encryption;
+import com.tequeno.bootassembly.enc.RsaUtil;
+import com.tequeno.bootassembly.enc.TransmissionAspect;
 import com.tequeno.config.JedisUtil;
 import com.tequeno.constants.HtResultBinder;
 import com.tequeno.utils.HtResultInfoWrapper;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.security.interfaces.RSAKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class DemoController {
     private JedisUtil jedisUtil;
 
     @RequestMapping("encrypt")
-    @Encrypt
+    @Encryption(Encryption.Type.ENCRYPT)
     public Map<String, String> encrypt() {
         String dataString = "Do not go gentle into that good night\n" +
                 "\tDylan Thomas\n" +
@@ -60,7 +61,7 @@ public class DemoController {
     }
 
     @RequestMapping("decrypt")
-    @Decrypt
+    @Encryption(Encryption.Type.DECRYPT)
     public Map<String, String> decrypt(@RequestBody Map<String, String> map) {
         Map<String, String> res = new HashMap<>();
         res.put("data", map.get("param1"));
@@ -69,7 +70,7 @@ public class DemoController {
     }
 
     @RequestMapping("handshake")
-    @Handshake
+    @Encryption
     public Map<String, String> handshake(@RequestBody Map<String, String> map) {
         Map<String, String> res = new HashMap<>();
         res.put("data", "hasta la vista baby");
@@ -81,7 +82,7 @@ public class DemoController {
     public HtResultBinder exchange(@RequestParam String publicKey) {
         Map<String, String> keyPair = RsaUtil.genKeyPair();
         keyPair.put(RsaUtil.JS_PUBLIC_KEY, publicKey);
-        jedisUtil.hashMultiSetDefault(SafetyAspect.ENC_KEY, keyPair);
+        jedisUtil.hashMultiSetDefault(TransmissionAspect.ENC_KEY, keyPair);
         return HtResultInfoWrapper.success(keyPair.get(RsaUtil.PUBLIC_KEY));
     }
 }
