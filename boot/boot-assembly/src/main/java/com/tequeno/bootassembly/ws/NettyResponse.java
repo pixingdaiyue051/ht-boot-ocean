@@ -1,6 +1,6 @@
 package com.tequeno.bootassembly.ws;
 
-public class MyWebSocketResponse {
+public class NettyResponse {
 
     private boolean success;
 

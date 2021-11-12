@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly.ws;
 
 
-public enum MyWebSocketCodeEnum {
+public enum NettyCodeEnum {
 
     SUCCESS("1000", "成功"),
     FAIL("1100", "失败"),
@@ -23,7 +23,7 @@ public enum MyWebSocketCodeEnum {
         return desc;
     }
 
-    MyWebSocketCodeEnum(String code, String desc) {
+    NettyCodeEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }

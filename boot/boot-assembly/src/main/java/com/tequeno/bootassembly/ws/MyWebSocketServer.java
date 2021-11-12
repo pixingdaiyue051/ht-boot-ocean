@@ -1,87 +1,70 @@
 package com.tequeno.bootassembly.ws;
 
-import com.alibaba.fastjson.JSON;
-import org.springframework.stereotype.Component;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-@ServerEndpoint(value = "/ws")
-@Component
 public class MyWebSocketServer {
 
-    /**
-     * 记录当前在线连接数
-     */
-    public static AtomicInteger onlineCount = new AtomicInteger(0);
+    private static Channel SERVER_CHANNEL = null;
 
-    /**
-     * 存放所有在线的客户端
-     */
-    public static Map<String, Session> clients = new ConcurrentHashMap<>();
+    private static Integer PORT = null;
 
-    /**
-     * 连接建立成功调用的方法
-     */
-    @OnOpen
-    public void onOpen(Session session) {
-        clients.put(session.getId(), session);
-        onlineCount.incrementAndGet();
-        System.out.println(session.getBasicRemote() + "上线了!");
-        System.out.println("目前在线数" + onlineCount.get());
+    public static void start() {
+        if (null != SERVER_CHANNEL) {
+            return;
+        }
+        PORT = 7517;
+        run();
     }
 
-    /**
-     * 连接关闭调用的方法
-     */
-    @OnClose
-    public void onClose(Session session) {
-        clients.remove(session.getId());
-        onlineCount.decrementAndGet();
-        System.out.println(session.getBasicRemote() + "断开连接!");
-        System.out.println("目前在线数" + onlineCount.get());
+    public static void close() {
+        if (null == SERVER_CHANNEL) {
+            return;
+        }
+        SERVER_CHANNEL.close();
+        SERVER_CHANNEL = null;
     }
 
-    /**
-     * 收到客户端消息后调用的方法
-     *
-     * @param message 客户端发送过来的消息
-     */
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        System.out.println(message);
-        MyWebSocketRequest request = JSON.parseObject(message, MyWebSocketRequest.class);
-        if (MyWebSocketCodeEnum.HEART.getCode().equals(request.getCode())) {
-            System.out.println("收到心跳包");
-            sendMessage("heart beat", session);
-        }
-        if (MyWebSocketCodeEnum.SUB.getCode().equals(request.getCode())) {
-            System.out.println("收到订阅包");
-            session.getUserProperties().put(request.getKey(), request.getValue());
-            sendMessage("hello welcome", session);
-        }
-        if (MyWebSocketCodeEnum.BIZ.getCode().equals(request.getCode())) {
-            System.out.println("收到业务包");
-            sendMessage(request.getMsg(), session);
-        }
-    }
+    private static void run() {
+        Thread wsServerThread = new Thread(() -> {
+            EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
+            EventLoopGroup workerGroup = new NioEventLoopGroup();
+            try {
+                ServerBootstrap b = new ServerBootstrap(); // (2)
+                b.group(bossGroup, workerGroup)
+                        .channel(NioServerSocketChannel.class) // (3)
+                        .childHandler(new MyWebSocketServerInitializer())
+                        .option(ChannelOption.SO_BACKLOG, 128)          // (5)
+                        .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 
-    @OnError
-    public void onError(Session session, Throwable error) {
-        error.printStackTrace();
-    }
+                // Bind and start to accept incoming connections.
+                ChannelFuture f = b.bind(PORT).sync(); // (7)
 
-    /**
-     * 服务端发送消息给客户端
-     */
-    private void sendMessage(String message, Session toSession) {
-        try {
-            toSession.getBasicRemote().sendText(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                // Wait until the server socket is closed.
+                // In this example, this does not happen, but you can do that to gracefully
+                // shut down your server.
+                SERVER_CHANNEL = f.channel();
+                System.out.println("closeFuture");
+                SERVER_CHANNEL.closeFuture().sync();
+                System.out.println("sync");
+            } catch (Exception e) {
+                System.out.println("启动netty异常");
+            } finally {
+                System.out.println("workerGroup shutdown gracefully");
+                workerGroup.shutdownGracefully();
+                System.out.println("bossGroup shutdown gracefully");
+                bossGroup.shutdownGracefully();
+                System.out.println("end");
+            }
+        });
+
+        wsServerThread.setName("wsServerThread");
+        wsServerThread.setDaemon(true);
+        wsServerThread.start();
     }
 }

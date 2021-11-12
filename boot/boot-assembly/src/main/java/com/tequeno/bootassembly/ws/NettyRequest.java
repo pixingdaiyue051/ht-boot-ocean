@@ -1,6 +1,6 @@
 package com.tequeno.bootassembly.ws;
 
-public class MyWebSocketRequest {
+public class NettyRequest {
 
     private String code;
 

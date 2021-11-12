@@ -1,9 +1,9 @@
 package com.tequeno.bootassembly.ws;
 
-public class MyWebSocketRequestHandler {
+public class NettyRequestHandler {
 
-    public static MyWebSocketRequest tmp() {
-        MyWebSocketRequest request = new MyWebSocketRequest();
+    public static NettyRequest tmp() {
+        NettyRequest request = new NettyRequest();
         request.setCode("0000");
         request.setKey("10kkj");
         request.setValue("8jhwqq");
