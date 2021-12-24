@@ -147,11 +147,13 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.56</version>
         </dependency>
-        <!-- netty -->
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+            <version>4.1.45.Final</version>
         </dependency>
+
 
         <!-- 引用tequeno-base-api-->
         <dependency>

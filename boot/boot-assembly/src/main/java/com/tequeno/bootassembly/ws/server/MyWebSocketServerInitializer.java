@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.ws;
+package com.tequeno.bootassembly.ws.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -18,7 +18,7 @@ public class MyWebSocketServerInitializer extends ChannelInitializer<SocketChann
         //支持写大数据流
         pipeline.addLast(new ChunkedWriteHandler());
         //http聚合器
-        pipeline.addLast(new HttpObjectAggregator(1024 * 62));
+        pipeline.addLast(new HttpObjectAggregator(65536));
         //websocket支持,设置路由
         pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
         //添加自定义的助手类

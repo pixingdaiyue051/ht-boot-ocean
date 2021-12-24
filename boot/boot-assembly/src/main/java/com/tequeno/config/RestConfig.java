@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @Configuration
 public class RestConfig {
@@ -19,5 +20,10 @@ public class RestConfig {
         multipartResolver.setMaxUploadSize(20971520);   // 20MB
         multipartResolver.setMaxInMemorySize(1048576);  // 1MB
         return multipartResolver;
+    }
+
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
 }
