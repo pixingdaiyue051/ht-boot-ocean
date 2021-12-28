@@ -41,4 +41,14 @@ public class NettyRequest {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "NettyRequest{" +
+                "code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", key='" + key + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

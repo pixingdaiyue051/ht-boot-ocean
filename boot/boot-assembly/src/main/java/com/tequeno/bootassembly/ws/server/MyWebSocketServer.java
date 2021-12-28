@@ -132,4 +132,8 @@ public class MyWebSocketServer {
             System.out.println("end");
         }
     }
+
+    public static void main(String[] args) {
+        MyWebSocketServer.start(7132);
+    }
 }

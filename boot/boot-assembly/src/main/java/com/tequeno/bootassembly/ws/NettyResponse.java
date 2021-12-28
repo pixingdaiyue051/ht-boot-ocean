@@ -41,4 +41,14 @@ public class NettyResponse {
     public void setData(Object data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "NettyResponse{" +
+                "success=" + success +
+                ", code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }
