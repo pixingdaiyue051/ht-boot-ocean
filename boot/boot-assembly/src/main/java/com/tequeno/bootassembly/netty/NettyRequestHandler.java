@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.ws;
+package com.tequeno.bootassembly.netty;
 
 public class NettyRequestHandler {
 

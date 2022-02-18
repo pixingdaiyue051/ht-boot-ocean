@@ -1,29 +1,30 @@
-package com.tequeno.bootassembly.ws.client;
+package com.tequeno.bootassembly.netty.client;
 
-import com.tequeno.bootassembly.ws.server.MyWebSocketServer;
+import com.alibaba.fastjson.JSON;
+import com.tequeno.bootassembly.netty.NettyConstant;
+import com.tequeno.bootassembly.netty.NettyRequest;
+import com.tequeno.bootassembly.netty.server.ServerSocket;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 
 import java.net.URI;
 
-public class MyClient {
+public class ClientSocket {
 
-    private static MyClient singleInstance = null;
+    private static ClientSocket singleInstance = null;
 
-    private static MyClient getInstance() {
+    private static ClientSocket getInstance() {
         if (singleInstance == null) {
-            synchronized (MyWebSocketServer.class) {
+            synchronized (ServerSocket.class) {
                 if (singleInstance == null) {
-                    singleInstance = new MyClient();
+                    singleInstance = new ClientSocket();
                 }
             }
         }
@@ -44,9 +45,17 @@ public class MyClient {
     }
 
     public static void close() {
-        MyClient instance = getInstance();
+        ClientSocket instance = getInstance();
         instance.channel.close();
         instance.channel = null;
+    }
+
+    public static void send(NettyRequest request) {
+        getInstance().channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
+    }
+
+    public static void send(NettyRequest request, ChannelHandlerContext ctx) {
+        ctx.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(request)));
     }
 
     public void run(String host, int port) {
@@ -54,8 +63,8 @@ public class MyClient {
         try {
             URI uri = new URI(String.format("ws://%s:%d/ws", host, port));
             WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, false, new DefaultHttpHeaders());
-            MyClientHandler handler = new MyClientHandler(handshaker);
-            MyClientInitializer initializer = new MyClientInitializer(handler);
+            ClientSocketHandler handler = new ClientSocketHandler(handshaker);
+            ClientSocketInitializer initializer = new ClientSocketInitializer(handler);
 
             Bootstrap b = new Bootstrap(); // (1)
             b.group(workerGroup); // (2)
@@ -82,6 +91,6 @@ public class MyClient {
     }
 
     public static void main(String[] args) {
-        start("127.0.0.1", 7132);
+        start("127.0.0.1", NettyConstant.PORT);
     }
 }

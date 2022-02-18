@@ -1,32 +1,28 @@
-package com.tequeno.bootassembly.ws.client;
+package com.tequeno.bootassembly.netty.client;
 
 import com.alibaba.fastjson.JSON;
-import com.tequeno.bootassembly.ws.NettyCodeEnum;
-import com.tequeno.bootassembly.ws.NettyRequestHandler;
-import com.tequeno.bootassembly.ws.NettyResponse;
+import com.tequeno.bootassembly.netty.NettyRequestHandler;
+import com.tequeno.bootassembly.netty.NettyResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
-import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
-public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
+public class ClientSocketHandler extends SimpleChannelInboundHandler<Object> {
 
-    private WebSocketClientHandshaker handshaker;
+    private final WebSocketClientHandshaker handshaker;
 
-    public MyClientHandler(WebSocketClientHandshaker handshaker) {
+    public ClientSocketHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("MyClientHandler------------" + msg);
-        System.out.println("isHandshakeComplete-----------" + handshaker.isHandshakeComplete());
+        System.out.println("client------------" + msg);
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) msg);
-            ctx.writeAndFlush(NettyRequestHandler.wrap(NettyCodeEnum.IM_USER_ONLINE, 1466227820597370881L));
         } else if (msg instanceof TextWebSocketFrame) {
             TextWebSocketFrame socketFrame = (TextWebSocketFrame) msg;
             String text = socketFrame.text();
@@ -39,21 +35,20 @@ public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("MyClientHandler-----channelActive");
+        System.out.println("client-----channelActive");
         handshaker.handshake(ctx.channel());
     }
 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("MyClientHandler-----channelInactive");
+        System.out.println("client-----channelInactive");
         super.channelInactive(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        ctx.close();
     }
 
     /**
@@ -67,14 +62,11 @@ public class MyClientHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        System.out.println("client------------userEventTriggered");
         if (evt instanceof IdleStateEvent) {
-            IdleState state = ((IdleStateEvent) evt).state();
-            if (IdleState.WRITER_IDLE.equals(state)) {
-                ctx.writeAndFlush(NettyRequestHandler.heartBeat());
-            }
+            ClientSocket.send(NettyRequestHandler.heartBeat(), ctx);
         } else {
             super.userEventTriggered(ctx, evt);
         }
     }
-
 }

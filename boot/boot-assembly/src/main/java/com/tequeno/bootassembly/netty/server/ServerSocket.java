@@ -1,13 +1,11 @@
-package com.tequeno.bootassembly.ws.server;
+package com.tequeno.bootassembly.netty.server;
 
 import com.alibaba.fastjson.JSON;
-import com.tequeno.bootassembly.ws.NettyResponse;
-import com.tequeno.bootassembly.ws.WebSocketKeyEnum;
+import com.tequeno.bootassembly.netty.NettyConstant;
+import com.tequeno.bootassembly.netty.NettyResponse;
+import com.tequeno.bootassembly.netty.NettyKeyEnum;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.ChannelMatcher;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -25,16 +23,15 @@ import java.util.stream.Collectors;
 /**
  * 服务 链接 管理
  */
-public class MyWebSocketServer {
+public class ServerSocket {
 
-    private static MyWebSocketServer singleInstance = null;
+    private static ServerSocket singleInstance = null;
 
-    private static MyWebSocketServer getInstance() {
+    private static ServerSocket getInstance() {
         if (singleInstance == null) {
-            synchronized (MyWebSocketServer.class) {
+            synchronized (ServerSocket.class) {
                 if (singleInstance == null) {
-                    singleInstance = new MyWebSocketServer();
-                    singleInstance.clientChannelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+                    singleInstance = new ServerSocket();
                 }
             }
         }
@@ -61,8 +58,10 @@ public class MyWebSocketServer {
     }
 
     public static void close() {
-        MyWebSocketServer instance = getInstance();
+        ServerSocket instance = getInstance();
+        instance.clientChannelGroup.close();
         instance.clientChannelGroup.clear();
+        instance.clientChannelGroup = null;
         instance.serverChannel.close();
         instance.serverChannel = null;
     }
@@ -88,7 +87,7 @@ public class MyWebSocketServer {
                     map.put("localAddress", ctx.localAddress());
                     map.put("remoteAddress", ctx.remoteAddress());
 
-                    WebSocketKeyEnum.map().keySet()
+                    NettyKeyEnum.map().keySet()
                             .stream()
                             .map(AttributeKey::valueOf)
                             .filter(ctx::hasAttr)
@@ -97,6 +96,12 @@ public class MyWebSocketServer {
                 }).collect(Collectors.toList());
     }
 
+    // 给单channel发送消息
+    public static void sendMsg(NettyResponse msg, ChannelHandlerContext ctx) {
+        ctx.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msg)));
+    }
+
+    // 按条件匹配channel发送消息
     public static void sendMsg(NettyResponse response, ChannelMatcher matcher) {
         getInstance().clientChannelGroup.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(response)), matcher);
     }
@@ -108,7 +113,7 @@ public class MyWebSocketServer {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // (3)
-                    .childHandler(new MyWebSocketServerInitializer())
+                    .childHandler(new ServerSocketInitializer())
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
                     .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 
@@ -119,21 +124,22 @@ public class MyWebSocketServer {
             // In this example, this does not happen, but you can do that to gracefully
             // shut down your server.
             serverChannel = f.channel();
-            System.out.println("closeFuture");
+            clientChannelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+            System.out.println("server-------------closeFuture");
             serverChannel.closeFuture().sync();
-            System.out.println("sync");
+            System.out.println("server-------------sync");
         } catch (Exception e) {
-            System.out.println("启动netty异常");
+            System.out.println("server-------------启动netty异常");
         } finally {
-            System.out.println("workerGroup shutdown gracefully");
+            System.out.println("server-------------workerGroup shutdown gracefully");
             workerGroup.shutdownGracefully();
-            System.out.println("bossGroup shutdown gracefully");
+            System.out.println("server-------------bossGroup shutdown gracefully");
             bossGroup.shutdownGracefully();
-            System.out.println("end");
+            System.out.println("server-------------end");
         }
     }
 
     public static void main(String[] args) {
-        MyWebSocketServer.start(7132);
+        start( NettyConstant.PORT);
     }
 }
