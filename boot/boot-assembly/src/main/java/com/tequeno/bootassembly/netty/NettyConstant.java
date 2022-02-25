@@ -14,7 +14,7 @@ public final class NettyConstant {
 
     public final static int READER_IDLE_TIME = 60;
 
-    public final static int MAX_IDLE_TIMES = 10;
+    public final static int MAX_IDLE_TIMES = 5;
 
     public final static AttributeKey<Object> ATTR_READ_IDLE = AttributeKey.valueOf(NettyKeyEnum.READ_IDLE.getKey());
 

@@ -20,7 +20,7 @@ public class ClientSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("client------------" + msg);
+        System.out.println("client-----" + msg);
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) msg);
         } else if (msg instanceof TextWebSocketFrame) {
@@ -62,7 +62,7 @@ public class ClientSocketHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        System.out.println("client------------userEventTriggered");
+        System.out.println("client-----userEventTriggered-----" + evt);
         if (evt instanceof IdleStateEvent) {
             ClientSocket.send(NettyRequestHandler.heartBeat(), ctx);
         } else {

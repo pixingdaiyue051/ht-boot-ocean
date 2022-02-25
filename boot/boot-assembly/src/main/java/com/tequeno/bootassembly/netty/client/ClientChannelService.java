@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly.netty.client;
 
+import com.tequeno.bootassembly.netty.NettyConstant;
 import com.tequeno.bootassembly.netty.NettyRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +14,13 @@ public class ClientChannelService {
     @Resource
     private ThreadPoolTaskExecutor pool;
 
-    @Value("${ws.port}")
-    private Integer wsPort;
-
     public void start() throws Exception {
         if (ClientSocket.isRunning()) {
             return;
         }
         System.out.println("client-------------Start");
         String hostAddress = InetAddress.getLocalHost().getHostAddress();
-        pool.execute((() -> ClientSocket.start(hostAddress, wsPort)));
+        pool.execute((() -> ClientSocket.start(hostAddress, NettyConstant.PORT)));
     }
 
     public void close() {

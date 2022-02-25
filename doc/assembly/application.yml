@@ -2,8 +2,6 @@ server:
   port: 8510
   servlet:
     context-path: /
-ws:
-  port: 7132
 spring:
   application:
     name: boot-assembly

@@ -45,9 +45,7 @@ public class ClientSocket {
     }
 
     public static void close() {
-        ClientSocket instance = getInstance();
-        instance.channel.close();
-        instance.channel = null;
+        getInstance().channel.close();
     }
 
     public static void send(NettyRequest request) {
@@ -87,6 +85,7 @@ public class ClientSocket {
             System.out.println("client-------------workerGroup shutdown gracefully");
             workerGroup.shutdownGracefully();
             System.out.println("client-------------end");
+            channel = null;
         }
     }
 

@@ -10,12 +10,13 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 @RestController
-public class ServerChannelController implements CommandLineRunner {
+//public class ServerChannelController implements CommandLineRunner {
+public class ServerChannelController {
 
     @Resource
     private ServerChannelService channelService;
 
-    @Override
+//    @Override
     @RequestMapping("/server/start")
     public void run(String... args) {
         channelService.start();

@@ -2,8 +2,8 @@ package com.tequeno.bootassembly.netty.server;
 
 import com.alibaba.fastjson.JSON;
 import com.tequeno.bootassembly.netty.NettyConstant;
-import com.tequeno.bootassembly.netty.NettyResponse;
 import com.tequeno.bootassembly.netty.NettyKeyEnum;
+import com.tequeno.bootassembly.netty.NettyResponse;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -58,12 +58,7 @@ public class ServerSocket {
     }
 
     public static void close() {
-        ServerSocket instance = getInstance();
-        instance.clientChannelGroup.close();
-        instance.clientChannelGroup.clear();
-        instance.clientChannelGroup = null;
-        instance.serverChannel.close();
-        instance.serverChannel = null;
+        getInstance().serverChannel.close();
     }
 
     public static String serverChannelId() {
@@ -136,10 +131,12 @@ public class ServerSocket {
             System.out.println("server-------------bossGroup shutdown gracefully");
             bossGroup.shutdownGracefully();
             System.out.println("server-------------end");
+            clientChannelGroup = null;
+            serverChannel = null;
         }
     }
 
     public static void main(String[] args) {
-        start( NettyConstant.PORT);
+        start(NettyConstant.PORT);
     }
 }

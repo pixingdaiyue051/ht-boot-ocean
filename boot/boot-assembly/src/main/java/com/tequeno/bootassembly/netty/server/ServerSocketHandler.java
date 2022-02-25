@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerSocketHandler extends SimpleChannelInboundHandler<Object> {
 
@@ -27,7 +26,7 @@ public class ServerSocketHandler extends SimpleChannelInboundHandler<Object> {
     //接收到客户都发送的消息
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("server------------" + msg);
+        System.out.println("server-----" + msg);
         if (msg instanceof TextWebSocketFrame) {
             textMsgHandler(ctx, (TextWebSocketFrame) msg);
         } else if (msg instanceof BinaryWebSocketFrame) {
@@ -99,14 +98,15 @@ public class ServerSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        System.out.println("server-----userEventTriggered");
-        if (evt instanceof IdleState) {
+        System.out.println("server-----userEventTriggered-----" + evt);
+        if (evt instanceof IdleStateEvent) {
             Attribute<Object> attribute = ctx.channel().attr(NettyConstant.ATTR_READ_IDLE);
-            AtomicInteger ac = new AtomicInteger(Integer.parseInt(attribute.get().toString()));
-            if (ac.incrementAndGet() > NettyConstant.MAX_IDLE_TIMES) {
-                ctx.close();
+            int i = Integer.parseInt(attribute.get().toString());
+            if (++i < NettyConstant.MAX_IDLE_TIMES) {
+                attribute.set(i);
+                return;
             }
-            attribute.set(ac.get());
+            ctx.close();
         } else {
             super.userEventTriggered(ctx, evt);
         }
