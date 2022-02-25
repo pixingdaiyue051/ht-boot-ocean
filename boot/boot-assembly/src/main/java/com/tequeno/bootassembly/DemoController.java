@@ -22,6 +22,11 @@ public class DemoController {
     @Resource
     private JedisUtil jedisUtil;
 
+    @RequestMapping("time")
+    public HtResultBinder time() {
+        return HtResultInfoWrapper.success(System.currentTimeMillis());
+    }
+
     @RequestMapping("encrypt")
     @Encryption(Encryption.Type.ENCRYPT)
     public Map<String, String> encrypt() {
