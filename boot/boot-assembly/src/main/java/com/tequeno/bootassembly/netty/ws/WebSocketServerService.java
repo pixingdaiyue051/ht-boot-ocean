@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.netty.server;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.tequeno.bootassembly.netty.NettyConstant;
 import com.tequeno.bootassembly.netty.NettyResponse;
@@ -11,30 +11,30 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ServerChannelService {
+public class WebSocketServerService {
 
     @Resource
     private ThreadPoolTaskExecutor pool;
 
     public void start() {
-        if (ServerSocket.isRunning()) {
+        if (WebSocketServer.isRunning()) {
             return;
         }
         System.out.println("server-------------Start");
-        pool.execute((() -> ServerSocket.start(NettyConstant.PORT)));
+        pool.execute((() -> WebSocketServer.start(NettyConstant.PORT)));
     }
 
     public void close() {
-        if (!ServerSocket.isRunning()) {
+        if (!WebSocketServer.isRunning()) {
             return;
         }
         System.out.println("server-------------Close");
-        ServerSocket.close();
+        WebSocketServer.close();
     }
 
     public NettyResponse status() {
-        if (ServerSocket.isRunning()) {
-            List<Map<String, Object>> list = ServerSocket.clientChannelStatus();
+        if (WebSocketServer.isRunning()) {
+            List<Map<String, Object>> list = WebSocketServer.clientChannelStatus();
             return NettyResponseHandler.success(String.format("%s channels is connecting", list.size()), list);
         }
         return NettyResponseHandler.fail("server is down");

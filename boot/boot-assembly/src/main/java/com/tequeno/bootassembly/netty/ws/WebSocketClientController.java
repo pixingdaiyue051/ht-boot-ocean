@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.netty.client;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.tequeno.bootassembly.netty.NettyRequest;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,10 +10,10 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 @RestController
-public class ClientChannelController {
+public class WebSocketClientController {
 
     @Resource
-    private ClientChannelService clientService;
+    private WebSocketClientService clientService;
 
     @RequestMapping("/client/start")
     public void start() throws Exception {

@@ -1,7 +1,6 @@
-package com.tequeno.bootassembly.netty.server;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.tequeno.bootassembly.netty.NettyResponse;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +10,10 @@ import javax.annotation.Resource;
 
 @RestController
 //public class ServerChannelController implements CommandLineRunner {
-public class ServerChannelController {
+public class WebSocketServerController {
 
     @Resource
-    private ServerChannelService channelService;
+    private WebSocketServerService channelService;
 
 //    @Override
     @RequestMapping("/server/start")

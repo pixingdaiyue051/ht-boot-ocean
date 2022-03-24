@@ -1,9 +1,8 @@
-package com.tequeno.bootassembly.netty.client;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.alibaba.fastjson.JSON;
 import com.tequeno.bootassembly.netty.NettyConstant;
 import com.tequeno.bootassembly.netty.NettyRequest;
-import com.tequeno.bootassembly.netty.server.ServerSocket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,15 +15,15 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 
 import java.net.URI;
 
-public class ClientSocket {
+public class WebSocketClient {
 
-    private static ClientSocket singleInstance = null;
+    private static WebSocketClient singleInstance = null;
 
-    private static ClientSocket getInstance() {
+    private static WebSocketClient getInstance() {
         if (singleInstance == null) {
-            synchronized (ServerSocket.class) {
+            synchronized (WebSocketServer.class) {
                 if (singleInstance == null) {
-                    singleInstance = new ClientSocket();
+                    singleInstance = new WebSocketClient();
                 }
             }
         }
@@ -61,8 +60,8 @@ public class ClientSocket {
         try {
             URI uri = new URI(String.format("ws://%s:%d/ws", host, port));
             WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, false, new DefaultHttpHeaders());
-            ClientSocketHandler handler = new ClientSocketHandler(handshaker);
-            ClientSocketInitializer initializer = new ClientSocketInitializer(handler);
+            WebSocketClientHandler handler = new WebSocketClientHandler(handshaker);
+            WebSocketClientInitializer initializer = new WebSocketClientInitializer(handler);
 
             Bootstrap b = new Bootstrap(); // (1)
             b.group(workerGroup); // (2)

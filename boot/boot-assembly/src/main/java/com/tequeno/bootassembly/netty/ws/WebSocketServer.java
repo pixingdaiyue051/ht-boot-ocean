@@ -1,6 +1,5 @@
-package com.tequeno.bootassembly.netty.server;
+package com.tequeno.bootassembly.netty.ws;
 
-import com.alibaba.fastjson.JSON;
 import com.tequeno.bootassembly.netty.NettyConstant;
 import com.tequeno.bootassembly.netty.NettyKeyEnum;
 import com.tequeno.bootassembly.netty.NettyResponse;
@@ -11,7 +10,6 @@ import io.netty.channel.group.ChannelMatcher;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
@@ -23,15 +21,15 @@ import java.util.stream.Collectors;
 /**
  * 服务 链接 管理
  */
-public class ServerSocket {
+public class WebSocketServer {
 
-    private static ServerSocket singleInstance = null;
+    private static WebSocketServer singleInstance = null;
 
-    private static ServerSocket getInstance() {
+    private static WebSocketServer getInstance() {
         if (singleInstance == null) {
-            synchronized (ServerSocket.class) {
+            synchronized (WebSocketServer.class) {
                 if (singleInstance == null) {
-                    singleInstance = new ServerSocket();
+                    singleInstance = new WebSocketServer();
                 }
             }
         }
@@ -92,13 +90,13 @@ public class ServerSocket {
     }
 
     // 给单channel发送消息
-    public static void sendMsg(NettyResponse msg, ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msg)));
+    public static void sendMsg(NettyResponse response, ChannelHandlerContext ctx) {
+        ctx.writeAndFlush(response);
     }
 
     // 按条件匹配channel发送消息
     public static void sendMsg(NettyResponse response, ChannelMatcher matcher) {
-        getInstance().clientChannelGroup.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(response)), matcher);
+        getInstance().clientChannelGroup.writeAndFlush(response, matcher);
     }
 
     private void run(int port) {
@@ -108,7 +106,7 @@ public class ServerSocket {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // (3)
-                    .childHandler(new ServerSocketInitializer())
+                    .childHandler(new WebSocketServerInitializer())
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
                     .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 

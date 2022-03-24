@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.netty.client;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.alibaba.fastjson.JSON;
 import com.tequeno.bootassembly.netty.NettyRequestHandler;
@@ -10,11 +10,11 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.timeout.IdleStateEvent;
 
-public class ClientSocketHandler extends SimpleChannelInboundHandler<Object> {
+public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
     private final WebSocketClientHandshaker handshaker;
 
-    public ClientSocketHandler(WebSocketClientHandshaker handshaker) {
+    public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
     }
 
@@ -64,7 +64,7 @@ public class ClientSocketHandler extends SimpleChannelInboundHandler<Object> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         System.out.println("client-----userEventTriggered-----" + evt);
         if (evt instanceof IdleStateEvent) {
-            ClientSocket.send(NettyRequestHandler.heartBeat(), ctx);
+            WebSocketClient.send(NettyRequestHandler.heartBeat(), ctx);
         } else {
             super.userEventTriggered(ctx, evt);
         }

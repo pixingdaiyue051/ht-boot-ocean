@@ -9,10 +9,13 @@ public enum NettyCodeEnum {
     SUCCESS("1000", "成功"),
     FAIL("1100", "失败"),
     EXCEPTION("1101", "异常"),
+    CLOSE("1102", "即将断开连接"),
 
     HEART("2000", "心跳包"),
     SUB("2001", "订阅包"),
     BIZ("2002", "业务包"),
+
+    BIN_FILE_META("3000", "文件 名字 大小")
     ;
     private final String code;
 

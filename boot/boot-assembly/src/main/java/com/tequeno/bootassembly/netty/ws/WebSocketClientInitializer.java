@@ -1,4 +1,4 @@
-package com.tequeno.bootassembly.netty.client;
+package com.tequeno.bootassembly.netty.ws;
 
 import com.tequeno.bootassembly.netty.NettyConstant;
 import io.netty.channel.ChannelInitializer;
@@ -11,11 +11,11 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 import java.util.concurrent.TimeUnit;
 
-public class ClientSocketInitializer extends ChannelInitializer<SocketChannel> {
+public class WebSocketClientInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final ClientSocketHandler handler;
+    private final WebSocketClientHandler handler;
 
-    public ClientSocketInitializer(ClientSocketHandler handler) {
+    public WebSocketClientInitializer(WebSocketClientHandler handler) {
         this.handler = handler;
     }
 
@@ -25,8 +25,6 @@ public class ClientSocketInitializer extends ChannelInitializer<SocketChannel> {
         //以下三个是Http的支持
         //http解码器
         pipeline.addLast(new HttpClientCodec());
-//        //支持写大数据流
-        pipeline.addLast(new ChunkedWriteHandler());
         //http聚合器
         pipeline.addLast(new HttpObjectAggregator(65536));
         // 心跳包
