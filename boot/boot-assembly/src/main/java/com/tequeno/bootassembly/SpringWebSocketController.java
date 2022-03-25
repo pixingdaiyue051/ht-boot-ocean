@@ -1,6 +1,5 @@
-//package com.tequeno.bootassembly.ws;
+//package com.tequeno.bootassembly;
 //
-//import com.alibaba.fastjson.JSON;
 //import org.springframework.stereotype.Component;
 //
 //import javax.websocket.*;
@@ -11,7 +10,7 @@
 //
 //@ServerEndpoint(value = "/ws")
 //@Component
-//public class SpringWebSocketStarter {
+//public class SpringWebSocketController {
 //
 //    /**
 //     * 记录当前在线连接数
@@ -51,22 +50,11 @@
 //     * @param message 客户端发送过来的消息
 //     */
 //    @OnMessage
-//    public void onMessage(String message, Session session) {
+//    public void onMessage(String message, Session session) throws Exception {
 //        System.out.println(message);
-//        NettyRequest request = JSON.parseObject(message, NettyRequest.class);
-//        if (NettyCodeEnum.HEART.getCode().equals(request.getCode())) {
-//            System.out.println("收到心跳包");
-//            sendMessage("heart beat", session);
-//        }
-//        if (NettyCodeEnum.SUB.getCode().equals(request.getCode())) {
-//            System.out.println("收到订阅包");
-//            session.getUserProperties().put(request.getKey(), request.getValue());
-//            sendMessage("hello welcome", session);
-//        }
-//        if (NettyCodeEnum.BIZ.getCode().equals(request.getCode())) {
-//            System.out.println("收到业务包");
-//            sendMessage(request.getMsg(), session);
-//        }
+////        JSONObject jsonObject = JSON.parseObject(message);
+////        session.getUserProperties().put();
+//        session.getBasicRemote().sendText("heart beat");
 //    }
 //
 //    @OnError
@@ -74,14 +62,4 @@
 //        error.printStackTrace();
 //    }
 //
-//    /**
-//     * 服务端发送消息给客户端
-//     */
-//    private void sendMessage(String message, Session toSession) {
-//        try {
-//            toSession.getBasicRemote().sendText(message);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 //}
