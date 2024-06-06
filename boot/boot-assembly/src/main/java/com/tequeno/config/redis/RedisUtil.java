@@ -1,603 +1,714 @@
-//package com.tequeno.config.redis;
-//
-//import com.tequeno.common.constants.HtPropertyConstant;
-//import com.tequeno.common.constants.HtZeroOneConstant;
-//import com.tequeno.common.enums.JedisSeqPrefixEnum;
-//import com.tequeno.common.enums.JedisKeyPrefixEnum;
-//import com.tequeno.common.enums.JedisLockTimeEnum;
-//import com.tequeno.common.utils.HtDateUtil;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.dao.DataAccessException;
-//import org.springframework.data.redis.core.RedisOperations;
-//import org.springframework.data.redis.core.RedisTemplate;
-//import org.springframework.data.redis.core.SessionCallback;
-//import org.springframework.data.redis.core.script.DefaultRedisScript;
-//import org.springframework.stereotype.Component;
-//import org.springframework.util.CollectionUtils;
-//
-//import javax.annotation.Resource;
-//import java.util.Collection;
-//import java.util.Collections;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Set;
-//import java.util.concurrent.TimeUnit;
-//
-//@Component
-//public class RedisUtil {
-//
-//    private final static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
-//
-//    /**
-//     * 超时时间需要大于0
-//     */
-//    private final static long ZERO = HtZeroOneConstant.ZERO_L;
-//
-//    /**
-//     * 获得锁是否成功 1 成功 0 失败
-//     */
-//    private final static Long SUCCESS = HtZeroOneConstant.ONE_L;
-//
-//    @Resource
-//    private RedisTemplate redisTemplate;
-//
-//    /**
-//     * 指定缓存失效时间
-//     *
-//     * @param key  键
-//     * @param time 时间(ms)
-//     * @return
-//     */
-//    public boolean expire(String key, long time) {
-//        try {
-//            check(key, time);
-//            redisTemplate.expire(key, time, TimeUnit.MILLISECONDS);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.expire调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 根据key 获取过期时间
-//     *
-//     * @param key
-//     * @return 时间(ms)
-//     */
-//    public long getExpire(String key) {
-//        try {
-//            check(key);
-//            return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.getExpire调用失败", e);
-//            return ZERO;
-//        }
-//    }
-//
-//    /**
-//     * 判断key是否存在
-//     *
-//     * @param key 键
-//     * @return true 存在 false不存在
-//     */
-//    public boolean hasKey(String key) {
-//        try {
-//            check(key);
-//            return redisTemplate.hasKey(key);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hasKey调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 删除缓存
-//     *
-//     * @param key 可以传一个值 或多个
-//     */
-//    public boolean del(String... key) {
-//        try {
-//            if (key != null && key.length > HtZeroOneConstant.ZERO_I) {
-//                if (key.length == HtZeroOneConstant.ONE_I) {
-//                    redisTemplate.delete(key[HtZeroOneConstant.ZERO_I]);
-//                } else {
-//                    redisTemplate.delete(CollectionUtils.arrayToList(key));
-//                }
-//            }
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.del调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 删除缓存
-//     *
-//     * @param c
-//     * @return
-//     */
-//    public boolean del(Collection c) {
-//        try {
-//            if (!CollectionUtils.isEmpty(c)) {
-//                redisTemplate.delete(c);
-//            }
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.del调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 普通缓存获取
-//     *
-//     * @param key 键
-//     * @return 值
-//     */
-//    public Object get(String key) {
-//        try {
-//            check(key);
-//            return redisTemplate.opsForValue().get(key);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.get调用失败", e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * 普通缓存放入
-//     *
-//     * @param key   键
-//     * @param value 值
-//     * @return true成功 false失败
-//     */
-//    public boolean set(String key, Object value) {
-//        try {
-//            check(key, value);
-//            redisTemplate.opsForValue().set(key, value);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.set调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 普通缓存放入并设置时间
-//     *
-//     * @param key   键
-//     * @param value 值
-//     * @param time  时间(ms) time要大于0
-//     * @return true成功 false 失败
-//     */
-//    public boolean set(String key, Object value, long time) {
-//        try {
-//            check(key, value, time);
-//            redisTemplate.opsForValue().set(key, value, time, TimeUnit.MILLISECONDS);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.set调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 根据hashKey获取单一hash缓存
-//     *
-//     * @param key     键
-//     * @param hashKey hash键对应是map的key
-//     * @return 值
-//     */
-//    public Object hget(String key, String hashKey) {
-//        try {
-//            check(key, hashKey);
-//            return redisTemplate.opsForHash().get(key, hashKey);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hget调用失败", e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * 获取key对应的所有hash缓存
-//     *
-//     * @param key 键
-//     * @return 当前key下存放的所有数据
-//     */
-//    public Map<String, Object> hmget(String key) {
-//        try {
-//            check(key);
-//            return redisTemplate.opsForHash().entries(key);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hmget调用失败", e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * 将map整体存入hash表
-//     *
-//     * @param key 键
-//     * @param map 对应多个键值
-//     * @return true 成功 false 失败
-//     */
-//    public boolean hmset(String key, Map<String, Object> map) {
-//        try {
-//            check(key);
-//            redisTemplate.opsForHash().putAll(key, map);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hmset调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 将map整体存入hash表,并设置失效时间
-//     *
-//     * @param key  键
-//     * @param map  对应多个键值
-//     * @param time 时间(ms)
-//     * @return true成功 false失败
-//     */
-//    public boolean hmset(String key, Map<String, Object> map, long time) {
-//        try {
-//            check(key, time);
-//            redisTemplate.execute(new SessionCallback() {
-//                @Override
-//                public Object execute(RedisOperations redisOperations) throws DataAccessException {
-//                    redisOperations.multi();
-//                    redisOperations.opsForHash().putAll(key, map);
-//                    redisOperations.expire(key, time, TimeUnit.MILLISECONDS);
-//                    redisOperations.exec();
-//                    return null;
-//                }
-//            });
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hmset调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 向一张hash表中放入数据,如果不存在将创建
-//     *
-//     * @param key       键
-//     * @param hashKey   项
-//     * @param hashValue 值
-//     * @return true 成功 false失败
-//     */
-//    public boolean hset(String key, String hashKey, Object hashValue) {
-//        try {
-//            redisTemplate.opsForHash().put(key, hashKey, hashValue);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hset调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 向一张hash表中放入数据,如果不存在将创建,并设置失效时间
-//     *
-//     * @param key       键
-//     * @param hashKey   项
-//     * @param hashValue 值
-//     * @param time      时间(ms) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
-//     * @return true 成功 false失败
-//     */
-//    public boolean hset(String key, String hashKey, Object hashValue, long time) {
-//        try {
-//            check(key, hashKey, time);
-//            redisTemplate.execute(new SessionCallback() {
-//                @Override
-//                public Object execute(RedisOperations redisOperations) throws DataAccessException {
-//                    redisOperations.multi();
-//                    redisOperations.opsForHash().put(key, hashKey, hashValue);
-//                    redisOperations.expire(key, time, TimeUnit.MILLISECONDS);
-//                    redisOperations.exec();
-//                    return null;
-//                }
-//            });
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hset调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 删除hash表中的值
-//     *
-//     * @param key     键 不能为null
-//     * @param hashKey 项 可以使多个 不能为null
-//     */
-//    public boolean hdel(String key, String... hashKey) {
-//        try {
-//            check(key, hashKey);
-//            redisTemplate.opsForHash().delete(key, hashKey);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hdel调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 判断hash表中是否有该项的值
-//     *
-//     * @param key     键 不能为null
-//     * @param hashKey 项 不能为null
-//     * @return true 存在 false不存在
-//     */
-//    public boolean hasHashKey(String key, String hashKey) {
-//        try {
-//            check(key, hashKey);
-//            return redisTemplate.opsForHash().hasKey(key, hashKey);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.hasHashKey调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public boolean lpush(String key, Object... value) {
-//        try {
-//            check(key, value);
-//            redisTemplate.opsForList().leftPush(key, value);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.lpush调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public boolean lpushCollection(String key, Collection c) {
-//        try {
-//            check(key, c);
-//            redisTemplate.opsForList().leftPushAll(key, c);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.lpushCollection调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public boolean rpush(String key, Object... value) {
-//        try {
-//            check(key, value);
-//            redisTemplate.opsForList().rightPush(key, value);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.rpush调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public boolean rpushCollection(String key, Collection c) {
-//        try {
-//            check(key, c);
-//            redisTemplate.opsForList().rightPushAll(key, c);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.rpushCollection调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public boolean sadd(String key, Object... obj) {
-//        try {
-//            check(key, obj);
-//            redisTemplate.opsForSet().add(key, obj);
-//            return true;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.sadd调用失败", e);
-//            return false;
-//        }
-//    }
-//
-//    public Set smembers(String key) {
-//        try {
-//            check(key);
-//            return redisTemplate.opsForSet().members(key);
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.smembers调用失败", e);
-//            return null;
-//        }
-//    }
-//
-//    private void check(String key) {
-//        if (null == key) {
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    private void check(String key, Object value) {
-//        if (null == key || null == value) {
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    private void check(String key, long time) {
-//        if (null == key || ZERO > time) {
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    private void check(String key, Object value, long time) {
-//        if (null == key || null == value || ZERO > time) {
-//            throw new RuntimeException();
-//        }
-//    }
-//
-////    public void sendMsg(String chanel, Object message) {
-////        redisTemplate.convertAndSend(chanel, message);
-////    }
-//
-//
-//    /**
-//     * 模糊匹配key并且删除
-//     *
-//     * @param pattern key模式 *匹配所有 ?单匹配 -区间匹配
-//     * @return 被删除的key数量 -1表示异常
-//     */
-//    public long keysDel(String pattern) {
-//        try {
-//            String script = "local result = 0\n" +
-//                    "local scanResultIndex = 0\n" +
-//                    "while scanResultIndex ~= '0' do\n" +
-//                    "   local idx = tonumber(scanResultIndex)\n" +
-//                    "   local scanResult = redis.call('scan', idx, 'match', KEYS[1])\n" +
-//                    "   local scanResultTable = scanResult[2]\n" +
-//                    "   for k, v in pairs(scanResultTable) do\n" +
-//                    "       redis.call('del', v)\n" +
-//                    "   end\n" +
-//                    "   result = result + #scanResultTable\n" +
-//                    "   scanResultIndex = scanResult[1]\n" +
-//                    "end\n" +
-//                    "return result";
-//            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-//            Object result = redisTemplate.execute(redisScript, Collections.singletonList(pattern));
-//            return Long.valueOf(result.toString());
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.keysDel调用失败", e);
-//            return -1L;
-//        }
-//    }
-//
-//
-//    /**
-//     * 模糊匹配key返回key集合
-//     *
-//     * @param pattern key模式 *匹配所有 ?单匹配 -区间匹配
-//     * @return key集合
-//     */
-//    public List keys(String pattern) {
-//        try {
-//            String script = "local result = {}\n" +
-//                    "local scanResultIndex = 0\n" +
-//                    "while scanResultIndex ~= '0' do\n" +
-//                    "   local idx = tonumber(scanResultIndex)\n" +
-//                    "   local scanResult = redis.call('scan', idx, 'match', KEYS[1])\n" +
-//                    "   local scanResultTable = scanResult[2]\n" +
-//                    "   for k, v in pairs(scanResultTable) do\n" +
-//                    "      table.insert(result, v)\n" +
-//                    "   end\n" +
-//                    "   scanResultIndex = scanResult[1]\n" +
-//                    "end\n" +
-//                    "return result";
-//            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, List.class);
-//            List result = (List) redisTemplate.execute(redisScript, redisTemplate.getKeySerializer(), redisTemplate.getKeySerializer(), Collections.singletonList(pattern));
-//            return result;
-//        } catch (Exception e) {
-//            logger.debug("RedisUtil.keys调用失败", e);
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * 获取分布式锁
-//     *
-//     * @param lockKey      锁
-//     * @param lockTimeEnum 加锁重试策略
-//     * @return 是否获取成功
-//     */
-//    public boolean tryLock(String lockKey, JedisLockTimeEnum lockTimeEnum) {
-//        lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
-//        return tryLock(lockKey, lockTimeEnum.getExpireTime(), lockTimeEnum.getRetryEvicTime(), lockTimeEnum.getEvicTime());
-//    }
-//
-//    /**
-//     * 获取分布式锁
-//     *
-//     * @param lockKey    锁
-//     * @param expireTime 单位ms
-//     * @return 是否获取成功
-//     */
-//    public boolean tryLock(String lockKey, long expireTime) {
-//        try {
-//            lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
-//            String script = "local result = redis.call('setnx', KEYS[1], KEYS[1])\n" +
-//                    "if (result == 1) then\n" +
-//                    "    result = redis.call('pexpire', KEYS[1], ARGV[1])\n" +
-//                    "end\n" +
-//                    "return result";
-//            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-//            Object result = redisTemplate.execute(redisScript, Collections.singletonList(lockKey), expireTime);
-//            return SUCCESS.equals(result);
-//        } catch (Exception e) {
-//            logger.warn("尝试获取分布式锁-key[{}]异常", lockKey, e);
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * 获取分布式锁
-//     *
-//     * @param lockKey       锁
-//     * @param expireTime    单位ms
-//     * @param retryEvicTime 重试间隔时间 单位ms
-//     * @param evicTime      最长重试等待时间 单位ms
-//     * @return 是否获取成功
-//     */
-//    private boolean tryLock(String lockKey, long expireTime, long retryEvicTime, long evicTime) {
-//        try {
-//            String script = "local result = redis.call('setnx', KEYS[1], KEYS[1])\n" +
-//                    "if (result == 1) then\n" +
-//                    "    result = redis.call('pexpire', KEYS[1], ARGV[1])\n" +
-//                    "end\n" +
-//                    "return result";
-//            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-//            List<String> keys = Collections.singletonList(lockKey);
-//            boolean isLocked;
-//            long startMillSecond = System.currentTimeMillis();
-//            do {
-//                Object result = redisTemplate.execute(redisScript, keys, expireTime);
-//                isLocked = SUCCESS.equals(result);
-//                // 已获得锁，无需等待
-//                if (isLocked) {
-//                    return true;
-//                }
-//                Thread.sleep(retryEvicTime);
-//                // 等待超时，获取锁失败
-//                if (System.currentTimeMillis() - startMillSecond > evicTime) {
-//                    return false;
-//                }
-//            } while (!isLocked);
-//        } catch (Exception e) {
-//            logger.warn("尝试获取分布式锁-key[{}]异常", lockKey, e);
-//        }
-//        return false;
-//    }
-//
-//    /**
-//     * 生成全局唯一流水号
-//     *
-//     * @param htSeqPrefixEnum 流水号前缀
-//     * @return 流水号自增1
-//     */
-//    public String tryGetOnlySequenceNum(JedisSeqPrefixEnum htSeqPrefixEnum) {
-//        try {
-//            String now = HtDateUtil.nowDateNum();
-//            String key = JedisKeyPrefixEnum.SEQ.assemblyKey(htSeqPrefixEnum.getPrefix() + now);
-//            String script = "local result = redis.call('setnx', KEYS[1], ARGV[1])\n" +
-//                    "if(result == 1) then\n" +
-//                    "    redis.call('expire', KEYS[1], ARGV[2])\n" +
-//                    "    result = tonumber(ARGV[1])\n" +
-//                    "else\n" +
-//                    "    result = redis.call('incr', KEYS[1])\n" +
-//                    "end\n" +
-//                    "return result";
-//            DefaultRedisScript redisScript = new DefaultRedisScript<>(script, Long.class);
-//            Object result = redisTemplate.execute(redisScript, Collections.singletonList(key), Long.parseLong(now + HtPropertyConstant.SEQ_SUFFIX), HtPropertyConstant.ONE_DAY);
-//            return htSeqPrefixEnum.assemblySeq(result);
-//        } catch (Exception e) {
-//            logger.warn("尝试获取唯一序列号异常", e);
-//            return null;
-//        }
-//    }
-//}
+package com.tequeno.config.redis;
+
+import com.tequeno.constants.HtCommonConstant;
+import com.tequeno.constants.HtPropertyConstant;
+import com.tequeno.constants.HtZeroOneConstant;
+import com.tequeno.enums.JedisKeyPrefixEnum;
+import com.tequeno.enums.JedisLockTimeEnum;
+import com.tequeno.enums.JedisLuaScriptEnum;
+import com.tequeno.utils.HtDateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Transaction;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * 不依赖spring的jedis服务，单例模式 使用jedisPool支持多线程
+ */
+@Component
+public class RedisUtil {
+
+    private final static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
+
+    @Resource
+    private JedisPool jedisPool;
+
+    @Value("${file.lua}")
+    private String luaPath;
+
+    private Map<String, String> scriptMap;
+
+    /**
+     * bean初始化完成后加载脚本
+     */
+    @PostConstruct
+    public void loadScript() {
+        try {
+            logger.info("loadScript start...");
+            scriptMap = new HashMap<>();
+            Jedis jedis = jedisPool.getResource();
+            for (JedisLuaScriptEnum scriptEnum : JedisLuaScriptEnum.values()) {
+                String scriptName = scriptEnum.getScriptName();
+                String luaFileName = scriptEnum.getLuaFileName();
+                String script = loadScriptFromDisk(luaFileName);
+                String scriptSha = jedis.scriptLoad(script);
+                scriptMap.put(scriptName, scriptSha);
+            }
+            closeJedis(jedis);
+        } catch (Exception e) {
+            logger.error("loadScript()异常:", e);
+        }
+    }
+
+
+    private void closeJedis(Jedis jedis) {
+        if (null != jedis) {
+            jedis.disconnect();
+            jedis.close();
+        }
+    }
+
+    //string 操作//////////////////////////////////////////////////////////////////////
+
+    /**
+     * string 设置key,使用默认超时时间
+     *
+     * @param key
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetDefault(String key, String value) {
+        return stringSet(key, value, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * string 设置key,不超时
+     *
+     * @param key
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetPersist(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String result = jedis.set(key, value);
+            return HtCommonConstant.OK.equals(result);
+        } catch (Exception e) {
+            logger.info("stringSetPersist(String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 设置key,指定超时时间
+     *
+     * @param key
+     * @param value
+     * @param expiredTime 单位ms
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSet(String key, String value, long expiredTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String result = jedis.psetex(key, expiredTime, value);
+            return HtCommonConstant.OK.equals(result);
+        } catch (Exception e) {
+            logger.info("stringSet(String,String,long[{}])异常:", expiredTime, e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 同时设置多个key,value,使用默认超时时间
+     *
+     * @param stringMap
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetDefault(Map<String, String> stringMap) {
+        return stringSet(stringMap, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * string 同时设置多个key,value,不超时
+     *
+     * @param stringMap
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSetPersist(Map<String, String> stringMap) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            pipe.multi();
+            stringMap.forEach(pipe::set);
+            pipe.exec();
+            pipe.sync();
+            return true;
+        } catch (Exception e) {
+            logger.info("stringSetPersist(Map)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 同时设置多个key,value使用指定超时时间
+     *
+     * @param stringMap
+     * @param expiredTime 单位ms
+     * @return 除非异常否则都是true
+     */
+    public boolean stringSet(Map<String, String> stringMap, long expiredTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            pipe.multi();
+            stringMap.forEach((k, v) -> pipe.psetex(k, expiredTime, v));
+            pipe.exec();
+            pipe.sync();
+            return true;
+        } catch (Exception e) {
+            logger.info("stringSet(Map,long[{}])异常:", expiredTime, e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 根据key返回value
+     *
+     * @param key
+     * @return key不存在返回null, 异常返回null
+     */
+    public String stringGet(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.get(key);
+        } catch (Exception e) {
+            logger.info("stringGet(String)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 一次返回多个value,忽略不存在的key
+     *
+     * @param keyList
+     * @return 如果所有key都不存在返回非null空集合, 异常返回null
+     */
+    public List<String> stringGet(List<String> keyList) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            keyList.forEach(pipe::get);
+            List<Object> txResult = pipe.syncAndReturnAll();
+            return txResult.parallelStream()
+                    .filter(Objects::nonNull)
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.info("stringGet(String)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 同时删除多个key
+     *
+     * @param keys
+     * @return 除非异常否则都是true
+     */
+    public boolean stringDel(String... keys) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Long result = jedis.del(keys);
+            logger.info("redis删除{}个key", result);
+            return true;
+        } catch (Exception e) {
+            logger.info("stringDel(String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * string 同时删除多个key
+     *
+     * @param keyList
+     * @return 除非异常否则都是true
+     */
+    public boolean stringDel(List<String> keyList) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            pipe.multi();
+            keyList.forEach(pipe::del);
+            pipe.exec();
+            List<Object> txResult = pipe.syncAndReturnAll();
+            long result = ((ArrayList) txResult.get(txResult.size() - 1)).parallelStream().mapToLong(r -> Long.valueOf(r.toString())).sum();
+            logger.info("redis删除{}个key", result);
+            return true;
+        } catch (Exception e) {
+            logger.info("stringDel(List)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    //hash 操作//////////////////////////////////////////////////////////////////////
+
+    /**
+     * hash 设置单个key的field,使用默认超时时间
+     *
+     * @param key
+     * @param field
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean hashSetDefault(String key, String field, String value) {
+        return hashSet(key, field, value, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * hash 设置单个key的field,不超时
+     *
+     * @param key
+     * @param field
+     * @param value
+     * @return 除非异常否则都是true
+     */
+    public boolean hashSetPersist(String key, String field, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            jedis.hset(key, field, value);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashSetPersist(String,String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 设置单个key的field,使用指定超时时间
+     *
+     * @param key
+     * @param field
+     * @param value
+     * @param expiredTime 单位ms
+     * @return 除非异常否则都是true
+     */
+    public boolean hashSet(String key, String field, String value, long expiredTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Transaction tx = jedis.multi();
+            tx.hset(key, field, value);
+            tx.pexpire(key, expiredTime);
+            tx.exec();
+            return true;
+        } catch (Exception e) {
+            logger.info("hashSet(String,String,String,long[{}])异常:", expiredTime, e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 设置同一个key的多个field,使用默认超时时间
+     *
+     * @param key
+     * @param fields
+     * @return 除非异常否则都是true
+     */
+    public boolean hashMultiSetDefault(String key, Map<String, String> fields) {
+        return hashMultiSet(key, fields, HtPropertyConstant.DEFAULT_REDIS_KEY_TIMEOUT);
+    }
+
+    /**
+     * hash 设置同一个key的多个field,不超时
+     *
+     * @param key
+     * @param fields
+     * @return 除非异常否则都是true
+     */
+    public boolean hashMultiSetPersist(String key, Map<String, String> fields) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            jedis.hmset(key, fields);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashMultiSetPersist(String,Map)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 设置同一个key的多个field,使用指定超时时间
+     *
+     * @param key
+     * @param fields
+     * @param expiredTime 单位ms
+     * @return 除非异常否则都是true
+     */
+    public boolean hashMultiSet(String key, Map<String, String> fields, long expiredTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Transaction tx = jedis.multi();
+            tx.hmset(key, fields);
+            tx.pexpire(key, expiredTime);
+            tx.exec();
+            return true;
+        } catch (Exception e) {
+            logger.info("hashMultiSet(String,Map,long[{}])异常:", expiredTime, e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 返回指定field的value
+     *
+     * @param key
+     * @param field
+     * @return 异常返回null
+     */
+    public String hashGet(String key, String field) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.hget(key, field);
+        } catch (Exception e) {
+            logger.info("hashGet(String,String)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 返回多个field的value集合,如果只指定hashKey返回全部value结合
+     *
+     * @param key
+     * @param fields
+     * @return 异常返回null
+     */
+    public List<String> hashMultiGet(String key, String... fields) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            if (null == fields || 0 == fields.length) {
+                return jedis.hvals(key);
+            }
+            List<String> txResult = jedis.hmget(key, fields);
+            return txResult.parallelStream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.info("hashMultiGet(String,String)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 返回多个field的value集合
+     *
+     * @param key
+     * @param fieldList
+     * @return 异常返回null
+     */
+    public List<String> hashMultiGet(String key, List<String> fieldList) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            fieldList.forEach(field -> pipe.hmget(key, field));
+            List<Object> txResult = pipe.syncAndReturnAll();
+            return txResult.parallelStream()
+                    .map(obj -> ((ArrayList<String>) obj).get(0))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.info("hashMultiGet(String,List)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 删除指定field
+     *
+     * @param key
+     * @param fields
+     * @return 除非异常否则都是true
+     */
+    public boolean hashDel(String key, String... fields) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Long result = jedis.hdel(key, fields);
+            logger.info("redis删除hashKey[{}]内{}个field", key, result);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashDel(String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * hash 删除指定field
+     *
+     * @param key
+     * @param fieldList
+     * @return 除非异常否则都是true
+     */
+    public boolean hashDel(String key, List<String> fieldList) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Pipeline pipe = jedis.pipelined();
+            pipe.multi();
+            fieldList.forEach(filed -> pipe.hdel(key, filed));
+            pipe.exec();
+            List<Object> txResult = pipe.syncAndReturnAll();
+            long result = ((ArrayList) txResult.get(txResult.size() - 1)).parallelStream().mapToLong(r -> Long.valueOf(r.toString())).sum();
+            logger.info("redis删除hashKey[{}]内{}个field", key, result);
+            return true;
+        } catch (Exception e) {
+            logger.info("hashDel(String,List)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+
+    /**
+     * @return redis服务器时间
+     */
+    public String time() {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.time().get(0);
+        } catch (Exception e) {
+            logger.info("time()异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+
+    //lua 操作//////////////////////////////////////////////////////////////////////
+
+    /**
+     * 模式匹配key并删除key
+     *
+     * @param pattern ?单匹配 *全匹配 []范围匹配
+     * @return 除非异常否则都是true
+     */
+    public boolean luaDelKeysByPattern(String pattern) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.DEL_KEYS_PATTERN.getScriptName());
+            Long result = (Long) jedis.evalsha(scriptSha, Collections.singletonList(pattern), Collections.emptyList());
+            logger.info("redis删除{}个key", result);
+            return true;
+        } catch (Exception e) {
+            logger.info("luaDelKeysByPattern(String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * 模式匹配key并说返回key集合
+     *
+     * @param pattern ?单匹配 *全匹配 []范围匹配
+     * @return key集合, 异常返回null
+     */
+    public List<String> luaKeysByPattern(String pattern) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.KEYS_PATTERN.getScriptName());
+            return (ArrayList<String>) jedis.evalsha(scriptSha, Collections.singletonList(pattern), Collections.emptyList());
+        } catch (Exception e) {
+            logger.info("luaKeysByPattern(String)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * 自增序列号
+     *
+     * @param key        序列key
+     * @param value      自增初始值
+     * @param expireTime 序列号超时时间
+     * @return 经过自增后的序列值, 异常返回null
+     */
+    public Object luaGetSequenceNum(String key, long value, long expireTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            key = JedisKeyPrefixEnum.SEQ.assemblyKey(key);
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.SEQUENCE_NUM.getScriptName());
+            return jedis.evalsha(scriptSha, Collections.singletonList(key), Arrays.asList(String.valueOf(value), String.valueOf(expireTime)));
+        } catch (Exception e) {
+            logger.info("luaGetSequenceNum(String,long,long)异常:", e);
+            return null;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * 根据日期获取序列,超时时间为1天
+     *
+     * @param value 自增初始值
+     * @return 自增后的序列号(自带前缀), 异常返回null
+     */
+    public Object luaGetSequenceNum(long value) {
+        String day = HtDateUtil.nowDateNum();
+        return luaGetSequenceNum(day, value, HtPropertyConstant.ONE_DAY);
+    }
+
+    /**
+     * 分布式锁
+     *
+     * @param lockKey    锁的唯一key
+     * @param token      随机生成token作为删除标志
+     * @param expireTime 过期时间,单位ms
+     * @return 是否成功加锁
+     */
+    public boolean luaTryLock(String lockKey, String token, long expireTime) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.TRY_LOCK.getScriptName());
+            Object result = jedis.evalsha(scriptSha, Collections.singletonList(lockKey), Arrays.asList(token, String.valueOf(expireTime)));
+            return HtZeroOneConstant.ONE_L.equals(result);
+        } catch (Exception e) {
+            logger.info("luaTryLock(String,String,long)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * 分布式锁
+     *
+     * @param lockKey      锁的唯一key
+     * @param token        随机生成token作为删除标志
+     * @param lockTimeEnum 加锁策略
+     * @return 是否成功加锁
+     */
+    public boolean luaTryLock(String lockKey, String token, JedisLockTimeEnum lockTimeEnum) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.TRY_LOCK.getScriptName());
+            boolean isLocked;
+            String expireTime = String.valueOf(lockTimeEnum.getExpireTime());
+            long retryEvicTime = lockTimeEnum.getRetryEvictTime();
+            long evicTime = lockTimeEnum.getEvictTime();
+            long startMillSecond = System.currentTimeMillis();
+            do {
+                Object result = jedis.evalsha(scriptSha, Collections.singletonList(lockKey), Arrays.asList(token, String.valueOf(expireTime)));
+                isLocked = HtZeroOneConstant.ONE_L.equals(result);
+                if (isLocked) {
+                    logger.info("根据key[{}]获取锁成功", lockKey);
+                    return true;
+                }
+                logger.info("尝试根据key[{}]获取锁失败,{}ms后重试", lockKey, retryEvicTime);
+                Thread.sleep(retryEvicTime);
+                if (System.currentTimeMillis() - startMillSecond > evicTime) {
+                    logger.info("尝试根据key[{}]获取锁失败,已超出最大等待时间{}ms", lockKey, evicTime);
+                    return false;
+                }
+            } while (!isLocked);
+            return false;
+        } catch (Exception e) {
+            logger.info("luaTryLock(String,String,JedisLockTimeEnum)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    /**
+     * 释放分布式锁
+     *
+     * @param lockKey 锁的唯一key
+     * @param token   随机生成token作为删除标志
+     * @return 是否释放锁
+     */
+    public boolean luaReleaseLock(String lockKey, String token) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            lockKey = JedisKeyPrefixEnum.LOCK.assemblyKey(lockKey);
+            String scriptSha = scriptMap.get(JedisLuaScriptEnum.RELEASE_LOCK.getScriptName());
+            Object result = jedis.evalsha(scriptSha, Collections.singletonList(lockKey), Collections.singletonList(token));
+            return HtZeroOneConstant.ONE_L.equals(result);
+        } catch (Exception e) {
+            logger.info("luaTryLock(String,String)异常:", e);
+            return false;
+        } finally {
+            closeJedis(jedis);
+        }
+    }
+
+    private String loadScriptFromDisk(String luaFileName) throws Exception {
+        FileChannel inChannel = FileChannel.open(Paths.get(luaPath, luaFileName), StandardOpenOption.READ);
+        MappedByteBuffer inMapper = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
+        byte[] b = new byte[inMapper.limit()];
+        inMapper.get(b);
+        String script = new String(b);
+        inChannel.close();
+        return script;
+    }
+}

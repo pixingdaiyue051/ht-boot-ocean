@@ -11,7 +11,7 @@ public class HtEncoderUtil {
 
     public final static String ALGORITHM_SHA256 = "SHA-256";
 
-    public final static int ITER = 16;
+    private final static int LOOP = 4;
 
     public static String md5Encode(String password, String salt) {
         try {
@@ -38,8 +38,7 @@ public class HtEncoderUtil {
             digest.update(salt.getBytes());
         }
         byte[] hashed = digest.digest(password.getBytes());
-        int iterations = ITER - 1;
-        for (int i = 0; i < iterations; ++i) {
+        for (int i = 0; i < LOOP; ++i) {
             digest.reset();
             hashed = digest.digest(hashed);
         }
@@ -52,10 +51,5 @@ public class HtEncoderUtil {
             out[var4++] = DIGITS[15 & hashed[i]];
         }
         return new String(out);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(md5Encode("123456", "123456"));
-        System.out.println(sha256Encode("123456", "123456"));
     }
 }

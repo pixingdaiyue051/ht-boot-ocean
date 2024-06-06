@@ -7,24 +7,24 @@ import java.time.format.DateTimeFormatter;
 
 public class HtDateUtil {
 
-    public final static String DATE_PATTRN = "yyyy-MM-dd";
+    public final static String DATE_PATTERN = "yyyy-MM-dd";
 
-    public final static String DATE_PATTRN_NUM = "yyyyMMdd";
+    public final static String DATE_PATTERN_NUM = "yyyyMMdd";
 
-    public final static String TIME_PATTRN = "HH:mm:ss";
+    public final static String TIME_PATTERN = "HH:mm:ss";
 
-    public final static String TIME_PATTRN_NUM = "HHmmss";
+    public final static String TIME_PATTERN_NUM = "HHmmss";
 
-    public final static String DATE_TIME_PATTRN = "yyyy-MM-dd HH:mm:ss";
+    public final static String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    public final static String DATE_TIME_PATTRN_NUM = "yyyyMMddHHmmss";
+    public final static String DATE_TIME_PATTERN_NUM = "yyyyMMddHHmmss";
 
     public static String nowDate() {
         return LocalDate.now().toString();
     }
 
     public static String nowDateNum() {
-        return LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTRN_NUM));
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN_NUM));
     }
 
     public static String nowTime() {
@@ -32,11 +32,11 @@ public class HtDateUtil {
     }
 
     public static String nowTimeNum() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTRN_NUM));
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN_NUM));
     }
 
     public static String now() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTRN));
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
     }
 
     /**
@@ -48,7 +48,7 @@ public class HtDateUtil {
         String start;
         String end;
         if (userTime) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTRN);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
             LocalDateTime localDateTime = LocalDateTime.now();
             start = localDateTime.plusDays(1 - localDateTime.getDayOfWeek().getValue() + 7L * weekOffset).withHour(0).withMinute(0).withSecond(0).format(dateTimeFormatter);
             end = localDateTime.plusDays(7L * (weekOffset + 1) - localDateTime.getDayOfWeek().getValue()).withHour(23).withMinute(59).withSecond(59).format(dateTimeFormatter);
@@ -69,7 +69,7 @@ public class HtDateUtil {
         String start;
         String end;
         if (userTime) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTRN);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
             LocalDateTime localDateTime = LocalDateTime.now();
             LocalDateTime localDateTime3 = localDateTime.plusMonths(monthOffset).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
             LocalDateTime localDateTime4 = localDateTime3.plusMonths(1).minusSeconds(1);

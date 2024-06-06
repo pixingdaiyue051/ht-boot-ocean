@@ -1,4 +1,4 @@
-package com.tequeno.utils;
+package com.tequeno.constants;
 
 public class HtAssemConstants {
 

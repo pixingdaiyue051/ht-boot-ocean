@@ -1,4 +1,4 @@
-package com.tequeno.config;
+package com.tequeno.config.rest;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

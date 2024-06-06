@@ -160,6 +160,38 @@
             <version>1.56</version>
         </dependency>
 
+        <!--redis官方推荐java客户端jedis-->
+        <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.12.5</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.26</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
 
         <!-- 引用tequeno-base-api-->
         <dependency>
@@ -172,12 +204,6 @@
                     <groupId>com.alibaba</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!-- 引用tequeno-redis-service-->
-        <dependency>
-            <groupId>com.tequeno</groupId>
-            <artifactId>tequeno-redis-service</artifactId>
-            <version>${tequeno.version}</version>
         </dependency>
     </dependencies>
 

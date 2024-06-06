@@ -38,4 +38,6 @@ public class HtCommonConstant {
      */
     public final static String DATA = "data";
 
+    public final static String OK = "OK";
+
 }

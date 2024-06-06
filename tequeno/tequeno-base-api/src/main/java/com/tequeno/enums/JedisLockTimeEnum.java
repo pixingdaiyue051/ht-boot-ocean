@@ -22,34 +22,34 @@ public enum JedisLockTimeEnum {
     /**
      * redis锁过期时间
      */
-    private long expireTime;
+    private final long expireTime;
 
     /**
      * 重复获取锁间隔
      */
-    private long retryEvicTime;
+    private final long retryEvictTime;
 
     /**
      * 最大等待时间
      */
-    private long evicTime;
+    private final long evictTime;
 
-    JedisLockTimeEnum(long expireTime, long retryEvicTime, long evicTime) {
+    JedisLockTimeEnum(long expireTime, long retryEvictTime, long evictTime) {
         this.expireTime = expireTime;
-        this.retryEvicTime = retryEvicTime;
-        this.evicTime = evicTime;
+        this.retryEvictTime = retryEvictTime;
+        this.evictTime = evictTime;
     }
 
     public long getExpireTime() {
         return expireTime;
     }
 
-    public long getRetryEvicTime() {
-        return retryEvicTime;
+    public long getRetryEvictTime() {
+        return retryEvictTime;
     }
 
-    public long getEvicTime() {
-        return evicTime;
+    public long getEvictTime() {
+        return evictTime;
     }
 
 }

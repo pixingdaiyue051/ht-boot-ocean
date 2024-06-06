@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly.trans;
 
 import com.alibaba.fastjson.JSON;
-import com.tequeno.config.JedisUtil;
+import com.tequeno.config.redis.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,7 +21,7 @@ public class TransmissionAspect {
     public final static String ENC_KEY = "enc_key";
 
     @Resource
-    private JedisUtil jedisUtil;
+    private RedisUtil redisUtil;
 
     @Pointcut("@annotation(com.tequeno.bootassembly.trans.Encryption)")
     public void aspect() {
@@ -48,7 +48,7 @@ public class TransmissionAspect {
         Map<String, String> req = (Map<String, String>) args[0];
         String cipher = req.get("cipher");
         String encryptData = req.get("data");
-        String privateKey = jedisUtil.hashGet(ENC_KEY, RsaUtil.PRIVATE_KEY);
+        String privateKey = redisUtil.hashGet(ENC_KEY, RsaUtil.PRIVATE_KEY);
         String aesKey = RsaUtil.decrypt(cipher, privateKey);
         String decrypt = AesUtil.decrypt(encryptData, aesKey);
 
@@ -70,7 +70,7 @@ public class TransmissionAspect {
         //前端公钥
         String key = AesUtil.getKey();
         String data = AesUtil.encrypt(res1, key);
-        String jpk = jedisUtil.hashGet(ENC_KEY, RsaUtil.JS_PUBLIC_KEY);
+        String jpk = redisUtil.hashGet(ENC_KEY, RsaUtil.JS_PUBLIC_KEY);
         String cipher = RsaUtil.encrypt(key, jpk);
 
         result.put("data", data);

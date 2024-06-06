@@ -12,8 +12,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
 @RestController
-@RequestMapping("test1")
-public class TestController {
+@RequestMapping("test/rest")
+public class RestTestController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPool;
@@ -23,12 +23,12 @@ public class TestController {
 
     /**
      * @return
+     * @throws InterruptedException
      */
-    @RequestMapping("one")
-    public HtResultBinder one() throws InterruptedException {
+    @RequestMapping("run")
+    public HtResultBinder run() throws InterruptedException {
         int threadSize = 20;
-//        String url = "http://127.0.0.1:7401/netcall/getExtenStatus?exten=8651";
-        String url = "http://127.0.0.1:7500/count/screen";
+        String url = "http://127.0.0.1:7210/test/jedis/seq";
         CountDownLatch c = new CountDownLatch(threadSize);
         IntStream.range(0, threadSize).forEach(i -> {
             threadPool.execute(() -> post(url));
