@@ -79,7 +79,7 @@ public class TransController {
     public HtResultBinder exchange(@RequestParam String publicKey) {
         Map<String, String> keyPair = RsaUtil.genKeyPair();
         keyPair.put(RsaUtil.JS_PUBLIC_KEY, publicKey);
-        redisUtil.hashMultiSetDefault(TransmissionAspect.ENC_KEY, keyPair);
+        redisUtil.hashMultiSetDefault(TransAspect.ENC_KEY, keyPair);
         return HtResultInfoWrapper.success(keyPair.get(RsaUtil.PUBLIC_KEY));
     }
 }

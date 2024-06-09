@@ -1,0 +1,23 @@
+//package com.tequeno.config;
+//
+//import com.tequeno.bootassembly.file.FileUploader;
+//import com.tequeno.constants.HtResultBinder;
+//import com.tequeno.utils.HtResultInfoWrapper;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.web.bind.annotation.ControllerAdvice;
+//import org.springframework.web.bind.annotation.ExceptionHandler;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//@ControllerAdvice(annotations = {Controller.class, RestController.class})
+//public class ExceptionAspect {
+//
+//    private final static Logger logger = LoggerFactory.getLogger(ImgFileUploader.class);
+//
+//    @ExceptionHandler(Exception.class)
+//    public HtResultBinder error(Exception e) {
+//        logger.error("内部异常:", e);
+//        return HtResultInfoWrapper.fail();
+//    }
+//}

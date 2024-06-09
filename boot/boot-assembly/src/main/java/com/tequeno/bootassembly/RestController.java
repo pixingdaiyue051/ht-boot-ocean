@@ -4,16 +4,15 @@ import com.tequeno.constants.HtResultBinder;
 import com.tequeno.utils.HtResultInfoWrapper;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("test/rest")
-public class RestTestController {
+@org.springframework.web.bind.annotation.RestController
+@RequestMapping("rest")
+public class RestController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPool;

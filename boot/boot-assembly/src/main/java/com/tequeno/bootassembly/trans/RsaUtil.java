@@ -96,17 +96,6 @@ public class RsaUtil {
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicK = keyFactory.generatePublic(x509KeySpec);
 
-        //设置加密、填充方式
-        /*
-            如需使用更多加密、填充方式，引入
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk16</artifactId>
-                <version>1.46</version>
-            </dependency>
-            并改成
-            Cipher cipher = Cipher.getInstance(ALGORITHMS ,new BouncyCastleProvider());
-         */
         Cipher cipher = Cipher.getInstance(ALGORITHMS);
         cipher.init(Cipher.ENCRYPT_MODE, publicK);
         // 后端加密先转成普通字节

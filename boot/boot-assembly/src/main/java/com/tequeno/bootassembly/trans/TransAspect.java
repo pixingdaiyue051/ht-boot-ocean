@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Component
 @Aspect
-public class TransmissionAspect {
+public class TransAspect {
 
     public final static String ENC_KEY = "enc_key";
 

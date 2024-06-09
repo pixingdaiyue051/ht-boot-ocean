@@ -1,7 +1,6 @@
 package com.tequeno.bootassembly.trans;
 
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,8 +26,6 @@ public class AesUtil {
      * 默认：AES/ECB/PKCS5Padding
      */
     private static final String ALGORITHMS = "AES/ECB/PKCS5Padding";
-
-    private static final BouncyCastleProvider PROVIDER = new BouncyCastleProvider();
 
     /**
      * 获取key
@@ -68,7 +65,7 @@ public class AesUtil {
      */
     public static String encrypt(String content, String encryptKey) throws Exception {
         //设置Cipher对象
-        Cipher cipher = Cipher.getInstance(ALGORITHMS, PROVIDER);
+        Cipher cipher = Cipher.getInstance(ALGORITHMS);
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), KEY_ALGORITHM));
 
         //调用doFinal
@@ -90,7 +87,7 @@ public class AesUtil {
         byte[] decodeBase64 = Base64.decodeBase64(encryptStr);
 
         //设置Cipher对象
-        Cipher cipher = Cipher.getInstance(ALGORITHMS, PROVIDER);
+        Cipher cipher = Cipher.getInstance(ALGORITHMS);
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), KEY_ALGORITHM));
 
         //调用doFinal解密

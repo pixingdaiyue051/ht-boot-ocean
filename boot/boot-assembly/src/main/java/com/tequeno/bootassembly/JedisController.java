@@ -3,9 +3,7 @@ package com.tequeno.bootassembly;
 import com.tequeno.config.redis.JedisUtil;
 import com.tequeno.config.redis.RedisUtil;
 import com.tequeno.constants.HtResultBinder;
-import com.tequeno.enums.JedisKeyPrefixEnum;
 import com.tequeno.utils.HtResultInfoWrapper;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Desription:
  * @Author: hexk
  */
 @RestController
-@RequestMapping("test/jedis")
-public class JedisTestController {
+@RequestMapping("jedis")
+public class JedisController {
 
-    private final static Logger logger = LoggerFactory.getLogger(JedisTestController.class);
+    private final static Logger logger = LoggerFactory.getLogger(JedisController.class);
 
     @Resource
     private RedisUtil redisUtil;
