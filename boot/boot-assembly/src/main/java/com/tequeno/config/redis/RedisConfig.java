@@ -1,6 +1,9 @@
 package com.tequeno.config.redis;
 
+import com.tequeno.enums.JedisKeyPrefixEnum;
 import org.redisson.Redisson;
+import org.redisson.api.RBlockingDeque;
+import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +13,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * @Desription:
- * @Author: hexk
  */
 @Configuration
 public class RedisConfig {
@@ -64,13 +65,19 @@ public class RedisConfig {
 
     @Bean
     public RedissonClient redissonConfig() {
-
-        String address = "redis://" + host + ":" + port;
+        String address = String.format("redis://%s:%d", host, port);
         Config config = new Config();
         config.useSingleServer()
                 .setAddress(address)
                 .setPassword(password)
                 .setDatabase(database);
         return Redisson.create(config);
+    }
+
+    @Bean
+    public RDelayedQueue<String> delayedQueue() {
+        RedissonClient client = this.redissonConfig();
+        RBlockingDeque<String> blockingDeque = client.getBlockingDeque(JedisKeyPrefixEnum.QUEUE.getPrefix());
+        return client.getDelayedQueue(blockingDeque);
     }
 }

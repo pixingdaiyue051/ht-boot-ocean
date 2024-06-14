@@ -1,8 +1,8 @@
 package com.tequeno.constants;
 
-public class HtResultBinder {
+import java.io.Serializable;
 
-    private Boolean success;
+public class HtJmsModel implements Serializable {
 
     private String code;
 
@@ -10,13 +10,7 @@ public class HtResultBinder {
 
     private Object data;
 
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
+    private Integer timeLevel;
 
     public String getCode() {
         return code;
@@ -40,5 +34,18 @@ public class HtResultBinder {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Integer getTimeLevel() {
+        return timeLevel;
+    }
+
+    public void setTimeLevel(Integer timeLevel) {
+        this.timeLevel = timeLevel;
+    }
+
+    @Override
+    public String toString() {
+        return code + msg + data;
     }
 }

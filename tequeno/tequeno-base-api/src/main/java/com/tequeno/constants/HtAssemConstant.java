@@ -1,6 +1,6 @@
 package com.tequeno.constants;
 
-public class HtAssemConstants {
+public class HtAssemConstant {
 
     public final static String NEED_ALL_PERMISSION = "没有以下权限:[%s]";
 

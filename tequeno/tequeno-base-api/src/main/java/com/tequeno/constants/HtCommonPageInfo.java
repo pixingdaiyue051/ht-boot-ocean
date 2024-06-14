@@ -21,7 +21,7 @@ public class HtCommonPageInfo {
     /**
      * 默认起始页码
      */
-    public final static Integer CURRENT_PAGE = HtZeroOneConstant.ONE_I;
+    public final static Integer CURRENT_PAGE = 1;
     /**
      * 默认分页大小
      */

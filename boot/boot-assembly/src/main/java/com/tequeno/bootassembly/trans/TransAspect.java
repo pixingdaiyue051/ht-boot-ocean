@@ -48,8 +48,10 @@ public class TransAspect {
         Map<String, String> req = (Map<String, String>) args[0];
         String cipher = req.get("cipher");
         String encryptData = req.get("data");
+        // 使用后端私钥解密得到aesKey
         String privateKey = redisUtil.hashGet(ENC_KEY, RsaUtil.PRIVATE_KEY);
         String aesKey = RsaUtil.decrypt(cipher, privateKey);
+        // 使用aesKey解密数据
         String decrypt = AesUtil.decrypt(encryptData, aesKey);
 
         Object o = JSON.parseObject(decrypt, Map.class);
@@ -67,9 +69,10 @@ public class TransAspect {
         Map<String, String> result = (Map<String, String>) o;
 
         String res1 = JSON.toJSONString(result.get("data"));
-        //前端公钥
+        // 使用aesKey加密数据
         String key = AesUtil.getKey();
         String data = AesUtil.encrypt(res1, key);
+        // 使用前端公钥加密aesKey
         String jpk = redisUtil.hashGet(ENC_KEY, RsaUtil.JS_PUBLIC_KEY);
         String cipher = RsaUtil.encrypt(key, jpk);
 

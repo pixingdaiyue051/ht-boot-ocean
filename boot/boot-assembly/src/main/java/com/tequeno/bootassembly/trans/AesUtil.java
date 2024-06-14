@@ -8,18 +8,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Random;
 
+/**
+ * 对称加密算法
+ * 使用一个密钥加密解密
+ */
 public class AesUtil {
 
     /**
      * 加密算法AES
      */
     private static final String KEY_ALGORITHM = "AES";
-
-    /**
-     * key的长度，Wrong key size: must be equal to 128, 192 or 256
-     * 传入时需要16、24、36
-     */
-    private static final Integer KEY_LENGTH = 16 * 8;
 
     /**
      * 算法名称/加密模式/数据填充方式
@@ -34,7 +32,7 @@ public class AesUtil {
         StringBuilder uid = new StringBuilder();
         //产生16位的强随机数
         Random rd = new SecureRandom();
-        for (int i = 0; i < KEY_LENGTH / 8; i++) {
+        for (int i = 0; i < 16; i++) {
             //产生0-2的3位随机数
             int type = rd.nextInt(3);
             switch (type) {

@@ -109,7 +109,11 @@ public class JedisUtil {
         return JedisUtil.JedisUtilHolder.INSTANCE;
     }
 
-    private void closeJedis(Jedis jedis) {
+    public Jedis getJedis() {
+        return jedisPool.getResource();
+    }
+
+    public void closeJedis(Jedis jedis) {
         if (null != jedis) {
             jedis.disconnect();
             jedis.close();

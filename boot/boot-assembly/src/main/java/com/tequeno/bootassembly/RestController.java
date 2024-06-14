@@ -1,7 +1,7 @@
 package com.tequeno.bootassembly;
 
-import com.tequeno.constants.HtResultBinder;
-import com.tequeno.utils.HtResultInfoWrapper;
+import com.tequeno.constants.HtResultModel;
+import com.tequeno.constants.HtResultWrapper;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +25,7 @@ public class RestController {
      * @throws InterruptedException
      */
     @RequestMapping("run")
-    public HtResultBinder run() throws InterruptedException {
+    public HtResultModel run() throws InterruptedException {
         int threadSize = 20;
         String url = "http://127.0.0.1:7210/test/jedis/seq";
         CountDownLatch c = new CountDownLatch(threadSize);
@@ -34,7 +34,7 @@ public class RestController {
             c.countDown();
         });
         c.wait();
-        return HtResultInfoWrapper.success();
+        return HtResultWrapper.success();
     }
 
     private void post(String url) {

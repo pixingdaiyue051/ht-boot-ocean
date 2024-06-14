@@ -63,8 +63,11 @@ public class RedisUtil {
         }
     }
 
+    public Jedis getJedis() {
+        return jedisPool.getResource();
+    }
 
-    private void closeJedis(Jedis jedis) {
+    public void closeJedis(Jedis jedis) {
         if (null != jedis) {
             jedis.disconnect();
             jedis.close();

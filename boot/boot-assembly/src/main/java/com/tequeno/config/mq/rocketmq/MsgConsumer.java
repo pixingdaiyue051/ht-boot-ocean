@@ -1,7 +1,7 @@
 //package com.tequeno.config.mq.rocketmq;
 //
 //import com.alibaba.fastjson.JSON;
-//import com.tequeno.common.mq.HtJmsModel;
+//import com.tequeno.constants.HtJmsModel;
 //import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 //import org.apache.rocketmq.common.message.MessageExt;
 //import org.slf4j.Logger;

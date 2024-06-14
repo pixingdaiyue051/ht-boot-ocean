@@ -1,8 +1,8 @@
 package com.tequeno.bootassembly.trans;
 
 import com.tequeno.config.redis.RedisUtil;
-import com.tequeno.constants.HtResultBinder;
-import com.tequeno.utils.HtResultInfoWrapper;
+import com.tequeno.constants.HtResultModel;
+import com.tequeno.constants.HtResultWrapper;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,10 +76,10 @@ public class TransController {
     }
 
     @RequestMapping("exchange")
-    public HtResultBinder exchange(@RequestParam String publicKey) {
+    public HtResultModel exchange(@RequestParam String publicKey) {
         Map<String, String> keyPair = RsaUtil.genKeyPair();
         keyPair.put(RsaUtil.JS_PUBLIC_KEY, publicKey);
         redisUtil.hashMultiSetDefault(TransAspect.ENC_KEY, keyPair);
-        return HtResultInfoWrapper.success(keyPair.get(RsaUtil.PUBLIC_KEY));
+        return HtResultWrapper.success(keyPair.get(RsaUtil.PUBLIC_KEY));
     }
 }

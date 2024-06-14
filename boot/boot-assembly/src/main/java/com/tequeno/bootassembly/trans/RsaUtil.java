@@ -14,6 +14,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 非对称加密算法
+ * 使用公钥私钥加密解密
+ */
 public class RsaUtil {
 
 
@@ -96,6 +100,17 @@ public class RsaUtil {
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicK = keyFactory.generatePublic(x509KeySpec);
 
+        //设置加密、填充方式
+        /*
+            如需使用更多加密、填充方式，引入
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk16</artifactId>
+                <version>1.46</version>
+            </dependency>
+            并改成
+            Cipher cipher = Cipher.getInstance(ALGORITHMS ,new BouncyCastleProvider());
+         */
         Cipher cipher = Cipher.getInstance(ALGORITHMS);
         cipher.init(Cipher.ENCRYPT_MODE, publicK);
         // 后端加密先转成普通字节
@@ -121,17 +136,6 @@ public class RsaUtil {
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
 
-        //设置加密、填充方式
-        /*
-            如需使用更多加密、填充方式，引入
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk16</artifactId>
-                <version>1.46</version>
-            </dependency>
-            并改成
-            Cipher cipher = Cipher.getInstance(ALGORITHMS ,new BouncyCastleProvider());
-         */
         Cipher cipher = Cipher.getInstance(ALGORITHMS);
         cipher.init(Cipher.DECRYPT_MODE, privateK);
         // 解码成base64字节

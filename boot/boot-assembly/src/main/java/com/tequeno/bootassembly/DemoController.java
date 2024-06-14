@@ -1,9 +1,9 @@
 package com.tequeno.bootassembly;
 
 import com.tequeno.config.redis.RedisUtil;
-import com.tequeno.constants.HtResultBinder;
+import com.tequeno.constants.HtResultModel;
+import com.tequeno.constants.HtResultWrapper;
 import com.tequeno.utils.HtDateUtil;
-import com.tequeno.utils.HtResultInfoWrapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +19,7 @@ public class DemoController {
     private RedisUtil redisUtil;
 
     @RequestMapping("time")
-    public HtResultBinder time() {
+    public HtResultModel time() {
         String timeMillis = String.valueOf(System.currentTimeMillis());
         String javaTime = HtDateUtil.now();
         String redisTime = redisUtil.time();
@@ -27,6 +27,6 @@ public class DemoController {
         map.put("timeMillis", timeMillis);
         map.put("javaTime", javaTime);
         map.put("redisTime", redisTime);
-        return HtResultInfoWrapper.success(map);
+        return HtResultWrapper.success(map);
     }
 }

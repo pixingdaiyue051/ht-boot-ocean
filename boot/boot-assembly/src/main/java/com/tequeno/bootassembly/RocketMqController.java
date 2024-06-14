@@ -1,9 +1,9 @@
 //package com.tequeno.bootassembly;
 //
-//import com.tequeno.common.constants.HtResultBinder;
-//import com.tequeno.common.mq.HtJmsConstant;
-//import com.tequeno.common.mq.HtJmsModel;
-//import com.tequeno.common.utils.HtResultInfoWrapper;
+//import com.tequeno.constants.HtJmsConstant;
+//import com.tequeno.constants.HtJmsModel;
+//import com.tequeno.constants.HtResultModel;
+//import com.tequeno.constants.HtResultWrapper;
 //import com.tequeno.config.mq.rocketmq.MsgSendProducer;
 //import org.apache.rocketmq.client.producer.SendCallback;
 //import org.apache.rocketmq.client.producer.SendResult;
@@ -25,27 +25,27 @@
 // * @date : 2019-11-26 14:22
 // **/
 //@RestController
-//@RequestMapping("test/rocket")
-//public class RocketMqTestController {
+//@RequestMapping("rocket")
+//public class RocketMqController {
 //
-//    private final static Logger logger = LoggerFactory.getLogger(RocketMqTestController.class);
+//    private final static Logger logger = LoggerFactory.getLogger(RocketMqController.class);
 //
 //    @Resource
 //    private MsgSendProducer producer;
 //
 //    @RequestMapping("sync")
-//    public HtResultBinder sendSync(@RequestParam("msg") String msg,
-//                                   @RequestParam(value = "timeLevel", required = false) Integer timeLevel) {
+//    public HtResultModel sendSync(@RequestParam("msg") String msg,
+//                                  @RequestParam(value = "timeLevel", required = false) Integer timeLevel) {
 //        HtJmsModel model = new HtJmsModel();
 //        model.setMsg(msg);
 //        model.setTimeLevel(timeLevel);
 //        SendResult result = producer.send(HtJmsConstant.ROCKET_TAG_A, model);
-//        return HtResultInfoWrapper.success(result);
+//        return HtResultWrapper.success(result);
 //    }
 //
 //    @RequestMapping("async")
-//    public HtResultBinder sendAsync(@RequestParam("msg") String msg,
-//                                    @RequestParam(value = "timeLevel", required = false) Integer timeLevel) {
+//    public HtResultModel sendAsync(@RequestParam("msg") String msg,
+//                                   @RequestParam(value = "timeLevel", required = false) Integer timeLevel) {
 //        HtJmsModel model = new HtJmsModel();
 //        model.setMsg(msg);
 //        model.setTimeLevel(timeLevel);
@@ -61,11 +61,11 @@
 //                        logger.debug("异步发送失败", throwable);
 //                    }
 //                });
-//        return HtResultInfoWrapper.success();
+//        return HtResultWrapper.success();
 //    }
 //
 //    @RequestMapping("batch")
-//    public HtResultBinder batchSend() {
+//    public HtResultModel batchSend() {
 //        List<HtJmsModel> list = IntStream.rangeClosed(1, 10)
 //                .boxed()
 //                .map(i -> {
@@ -76,6 +76,6 @@
 //                })
 //                .collect(Collectors.toList());
 //        producer.send(HtJmsConstant.ROCKET_TAG_B, list);
-//        return HtResultInfoWrapper.success();
+//        return HtResultWrapper.success();
 //    }
 //}
