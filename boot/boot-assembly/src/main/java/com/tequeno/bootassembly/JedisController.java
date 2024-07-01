@@ -6,7 +6,6 @@ import com.tequeno.constants.HtResultModel;
 import com.tequeno.constants.HtResultWrapper;
 import com.tequeno.enums.JedisKeyPrefixEnum;
 import com.tequeno.utils.HtDateUtil;
-import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +27,6 @@ public class JedisController {
     @Resource
     private RedisUtil redisUtil;
 
-    @Resource
-    private RedissonClient redisson;
-
     @RequestMapping("seq")
     public HtResultModel seq() {
         long value = 24000;
@@ -45,9 +41,9 @@ public class JedisController {
     }
 
     @RequestMapping("lock")
-    public HtResultModel lock() throws InterruptedException {
+    public HtResultModel lock() {
         String key = "test";
-        long expire = 60000;
+        long expire = 650000L;
 
         // 1、jedis java原生
         JedisUtil jedisUtil = JedisUtil.getInstance();
@@ -57,10 +53,6 @@ public class JedisController {
 //        // 2、jedis spring托管
 //        String token = String.valueOf(System.currentTimeMillis());
 //        boolean result = redisUtil.luaTryLock(key, token, expire);
-
-//        // 3、redisson lock
-//        RLock lock = redisson.getLock(JedisKeyPrefixEnum.LOCK.assemblyKey(key));
-//        boolean result = lock.tryLock(0, expire, TimeUnit.MILLISECONDS);
 
         if (result) {
             logger.info("加锁成功");
